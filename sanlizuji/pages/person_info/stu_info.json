@@ -1,0 +1,4 @@
+{
+    "usingComponents": { "desc": "/components/desc/desc" },
+    "navigationBarTitleText": "个人信息"
+}

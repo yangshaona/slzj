@@ -1,0 +1,19 @@
+<!--pages/news/detail_1.wxml-->
+<view class="top" style="height: {{height*0.2}}px;">
+    <image src="{{course_detail.imagesurl}}" mode="aspectFill"></image>
+</view>
+
+<!-- 新闻标题 -->
+<view class="title">{{course_detail.name}}</view>
+
+<!-- 新闻内容 -->
+<view class="infoBox">
+    <view style='margin-left:.3em;margin-right:.15em;'>
+        <rich-text nodes="{{course_detail.content}}"></rich-text>
+    </view>
+    <view class="date">发布时间：{{course_detail.startTime}}</view>
+    <!-- <view class="view">
+      <view>{{view}}</view>
+      <image src="/icon/view.png" mode="widthFix"></image>
+    </view> -->
+</view>

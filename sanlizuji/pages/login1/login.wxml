@@ -1,0 +1,26 @@
+<!--pages/login/login.wxml-->
+
+<view class="ctnBox">
+    <form bindsubmit="submit">
+        <view>
+            <view class="desc">姓名
+                <image mode="widthFix" src="/icon/account.png"></image>
+            </view>
+            <input type="text" name="name" id="name" placeholder="姓名" />
+        </view>
+
+        <view wx:if="{{flag_identity[0]==1||flag_identity[1]==1}}">
+            <view class="desc">身份证号
+                <image mode="widthFix" src="/icon/id.png"></image>
+            </view>
+            <input type="idcard" name="idNum" id="idNum" placeholder="身份证号" maxlength="18" />
+        </view>
+        <view>
+            <view class="desc">手机号
+                <image mode="widthFix" src="/icon/phone.png"></image>
+            </view>
+            <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" />
+        </view>
+        <button form-type="submit" class="submit">提交</button>
+    </form>
+</view>

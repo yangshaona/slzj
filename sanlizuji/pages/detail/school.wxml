@@ -1,0 +1,42 @@
+<!--pages/detail/school.wxml-->
+<view class="top">
+    <!-- <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
+        <block wx:for="{{actImg}}" wx:key="item">
+            <swiper-item class="swiper-item"> -->
+    <image class="actImg" src="{{service_club.pic}}" mode="widthFix"></image>
+    <!-- </swiper-item>
+        </block>
+    </swiper> -->
+</view>
+
+<!-- 学校名称logo -->
+<view class="infoBox">
+    <view class="flexBox">
+        <image class="logo" mode="widthFix" src="{{service_club.pic}}"></image>
+        <view>{{service_club.club_name}}</view>
+    </view>
+</view>
+
+<!-- 小标题 -->
+<view class="infoTtl">学校简介</view>
+
+<!-- 学校介绍 -->
+<view class="infoBox">
+    <view class="desc">
+        <view style='margin-left:.3em;margin-right:.15em;'>
+            <rich-text nodes="{{service_club.introduce==''?'暂无简介':service_club.introduce}}"></rich-text>
+        </view>
+    </view>
+</view>
+
+<!-- 小标题 -->
+<view class="infoTtl">活动回顾</view>
+<view class="infoBox" wx:if="{{schoolImg==''}}" style="margin: 3%;">暂无活动回顾</view>
+<view class="infoBox" wx:else>
+    <block wx:for="{{schoolImg}}" wx:key="item">
+        <view class="schoolImg" data-id="{{item.id}}" bindtap="toCourseDetail">
+            <image src="{{item.imagesurl}}" mode="widthFix"></image>
+            <view class="schoolDesc">{{item.name}}</view>
+        </view>
+    </block>
+</view>

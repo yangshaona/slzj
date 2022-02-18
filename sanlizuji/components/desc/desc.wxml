@@ -1,0 +1,5 @@
+<!--components/desc/desc.wxml-->
+<view class="desc_box line">
+    <image src="{{icon}}" mode="widthFix" class="icon"></image>
+    <view class="desc">{{innerText}}</view>
+</view>

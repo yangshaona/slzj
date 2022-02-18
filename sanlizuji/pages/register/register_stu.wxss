@@ -1,0 +1,111 @@
+/* pages/register/register_stu.wxss */
+
+
+/* 未获取用户昵称时 */
+
+.primary {
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    align-items: center;
+    width: 80%;
+    margin: 10% 10% 0 10%;
+    padding: 5%;
+    line-height: 2rem;
+}
+
+.change {
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 1rem;
+    color: #6177ff;
+    width: 100%;
+    margin: 0;
+}
+
+
+/* 注册盒子 */
+
+.ctnBox {
+    display: block;
+    box-sizing: border-box;
+    align-items: center;
+    width: 90%;
+    padding: 5%;
+    margin: 5%;
+    background-color: #fafafa;
+    border-radius: 1rem;
+    line-height: 2rem;
+}
+
+.desc {
+    line-height: 3rem;
+    position: relative;
+    display: flex;
+    color: #6177ff;
+}
+
+image {
+    display: block;
+    position: absolute;
+    box-sizing: border-box;
+    width: 8%;
+    right: 5%;
+    bottom: 0%;
+}
+
+picker {
+    display: block;
+    border-bottom: 1px #888888 solid;
+    padding: 0 2.5%;
+}
+
+input {
+    display: block;
+    padding: 1% 2.5%;
+    border-bottom: 1px #888888 solid;
+}
+
+
+/* 缺省文字 */
+
+.default {
+    color: #888888;
+}
+
+
+/* 框框model */
+
+.box {
+    display: block;
+    border-bottom: 1px #888888 solid;
+    padding: 0 2.5%;
+}
+
+
+/* 获取用户头像 */
+
+.chooseImg {
+    margin: 2.5% 0;
+    align-items: center;
+    display: block;
+    padding: 2.5%;
+    border-radius: 0.5rem;
+    color: #6177ff;
+    border: 1px #6177ff solid;
+    background-color: #fafafa;
+}
+
+
+/* 提交按钮 */
+
+.submit {
+    margin: 3rem 0;
+    align-items: center;
+    display: block;
+    /* padding: 4% 2.5%; */
+    border-radius: 0.5rem;
+    color: white;
+    background-color: #6177ff;
+}

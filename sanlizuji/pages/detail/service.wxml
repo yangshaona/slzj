@@ -1,0 +1,42 @@
+<!--pages/detail/service.wxml-->
+<view class="top">
+  <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
+    <block wx:for="{{actImg}}" wx:key="item">
+      <swiper-item class="swiper-item">
+        <image class="actImg" src="{{item}}" mode="widthFix"></image>
+      </swiper-item>
+    </block>
+  </swiper>
+</view>
+
+<!-- 服务商名称logo -->
+<view class="infoBox">
+  <view class="flexBox">
+    <image class="logo" mode="widthFix" src="{{logo}}"></image>
+    <view>{{serviceName}}</view>
+  </view>
+</view>
+
+<!-- 小标题 -->
+<view class="infoTtl">服务商简介</view>
+
+<!-- 服务商介绍 -->
+<view class="infoBox">
+  <view class="desc">
+    <block wx:for="{{desc}}" wx:key="item">
+      <view>{{item}}</view>
+    </block>
+  </view>
+</view>
+
+<!-- 小标题 -->
+<view class="infoTtl">活动回顾</view>
+<view class="infoBox">
+  <block wx:for="{{schoolImg}}" wx:key="item">
+    <view class="schoolImg">
+      <image src="{{item.img}}" mode="widthFix"></image>
+      <view class="schoolDesc">{{item.desc}}</view>
+    </view>
+  </block>
+</view>
+

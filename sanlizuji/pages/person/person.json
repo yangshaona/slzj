@@ -1,0 +1,5 @@
+{
+    "usingComponents": { "desc": "/components/desc/desc" },
+    "navigationBarTitleText": "个人空间",
+    "navigationStyle": "custom"
+}

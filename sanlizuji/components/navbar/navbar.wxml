@@ -1,0 +1,9 @@
+<view class="navbar custom-class" style='height:{{navHeight}}px;background-color:{{bgColor}}'>
+  <view wx:if="{{showNav}}" class="navbar-action-wrap navbar-action-group row item-center" style='top:{{navTop}}px;background-color:rgba(255,255,255,.6)'>
+        <view name="back" color="{{iconColor}}" size="5px" block="{{true}}" class="navbar-action_item" bindtap="navBack"><image src='../../resource/images/back.png' style='width:25px;height:25px;'></image></view>
+  </view>
+  <view class='navbar-brand' style='top:{{navTop}}px' wx:if="{{showBrand}}"> <image src='../../resource/images/brand.png' style='width:30px;height:30px;'></image></view>
+  <view class='navbar-title' style='top:{{navTop}}px'>
+    {{pageName}}
+  </view>
+</view>

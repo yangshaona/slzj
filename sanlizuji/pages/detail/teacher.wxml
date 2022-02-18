@@ -1,0 +1,69 @@
+<!--pages/detail/teacher.wxml-->
+<!--pages/detail/school.wxml-->
+<view wx:if="{{teacher_info=='该活动暂无导师'}}" style="margin: 3%;">该活动暂无导师</view>
+<view wx:else>
+    <view class="top">
+        <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
+            <block wx:for="{{schoolImg}}" wx:key="item">
+                <swiper-item class="swiper-item">
+                    <image class="actImg" src="{{item.pic}}" mode="widthFix"></image>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
+    <!-- <block wx:for="{{teacher_info}}" wx:key="item"> -->
+    <!-- 小标题 -->
+    <view class="infoTtl">导师信息</view>
+
+    <!-- 导师名称 -->
+    <view class="infoBox">
+        <view class="teacherInfo">
+            <view class="teacherName">{{teacher_info.name}}</view>
+            <view class="phone">
+                <image src="/icon/phone.png" mode="widthFix"></image>
+                <view>{{teacher_info.phone}}</view>
+            </view>
+        </view>
+    </view>
+
+    <!-- 小标题 -->
+    <view class="infoTtl">导师简介</view>
+
+    <!-- 导师介绍 -->
+    <view class="infoBox">
+        <view class="desc">
+            <view>{{teacher_info.introduce==null?"暂无简介":teacher_info.introduce}}</view>
+        </view>
+    </view>
+    <!-- </block> -->
+    <!-- 小标题 -->
+    <view class="infoTtl">活动回顾</view>
+    <view class="infoBox" wx:if="{{schoolImg.length==0}}">暂无活动相关回顾</view>
+
+    <view class="infoBox" wx:else>
+        <block wx:for="{{schoolImg}}" wx:key="item">
+            <view class="schoolImg">
+                <image src="{{item.pic}}" mode="widthFix"></image>
+                <view class="schoolDesc">{{item.name}}</view>
+            </view>
+        </block>
+    </view>
+
+    <!-- 小标题 -->
+    <!-- <view class="infoTtl">导师评价</view>
+    <view class="infoBox">
+        <block wx:for="{{comment}}" wx:key="item">
+            <view class="comment">
+                <view class="accountInfo">
+                    <view class="avatorBox" style="height: 100rpx;">
+                        <image src="{{item.avator}}" class="avator" mode="widthFix"></image>
+                    </view>
+                    <view class="nickName">{{item.nickName}}</view>
+                </view>
+                <view class="commentCtn">
+                    <text>{{item.ctn}}</text>
+                </view>
+            </view>
+        </block>
+    </view> -->
+</view>

@@ -1,0 +1,79 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/index1/index",
+        "pages/register/register_stu",
+        "pages/register/register_parent",
+        "pages/register/register_teacher",
+        "pages/login/login",
+        "pages/login1/login",
+        "pages/test/test",
+        "pages/course/course",
+        "pages/person/person",
+        "pages/person/parent",
+        "pages/person/teacher",
+        "pages/mycourse/mycourse_stu",
+        "pages/journey/journey",
+        "pages/doing/doing_stuprt",
+        "pages/task/task",
+        "pages/myApply/myApply",
+        "pages/detail/detail",
+        "pages/detail/teacher",
+        "pages/detail/school",
+        "pages/detail/service",
+        "pages/news/news",
+        "pages/news_detail/news_detail",
+        "pages/willDo/willDo",
+        "pages/doing/doing_tc",
+        "pages/myApply/comment",
+        "pages/person_info/stu_info",
+        "pages/person_info/teacher_info",
+        "pages/person_info/parent_info",
+        "pages/pay/confirm",
+        "pages/doing/doing_parent"
+    ],
+    "window": {
+        "backgroundColor": "#ffffff",
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "三立足迹",
+        "navigationBarTextStyle": "black"
+    },
+    "tabBar": {
+        "color": "#000",
+        "selectedColor": "#000",
+        "backgroundColor": "#fff",
+        "borderStyle": "black",
+        "list": [{
+                "pagePath": "pages/index/index",
+                "text": "首页",
+                "iconPath": "icon/全球跨境 (2).png",
+                "selectedIconPath": "icon/全球跨境.png"
+            },
+            {
+                "pagePath": "pages/course/course",
+                "text": "课程",
+                "iconPath": "icon/我的课程 (1).png",
+                "selectedIconPath": "icon/我的课程.png"
+            },
+            {
+                "pagePath": "pages/news/news",
+                "text": "新闻",
+                "iconPath": "icon/新闻 (1).png",
+                "selectedIconPath": "icon/新闻.png"
+            },
+            {
+                "pagePath": "pages/person/person",
+                "text": "我的",
+                "iconPath": "icon/用户 (2).png",
+                "selectedIconPath": "icon/用户.png"
+            }
+        ]
+    },
+    "permission": {
+        "scope.userLocation": {
+            "desc": "获取当前定位"
+        }
+    },
+    "sitemapLocation": "sitemap.json"
+}

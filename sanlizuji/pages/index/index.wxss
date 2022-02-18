@@ -1,0 +1,291 @@
+/* pages/index/index.wxss */
+
+.top {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5%;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.top::after {
+    content: '';
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 10%;
+    height: 10px;
+    background-image: linear-gradient(to right, #91a0ff, #5e73ff);
+    border-radius: 1rem;
+    margin: -5px 40% auto 40%;
+    z-index: -1;
+}
+
+.total {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    background-color: #fafafa;
+}
+
+.swiper {
+    display: block;
+    width: 100%;
+    height: 50%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.swiper-item {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.swiper-item image {
+    width: 100%;
+}
+
+
+/* 导航栏样式 */
+
+.navTop {
+    display: flex;
+    box-sizing: border-box;
+    width: 90%;
+    margin: 5% 5% 0 5%;
+    padding: 2% 5% 5% 5%;
+    border-radius: 1rem;
+    background: #fafafa;
+    box-shadow: 0px 1px 5px #aaaaaa;
+}
+
+.nav {
+    display: block;
+    position: relative;
+    z-index: 2;
+    width: 20%;
+    margin: 0 2.5%;
+}
+
+
+/* 导航栏icon */
+
+.nav image {
+    display: block;
+    width: 60%;
+    margin: 20%;
+}
+
+
+/* 导航栏文字 */
+
+.nav view {
+    flex-wrap: nowrap;
+    width: 100%;
+    text-align: center;
+    font-size: 0.75rem;
+    line-height: 0.5rem;
+    padding: 0 0 2px 0;
+}
+
+.nav view::after {
+    content: '';
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 70%;
+    height: 10px;
+    background-image: linear-gradient(to right, #91a0ff, #5e73ff);
+    border-radius: 1rem;
+    margin: -1px 15% auto 15%;
+    z-index: -1;
+}
+
+
+/* 搜索框 */
+
+.srcFold {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row-reverse;
+    width: 90%;
+    width: 80rpx !important;
+    height: 80rpx !important;
+    margin: 5% 5% 0 auto;
+    border-radius: 4rem;
+    overflow: hidden;
+    border: 4rpx #555555 solid;
+    transition: cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.5s;
+}
+
+.srcExt {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row-reverse;
+    width: 90%;
+    margin: 5% 5% 0 auto;
+    border-radius: 2rem;
+    overflow: hidden;
+    border: 2px #555555 solid;
+    transition: cubic-bezier(0.39, 0.575, 0.565, 1) 0.5s;
+}
+
+.srcImg {
+    display: block;
+    width: 40px !important;
+    height: 40px !important;
+    margin: auto 0;
+    border-radius: 100%;
+}
+
+.inputFold {
+    width: 0px;
+    padding: 2.5%;
+    opacity: 0%;
+    transition: cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.5s;
+}
+
+.inputExt {
+    width: 70%;
+    padding: 2.5%;
+    opacity: 100%;
+    transition: cubic-bezier(0.47, 0, 0.745, 0.715) 0.5s;
+}
+
+
+/* 活动样式 */
+
+.actTop {
+    display: block;
+    width: 100%;
+    margin-bottom: 45rpx;
+}
+
+
+/* 标题栏 */
+
+.title {
+    display: block;
+    margin-top: 10rpx;
+}
+
+.review {
+    width: 50%;
+    font-size: 1.25rem !important;
+    margin: 3rem 5rpx 2rem 5%;
+    font-weight: bold !important;
+    padding: 0 0 0 2%;
+    border-left: 2px #6177ff solid;
+}
+
+.more {
+    border-radius: 30rpx;
+    border: 1rpx solid #6177ff;
+    padding: 10rpx 20rpx;
+    font-size: 24rpx;
+    float: right;
+    color: white;
+    background: #6177ff;
+    margin-right: 15rpx;
+}
+
+
+/* 活动卡片 */
+
+.actBox {
+    display: block;
+    box-sizing: border-box;
+    width: 90%;
+    height: 20rem;
+    background: whitesmoke;
+    margin: 5%;
+    padding: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0px 1px 5px #aaaaaa;
+}
+
+
+/* 缩略图容器 */
+
+.actImg {
+    height: 65% !important;
+    overflow: hidden;
+}
+
+
+/* 缩略图 */
+
+.actImg image {
+    width: 100% !important;
+    height: 100%;
+}
+
+
+/* 卡片下部分 */
+
+.ctnBox {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 45% !important;
+    overflow: hidden;
+    padding: 5% 2.5% 2.5% 5%;
+}
+
+
+/* 活动标题 */
+
+.actTitle {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    /* padding: 0 0 2% 0; */
+}
+
+
+/* ddl及报名人数 */
+
+.descBox {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 0.75rem;
+}
+
+.time-ddl {
+    display: block;
+    width: 60%;
+    text-align: left;
+    font-weight: 150 !important;
+    color: #888888;
+    /* margin: auto 0; */
+    font-size: 26rpx;
+    margin-top: 10rpx;
+}
+
+.numBox {
+    display: flex;
+    box-sizing: border-box;
+    width: 40%;
+    flex-direction: row-reverse;
+    margin-right: 6rpx;
+    margin-top: 15rpx;
+}
+
+.numBox image {
+    width: 1rem;
+    margin: 0% 4%;
+    /* position: relative; */
+}
+
+.numBox view {
+    text-align: right;
+    color: #6177ff;
+}

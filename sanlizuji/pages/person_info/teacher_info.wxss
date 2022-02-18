@@ -1,0 +1,35 @@
+/* pages/person_info/teacher_info.wxss */
+
+.primary {
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+    align-items: center;
+    width: 90%;
+    margin: 0% 5%;
+    padding: 1%;
+    line-height: 2rem;
+}
+
+.info_desc_box::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 60%;
+    height: 12px;
+    left: 20%;
+    bottom: -5px;
+    z-index: -1;
+    border-radius: 1.5rem;
+    background: linear-gradient(to right, #8595ff, #6177ff);
+}
+
+.info_desc {
+    display: block;
+    box-sizing: border-box;
+    line-height: 2rem;
+}
+
+.logout {
+    margin-top: 10%;
+}

@@ -1,0 +1,80 @@
+<!--pages/course/course.wxml-->
+<!-- 总页面 -->
+<view class="total" id="total">
+    <!-- 顶部标题-->
+    <view class="top" style="padding-top: {{statusHeight+16}}px;">
+        {{title_name==''?'课程':title_name}}
+    </view>
+    <!-- 筛选按钮 -->
+    <view class="filterTop" catchtap="filterTap">
+        <image src="/icon/filter.png" mode="widthFix"></image>
+        <view>筛选</view>
+    </view>
+    <!-- 筛选框 -->
+    <view class="{{filterClass}}">
+        <block wx:for="{{filter}}" wx:key="item">
+            <view class="filter">
+                <view class="filterTtl">{{item.title}}</view>
+                <view class="filterBox">
+                    <block wx:for="{{item.ctn}}" wx:for-item="ctn" wx:key="idx">
+                        <view class="filterCtn" data-id="{{filterID[ctn]}}" data-value='{{ctn}}' catchtap="filterCheck">{{ctn}}</view>
+                    </block>
+                </view>
+            </view>
+        </block>
+
+        <!-- 时间选择器 -->
+        <view class="filterTtl">活动时间</view>
+        <view class="filterBox">
+            <picker mode="date" class="filterCtn" start="2021-01-01" end="{{end == '' ? '2031-01-01' : end}}" value="{{start}}" bindchange="startChange">
+                {{start == "" ? "开始时间" : start}}
+            </picker>
+            <picker mode="date" class="filterCtn" start="{{start == '' ? '2021-01-01' : start}}" end="2025-01-01" value="{{end}}" bindchange="endChange">
+                {{end == "" ? "结束时间" : end}}
+            </picker>
+        </view>
+        <button class="confirm" bindtap="filterTap">确认</button>
+    </view>
+    <!-- 顶部搜索框 -->
+    <!-- <view class="search">
+        <view class="srcExt">
+            <icon type="search" size="20"></icon>
+            <input type="text" confirm-type="search" name="search" id="search" placeholder=" 搜索" class="inputExt" bindconfirm="searchTap" bindblur="searchTap" />
+        </view>
+        <button class="{{isSearch=='0' ? 'choose' : 'noChoose'}}" bindtap="getSearchContent">搜索</button>
+    </view> -->
+
+    <!-- 顶部搜索框 -->
+    <view class="search">
+        <view class="srcExt">
+            <input type="text" name="search" id="search" placeholder="搜索" class="inputExt" bindconfirm="searchTap" bindblur="searchTap" />
+        </view>
+    </view>
+    <!-- 全部活动 -->
+    <view class="actTop" style="opacity: {{ctnOpacity}}">
+        <!-- 活动卡片 -->
+        <block wx:for="{{activity}}" wx:key="item">
+            <view class="actBox" style="height: {{height*0.35+'px'}};" bindtap="toCourseDetail" data-fid="{{item.id}}">
+                <!-- 活动缩略图 -->
+                <view class="actImg">
+                    <image src="{{item.pic}}" mode="aspectFill"></image>
+                </view>
+                <view class="ctnBox">
+                    <!-- 活动主题 -->
+                    <view class="actTitle">{{item.title}}</view>
+                    <view class="descBox">
+                        <!-- 报名时间 -->
+                        <view class="ddl">报名截止: <text style="color: #6177ff;">{{item.end_time}}</text></view>
+                        <!-- 报名人数 -->
+                        <view class="numBox">
+                            <view>已报名：{{item.sign_num==''?0:item.sign_num}}</view>
+                            <image src="/icon/account.png" mode="widthFix"></image>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </block>
+    </view>
+
+
+</view>

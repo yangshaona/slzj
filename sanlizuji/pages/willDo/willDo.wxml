@@ -1,0 +1,32 @@
+<!--pages/willDo/willDo.wxml-->
+
+<!-- 导师端专属 -->
+
+<!-- 总页面 -->
+<view wx:if="{{activity==''}}" style="margin: 3%;">暂无要进行的活动</view>
+<view wx:else class="total" id="total">
+    <!-- 顶部标题-->
+    <!-- <view class="title" style="padding-top:{{statusHeight+'px'}};">将要进行</view> -->
+
+    <!-- 全部活动 -->
+    <view class="actTop">
+        <block wx:for="{{activity}}" wx:key="item">
+            <view class="actBox" style="height: 300px;" data-id="{{item.courseid}}" bindtap="toCourseDetail">
+                <image src="{{item.imagesurl}}" mode="widthFix" class="actImg"></image>
+                <view class="actCtn">
+                    <text class="actTtl">{{item.coursename}}</text>
+                    <view class="actTeacher">
+                        <image src="/icon/address.png" mode="widthFix"></image>
+                        <view>{{item.province}}{{item.city}}</view>
+                    </view>
+                    <view class="actDate">
+                        <view class="actDesc">开始日期: <text style="color: #6177ff;">{{item.startTime}}</text></view>
+                        <view class="actDesc">结束日期: <text style="color: #6177ff;">{{item.endTime}}</text></view>
+                    </view>
+                    <view></view>
+                </view>
+            </view>
+        </block>
+    </view>
+
+</view>

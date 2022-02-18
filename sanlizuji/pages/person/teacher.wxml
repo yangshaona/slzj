@@ -1,0 +1,40 @@
+<!--pages/person/teacher.wxml-->
+<!--pages/person/demo.wxml-->
+<!-- 顶部标题栏 -->
+<!-- <view class="top" style="padding-top: {{statusHeight+16}}px;">
+    个人中心
+</view> -->
+
+<!-- 用户基本信息栏 -->
+<view class="infoBox">
+    <view class="avator">
+        <open-data type="userAvatarUrl"></open-data>
+    </view>
+    <view style="display: block; width: 55%;">
+        <view class="infoCtn">
+            <open-data type="userNickName"></open-data>
+            <image src="{{sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
+        </view>
+        <view class="identity">{{identity}}</view>
+    </view>
+</view>
+
+<!-- 数据展示栏 -->
+<view class="dataBox">
+    <block wx:for="{{userInfo}}" wx:key="item">
+        <view class="data">
+            <view>{{item.data}}</view>
+            <view>{{item.desc}}</view>
+        </view>
+    </block>
+</view>
+
+<!-- 小组件 -->
+<view class="widgetsBox">
+    <block wx:for="{{teacher_widgets}}" wx:key="id">
+        <view class="widgets" data-id="{{item.id}}" bindtap="teacherWidgetsTap">
+            <image src="{{item.icon}}" mode="widthFix"></image>
+            <view>{{item.desc}}</view>
+        </view>
+    </block>
+</view>

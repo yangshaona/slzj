@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+        "desc": "/components/desc/desc"
+    },
+    "navigationBarTitleText": "确认订单",
+    "backgroundColor": "#f6f6f6"
+}

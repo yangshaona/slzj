@@ -1,0 +1,40 @@
+<!--pages/journey/journey.wxml-->
+<!-- 顶部标题 -->
+
+
+<!-- 活动展示卡片 -->
+<view style="margin: 5%;font-size: 32rpx;" wx:if="{{journey=='无正在进行的活动行程'||journey==''}}">无正在进行的活动行程</view>
+<view wx:else>
+    <block wx:for="{{journey}}" wx:key="item">
+        <view class="total">
+            <view class="actCard" style="height: 600rpx;" data-fid="{{item[0].courseid}}" bindtap="toCourseDetail">
+                <image src="{{item[0].pic}}" mode="widthFix" class="actImg"></image>
+                <view class="actInfo">
+                    <text class="actName">{{item[0].course_name}}</text>
+                    <view class="actDate">
+                        <view>开始: <text style="color: #6177ff;">{{item[0].SignIn_start_day}}</text></view>
+                        <view>结束: <text style="color: #6177ff;">{{item[0].SignIn_end_day}}</text></view>
+                    </view>
+                </view>
+            </view>
+
+            <!-- 第n天 -->
+            <view class="journeyTitle">— 活动行程 —</view>
+            <view class="journeyTop">
+                <block wx:for="{{item}}" wx:key="item">
+                    <view class="oneDay" data-id="{{item.day}}">
+                        <view class="day">◉ 第{{item.day}}天</view>
+                        <view class="event">
+                            <image src="/icon/remark.png" mode="widthFix" class="journeyIcon"></image>
+                            <view class="desc">{{item.name}}</view>
+                        </view>
+                        <view class="local">
+                            <image src="/icon/address.png" mode="widthFix" class="journeyIcon"></image>
+                            <view class="desc">{{item.location}}</view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+        </view>
+    </block>
+</view>

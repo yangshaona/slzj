@@ -1,0 +1,38 @@
+<!--pages/person_info/parent_info.wxml-->
+<!-- <view class="info_desc_box">个人信息</view> -->
+<view class="primary">
+    <view class="info_desc">
+        <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
+        <desc inner-text="{{user.name}}" icon="/icon/account.png"></desc>
+        <desc inner-text="{{user.province}}{{user.city}}" icon="/icon/address.png"></desc>
+        <desc inner-text="{{user.kids==''?'未绑定孩子':user.kids}}" icon="/icon/parent_kid.png"></desc>
+    </view>
+    <view>
+        <view class="desc">绑定孩子
+        </view>
+        <button class="bind" type="button" bindtap="Bind">绑定</button>
+    </view>
+    <button class="logout" bindtap="logout" type="button">退出登录</button>
+</view>
+<view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'></view>
+<view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
+    <view class='windowRow'>
+        <text class='userTitle'>监护人信息
+  </text>
+        <view class='back' bindtap='back'>
+            返回
+        </view>
+    </view>
+    <view class='wishName'>孩子姓名：
+        <input bindinput='nameInput' placeholder='请输入内容' class='wish_put'></input>
+    </view>
+    <view class='wishName'>孩子身份证：
+        <input bindinput='idInput' placeholder='请输入内容' class='wish_put'></input>
+    </view>
+    <view class='wishName'>孩子手机号：
+        <input bindinput='phoneInput' placeholder='请输入内容' class='wish_put'></input>
+    </view>
+    <view class='wishbnt'>
+        <button class='wishbnt_bt' bindtap='ok'>确定</button>
+    </view>
+</view>

@@ -1,0 +1,36 @@
+<!--pages/pay/confirm.wxml-->
+
+<!-- 订单信息 -->
+<view class="card">
+    <!-- 课程标题 -->
+    <view class="title">{{order.title}}</view>
+    <!-- 起始日期 -->
+    <desc inner-text="{{order.signIn_date_start}}~{{order.signIn_date_end}}" icon="/icon/time2.png"></desc>
+    <!-- 价格 -->
+    <view class="price">￥{{order.price}}</view>
+</view>
+
+<!-- 学员信息 -->
+<view class="card">
+    <view class="stu_title">学员信息</view>
+    <view class="stu_box">
+        <view class="stu_desc">学员</view>
+        <view class="stu">{{userinfo.name}}</view>
+        <!-- <picker class="stu" mode="selector" range="{{stu_arr}}" value="{{idx}}" bindchange="stuChange">
+            <view style="color: #888888">{{idx == -1 ? '选择学员>' : userinfo.name}}</view>
+        </picker> -->
+    </view>
+</view>
+
+<!-- 温馨提示 -->
+<view class="tips">
+    *请您仔细阅读<text style="color: #6177ff;" bindtap="toBuyInfo" data-id="{{order.id}}">购买须知</text>，点击提交订单即代表您已阅读并同意条款内容。
+</view>
+
+<!-- 底部确认栏 -->
+<view class="bottom" style="bottom: 0px;">
+    <view class="bottom_desc">
+        应付：<text style="color: #6177ff;">￥{{order.price}}</text>
+    </view>
+    <button class="submit" bindtap="checkSubmit">提交订单</button>
+</view>

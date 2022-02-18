@@ -1,0 +1,2 @@
+/* pages/detail/service.wxss */
+@import '../detail/school.wxss';

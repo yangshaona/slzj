@@ -1,0 +1,26 @@
+<!--pages/person_info/teacher_info.wxml-->
+<wxs src="../../utils/subut.wxs" module="tools"></wxs>
+<view class="primary">
+    <view class="info_desc">
+        <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
+        <desc inner-text="{{user.name}}" icon="/icon/account.png"></desc>
+        <desc inner-text="{{user.birthday}}" icon="/icon/birthday.png"></desc>
+        <desc inner-text="{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
+        <desc inner-text="{{user.phone==''?'无':tools.sub(user.phone, 3, 1)}}" icon="/icon/phone.png"></desc>
+
+        <view wx:if="{{user.type==0}}">
+            <desc inner-text="企业" icon="/icon/edu.png"></desc>
+        </view>
+        <view wx:elif="{{user.type==1}}">
+            <desc inner-text="学校" icon="/icon/edu.png"></desc>
+        </view>
+        <view wx:elif="{{user.type==1}}">
+            <desc inner-text="兼职" icon="/icon/edu.png"></desc>
+        </view>
+        <view wx:else>
+            <desc inner-text="未知" icon="/icon/edu.png"></desc>
+        </view>
+        <desc inner-text="{{user.province}}{{user.city}}" icon="/icon/address.png"></desc>
+    </view>
+    <button class="logout" bindtap="logout" type="button">退出登录</button>
+</view>

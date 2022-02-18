@@ -1,0 +1,171 @@
+/* pages/news/news.wxss */
+
+
+/* pages/mycourse/mycourse_stu.wxss */
+
+
+/* pages/course/course.wxss */
+
+
+/* 顶部标题 */
+
+.top {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5%;
+    background: white;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.top::after {
+    content: '';
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 10%;
+    height: 10px;
+    background-image: linear-gradient(to right, #91a0ff, #5e73ff);
+    border-radius: 1rem;
+    margin: -5px 40% auto 40%;
+    z-index: -1;
+}
+
+.total {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    background: white;
+}
+
+
+/* 顶部标题 */
+
+.topTitle {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center !important;
+    color: black;
+    padding: 0% 2.5% 2.5% 2.5%;
+    margin-bottom: 0;
+}
+
+
+/* 活动卡片 */
+
+.actTop {
+    display: block;
+    width: 100%;
+}
+
+
+/* 标题栏 */
+
+.title {
+    display: block;
+    box-sizing: border-box;
+    width: 95%;
+    font-size: 1.25rem !important;
+    margin: 0.5rem 0 2rem 5%;
+    font-weight: bold !important;
+    padding: 0 0 0 2%;
+    border-left: 2px #6177ff solid;
+}
+
+
+/* 活动卡片 */
+
+.actBox {
+    display: block;
+    box-sizing: border-box;
+    width: 90%;
+    height: 15rem;
+    background: whitesmoke;
+    margin: 5%;
+    padding: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0px 1px 5px #aaaaaa;
+}
+
+
+/* 缩略图容器 */
+
+.actImg {
+    height: 65% !important;
+    overflow: hidden;
+}
+
+
+/* 缩略图 */
+
+.actImg image {
+    width: 100% !important;
+    height: 100%;
+}
+
+
+/* 卡片下部分 */
+
+.ctnBox {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 35% !important;
+    overflow: hidden;
+    padding: 5% 2.5% 2.5% 5%;
+}
+
+
+/* 活动标题 */
+
+.actTitle {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 0 4% 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ddl及报名人数 */
+
+.descBox {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 0.75rem;
+}
+
+.ddl {
+    display: block;
+    width: 40%;
+    text-align: left;
+    font-weight: 100 !important;
+    color: #888888;
+    margin: auto 0;
+}
+
+.numBox {
+    display: flex;
+    box-sizing: border-box;
+    width: 60%;
+    flex-direction: row-reverse;
+}
+
+.numBox image {
+    width: 1rem;
+    position: relative;
+    margin: auto 0;
+}
+
+.numBox view {
+    text-align: right;
+    margin: auto 10rpx;
+    color: #6177ff;
+}

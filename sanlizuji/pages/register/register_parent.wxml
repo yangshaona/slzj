@@ -1,0 +1,55 @@
+<!--pages/register/register_parent.wxml-->
+<!-- 照片上传还没搞 -->
+<!-- 注册框 -->
+<block wx:if="{{!cangetUserInfo}}">
+    <view class="primary">
+        <button class="submit" bindtap="getNickName">注册</button>
+        <button class="submit" bindtap="login">登录</button>
+    </view>
+</block>
+<block wx:if="{{cangetUserInfo}}">
+    <view class="ctnBox">
+        <form bindsubmit="submit">
+            <view>
+                <view class="desc">姓名
+                    <image mode="widthFix" src="/icon/account.png"></image>
+                </view>
+                <input type="text" name="name" id="name" placeholder="姓名" />
+            </view>
+            <view>
+                <view class="desc">性别
+                    <image mode="widthFix" src="/icon/sex.png"></image>
+                </view>
+                <radio-group name="sex" id="sex" class="box" style="display: flex;">
+                    <label style="width: 50%;display: block;"><radio value="男">男</radio></label>
+                    <label style="width: 50%;display: block;"><radio value="女">女</radio></label>
+                </radio-group>
+            </view>
+            <view>
+                <view class="desc">昵称(微信授权获取)</view>
+                <input type="text" disabled="true" value="{{nickName}}" />
+            </view>
+            <view>
+                <view class="desc">手机号
+                    <image mode="widthFix" src="/icon/phone.png"></image>
+                </view>
+                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" />
+            </view>
+            <view>
+                <view class="desc">地区
+                    <image mode="widthFix" src="/icon/address.png"></image>
+                </view>
+                <picker name="region" id="region" mode="multiSelector" value="{{reg_idx == null ? '' : reg}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
+                    {{reg_idx == null ? "请选择" : reg}}
+                </picker>
+            </view>
+            <!-- <view>
+                <view class="desc">绑定孩子
+                </view>
+                <button class="bind">绑定</button>
+            </view> -->
+            <!-- 提交检查/注册 -->
+            <button form-type="submit" class="submit">注册</button>
+        </form>
+    </view>
+</block>

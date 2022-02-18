@@ -1,0 +1,26 @@
+/* components/desc/desc.wxss */
+
+.desc_box {
+    display: flex;
+    box-sizing: border-box;
+    width: 95%;
+    margin: 4% 2.5%;
+}
+
+.icon {
+    width: 1.35rem;
+    margin: auto 2.5% auto 0;
+}
+
+.desc {
+    font-size: 1rem;
+    margin: auto 2%;
+    color: #444444;
+}
+
+.line {
+    width: 100%;
+    margin-left: 5rpx;
+    margin-right: 5rpx;
+    border-bottom: 1rpx solid rgb(212, 209, 209);
+}

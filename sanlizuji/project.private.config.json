@@ -1,0 +1,93 @@
+{
+    "setting": {},
+    "condition": {
+        "plugin": {
+            "list": []
+        },
+        "game": {
+            "list": []
+        },
+        "gamePlugin": {
+            "list": []
+        },
+        "miniprogram": {
+            "list": [
+                {
+                    "id": -1,
+                    "name": "pages/shop/shop",
+                    "pathName": "pages/shop/shop",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": -1,
+                    "name": "pages/index/index",
+                    "pathName": "pages/index/index",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": -1,
+                    "name": "pages/goodsDetail2/detail",
+                    "pathName": "pages/goodsDetail2/detail",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": -1,
+                    "name": "pages/detail/detail",
+                    "pathName": "pages/detail/detail",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": -1,
+                    "name": "pages/index/index",
+                    "pathName": "pages/index/index",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": 5,
+                    "name": "pages/mine/myDetail/myDetail",
+                    "pathName": "pages/mine/myDetail/myDetail",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": 6,
+                    "name": "pages/mine/myInfo/myInfo",
+                    "pathName": "pages/mine/myInfo/myInfo",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": -1,
+                    "name": "pages/appraise/appraise",
+                    "pathName": "pages/appraise/appraise",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "id": -1,
+                    "name": "pages/order/order",
+                    "pathName": "pages/order/order",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/register_identity/register_identity",
+                    "pathName": "pages/register_identity/register_identity",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/vipRegister/vipRegister",
+                    "pathName": "pages/vipRegister/vipRegister",
+                    "query": "",
+                    "scene": null
+                }
+            ]
+        }
+    }
+}

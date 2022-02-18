@@ -1,0 +1,167 @@
+<!--pages/detail/detail.wxml-->
+<view class="top">
+    <!-- <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
+        <block wx:for="{{course_detail.pic}}" wx:key="item">
+            <swiper-item class="swiper-item"> -->
+    <image class="actImg" src="{{course_detail.pic}}" mode="widthFix"></image>
+    <!-- </swiper-item>
+        </block>
+    </swiper> -->
+</view>
+
+<view class="infoBox">
+    <view class="theme">{{course_detail.title}}</view>
+    <view class="price">
+        <text>￥{{course_detail.price}}</text>
+        <view>起</view>
+    </view>
+
+
+    <view class="date-num">
+        <view class="date">报名时间：<text style="color: #6177ff;">{{course_detail.sign_date_start}}~{{course_detail.sign_date_end}}</text></view>
+        <view class="num">
+            <view><text style="color: #6177ff;">已报名：{{course_detail.sign_num==""?0:course_detail.sign_num}}</text></view>
+            <image src="/icon/account.png" mode="widthFix"></image>
+        </view>
+    </view>
+</view>
+
+<view class="infoBox" data-id="{{service_club.id}}" bindtap="serviceDetail">
+    <view class="service">
+        <image src="{{service_club.pic}}" mode="widthFix" class="logo"></image>
+        <view class="serviceName">{{service_club.club_name}}</view>
+        <image src="/icon/prove.png" mode="widthFix" class="icon"></image>
+    </view>
+    <view class="desc">
+        <view style='margin-left:.3em;margin-right:.15em;'>
+            <rich-text nodes="{{service_club.introduce==''?'暂无机构简介':service_club.introduce}}"></rich-text>
+        </view>
+    </view>
+</view>
+
+<view class="infoBox">
+    <view class="infoTtl">活动简介</view>
+    <view>{{course_detail.introduction!=""?course_detail.introduction:"暂无活动简介"}}</view>
+</view>
+<view class="infoBox">
+    <view class="infoTtl">活动详情</view>
+    <view style='margin-left:.3em;margin-right:.15em;'>
+        <rich-text nodes="{{course_detail.text==''?'暂无活动详情':course_detail.text}}"></rich-text>
+    </view>
+</view>
+
+<!-- 第n天 -->
+<view class="journeyTitle">— 活动行程 —</view>
+<view class="journey" wx:if="{{journey==''}}">暂无活动行程安排</view>
+<view class="journeyTop" wx:else>
+    <block wx:for="{{journey}}" wx:key="item">
+        <view class="oneDay" data-id="{{item.day}}">
+            <view class="day">◉ 第{{item.day}}天</view>
+            <view class="event">
+                <image src="/icon/remark.png" mode="widthFix" class="journeyIcon"></image>
+                <view class="desc">{{item.name}}</view>
+            </view>
+            <view class="local">
+                <image src="/icon/address.png" mode="widthFix" class="journeyIcon"></image>
+                <view class="desc">{{item.location}}</view>
+            </view>
+            <view class="local">
+                <image src="/icon/时钟.png" mode="widthFix" class="journeyIcon"></image>
+                <view class="desc">{{item.start_time}}~{{item.end_time}}</view>
+            </view>
+        </view>
+    </block>
+</view>
+
+<!-- 评论区 -->
+<view class="journeyTitle">— 活动评价 —</view>
+<view class="journey" wx:if="{{comment==''}}">该活动暂无评价</view>
+<view class="infoBox" wx:else>
+    <block wx:for="{{comment}}" wx:key="item">
+        <view class="comment">
+            <view class="accountInfo">
+                <view class="avatorBox" style="height: 90rpx;">
+                    <image src="{{avator}}" class="avator" mode="widthFix"></image>
+                </view>
+                <view class="nickName">{{item.username}}</view>
+            </view>
+            <view class="commentCtn">
+                <text>{{item.coursem}}</text>
+            </view>
+        </view>
+    </block>
+</view>
+
+<!-- 评价栏 -->
+<block wx:if="{{cmt_display}}">
+    <view class="infoBox">
+        <view class="rating">
+            <view class="ttl">服务：</view>
+            <block wx:for="{{service_rate}}" wx:key="id">
+                <image src="{{item.icon}}" mode="widthFix" class="star" data-value="{{item.rate}}">
+                    <view class="star_half_1" data-name="service" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+                    <view class="star_half_2" data-name="service" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+                </image>
+            </block>
+        </view>
+        <view class="rating">
+            <view class="ttl">课程：</view>
+            <block wx:for="{{course_rate}}" wx:key="id">
+                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+                    <view class="star_half_1" data-name="course" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+                    <view class="star_half_2" data-name="course" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+                </image>
+            </block>
+        </view>
+        <view class="rating">
+            <view class="ttl">住宿：</view>
+            <block wx:for="{{dorm_rate}}" wx:key="id">
+                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+                    <view class="star_half_1" data-name="dorm" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+                    <view class="star_half_2" data-name="dorm" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+                </image>
+            </block>
+        </view>
+        <view class="rating">
+            <view class="ttl">餐饮：</view>
+            <block wx:for="{{food_rate}}" wx:key="id">
+                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+                    <view class="star_half_1" data-name="food" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+                    <view class="star_half_2" data-name="food" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+                </image>
+            </block>
+        </view>
+        <view class="rating">
+            <view class="ttl">导师：</view>
+            <block wx:for="{{teacher_rate}}" wx:key="id">
+                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+                    <view class="star_half_1" data-name="teacher" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+                    <view class="star_half_2" data-name="teacher" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+                </image>
+            </block>
+        </view>
+
+        <!-- 评价填写 -->
+        <form bindsubmit="cmt_submit">
+            <textarea type="text" class="cmt_input" name="comment" placeholder="评价一下吧"></textarea>
+            <button form-type="submit" class="button1">提交评价</button>
+        </form>
+    </view>
+</block>
+
+
+<!-- 底部fix栏 -->
+<view class="bottom">
+    <view class="bottomHalf1">
+        <image src="/icon/kefu.png" mode="widthFix"></image>
+        <view>客服</view>
+    </view>
+    <!-- <view class="bottomHalf1" bindtap="commentTap">
+        <image src="/icon/message2.png" mode="widthFix"></image>
+        <view>评论</view>
+    </view> -->
+    <view class="bottomHalf2">
+        <button class="button1" id="teacher" bindtap="teacherSignUp">教师报名</button>
+        <button class="button2" id="student" bindtap="studentSignUp">学生报名</button>
+    </view>
+</view>

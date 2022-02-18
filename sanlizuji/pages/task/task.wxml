@@ -1,0 +1,18 @@
+<!--pages/task/task.wxml-->
+<view style="margin: 5%;font-size: 32rpx;" wx:if="{{task=='无正在进行的活动行程'||task.length==0}}">暂无活动任务</view>
+
+<view class="total" wx:else>
+    <!-- 活动标题 -->
+    <view class="actTitle">当前活动: {{mission[0].course_name}}</view>
+    <!-- 任务卡片 -->
+    <block wx:for="{{task}}" wx:key="item">
+        <view class="taskBox">
+            <view class="day">第{{item.day}}天</view>
+            <view class="locateBox">
+                <image class="locateImg" mode="widthFix" src="/icon/address.png"></image>
+                <view class="locate">{{item.location}}</view>
+            </view>
+            <view class="task">{{item.task}}</view>
+        </view>
+    </block>
+</view>
