@@ -1,0 +1,12 @@
+<template name="unbounded">
+  
+
+  <view class='watch-more' >
+    <image src="/icon/未绑定.png" mode="widthFix">
+    </image>
+    <view>
+      暂未绑定孩子信息
+  </view>
+    <text  catchtap='_goBound' >绑定孩子</text>
+  </view>
+</template>

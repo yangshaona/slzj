@@ -1,5 +1,7 @@
 // pages/doing/doing_parent.js
 const app = getApp();
+let id_flag = wx.getStorageSync('id_flag')
+let user = wx.getStorageSync('user')
 Page({
 
     /**
@@ -8,6 +10,8 @@ Page({
     data: {
 
         activity: "",
+        user: user,
+        id_flag: id_flag
     },
     //跳转到对应孩子的正在活动
     toStudentActiviDetail: function(e) {
@@ -17,13 +21,25 @@ Page({
             url: './doing_stuprt?userid=' + e.currentTarget.dataset.id,
         })
     },
+    // 监护人绑定孩子
+    _goBound: function() {
+        id_flag = wx.getStorageSync('id_flag');
+        wx.navigateTo({
+            url: '../person_info/parent_info',
+        })
 
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        let user = wx.getStorageSync('user')
         let that = this;
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag')
+        that.setData({
+            user: user,
+            id_flag: id_flag
+        })
         wx.request({
             url: app.globalData.url + 'WxSign/ParentGetStuActivityDetail',
             data: {
@@ -36,17 +52,6 @@ Page({
                 console.log("获取到真在活动的孩子的信息")
                 console.log(res)
                 console.log(res.data.data.data)
-                    // var doing = [];
-                    // if (res.data.data.data[0].length == 0) {
-                    //     that.setData({
-                    //         activity: "无正在进行的课程",
-                    //     })
-                    // } else {
-                    //     //     that.setData({
-                    //     //         doing: res.data.data[0],
-                    //     //         teacher: res.data.teacher[0],
-                    //     //         course: res.data.data[0]
-                    //     //     })
                 var doing = [],
                     activity = [];
                 console.log(res.data.data.data[0])
@@ -98,7 +103,12 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag')
+        this.setData({
+            user: user,
+            id_flag: id_flag
+        })
     },
 
     /**

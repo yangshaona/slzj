@@ -1,5 +1,7 @@
 // pages/journey/journey.js
 const app = getApp();
+let user = wx.getStorageSync('user');
+let id_flag = wx.getStorageSync('id_flag');
 Page({
 
     /**
@@ -22,16 +24,28 @@ Page({
         start: '2022-01-21',
         end: '2022-02-22',
         // 活动
-        journey: []
+        journey: [],
+        user: user,
+        id_flag: id_flag
     },
 
+    //登录查看更多
+    _goLogin: function() {
+        wx.navigateTo({
+            url: '../register/register_stu',
+        })
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
         let that = this;
-        let user = wx.getStorageSync('user');
-        let id_flag = wx.getStorageSync('id_flag');
+        user = wx.getStorageSync('user')
+        id_flag = wx.getStorageSync('id_flag');
+        that.setData({
+            id_flag: id_flag,
+            user: user
+        })
         var modelName = "";
         var activity = [],
             journey = [];
@@ -120,6 +134,14 @@ Page({
             url: '../detail/detail?id=' + fid,
         })
     },
+    // 监护人绑定孩子已经孩子绑定监护人
+    _goBound: function() {
+        id_flag = wx.getStorageSync('id_flag');
+        wx.navigateTo({
+            url: '../person_info/parent_info',
+        })
+
+    },
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -131,7 +153,12 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
+        user = wx.getStorageSync('user')
+        id_flag = wx.getStorageSync('id_flag');
+        this.setData({
+            id_flag: id_flag,
+            user: user
+        })
     },
 
     /**

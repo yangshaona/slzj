@@ -266,22 +266,24 @@ App({
         console.log(id_flag)
         console.log(user);
         var that = this;
-        that.globalData.realTime = setInterval(function() {
-                // 请求服务器数据
-                if (id_flag == "teacher") {
-                    that.TeaNowCourse()
+        if (user != null && user != '') {
+            that.globalData.realTime = setInterval(function() {
+                    // 请求服务器数据
 
-                }
-                if (id_flag == 'student') {
-                    that.ActiveStuDetail();
-                }
+                    if (id_flag == "teacher") {
+                        that.TeaNowCourse()
 
-            }, 30000) //间隔时间
+                    }
+                    if (id_flag == 'student') {
+                        that.ActiveStuDetail();
+                    }
 
-        // 更新数据
-        that.globalData.realTime = that.globalData.realTime; //实时数据对象(用于关闭实时刷新方法)
+                }, 30000) //间隔时间
 
+            // 更新数据
+            that.globalData.realTime = that.globalData.realTime; //实时数据对象(用于关闭实时刷新方法)
 
+        }
     },
     //上传学生定位
     UpStuLocation: function(courseid, latitude, longitude) {
@@ -344,12 +346,13 @@ App({
         let user = wx.getStorageSync('user')
         wx.getLocation({
             type: "gcj02",
-            altitude: 'false',
+            altitude: 'true',
             isHighAccuracy: 'true',
             highAccuracyExpireTime: '3500',
             success: (res) => {
                 this.globalData.latitude = res.latitude;
                 this.globalData.longtitude = res.longitude;
+                console.log("导师或学生上传位置")
                 console.log(res.latitude);
                 console.log(res.longitude)
                 if (id_flag == 'teacher') { this.UpTeaLocation(id, this.globalData.latitude, this.globalData.longtitude) }

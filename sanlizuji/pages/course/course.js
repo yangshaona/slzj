@@ -213,6 +213,7 @@ Page({
             icon: 'success',
             duration: 500
         })
+        this.getSearchContent();
         setTimeout(function() {
             e.detail.value = "";
         }, 500)

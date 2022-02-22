@@ -19,7 +19,7 @@
         <view style="display: block; width: 55%;">
             <view class="infoCtn">
                 <open-data type="userNickName"></open-data>
-                <image src="{{sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
+                <image src="{{user.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
             </view>
             <view class="identity">{{identity}}</view>
             <view wx:if="{{user.phone!=''}}">
@@ -63,7 +63,7 @@
         <view style="display: block; width: 55%;">
             <view class="infoCtn">
                 <open-data type="userNickName"></open-data>
-                <image src="{{sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
+                <image src="{{user.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
             </view>
             <view class="identity">{{identity}}</view>
             <view wx:if="{{user.phone!=''}}">
@@ -96,13 +96,13 @@
 <!-- 学生用户基本信息栏 -->
 <view wx:else>
     <view class="infoBox">
-        <view class="avator" style="height: {{imgHeight}}px;">
+        <view class="avator" style="height: {{imgHeight}}px;" bindtap="upImage">
             <image src="{{avator==''?'/icon/默认头像.png':avator}}" mode="widthFix"></image>
         </view>
-        <view style="display: block; width: 55%;" wx:if="{{user!=null}}">
+        <view style="display: block; width: 55%;" wx:if="{{user!=null&&user!=''}}">
             <view class="infoCtn">
                 <view>{{user.name}}</view>
-                <image src="{{sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
+                <image src="{{user.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
             </view>
 
             <view class="identity">{{identity}}</view>

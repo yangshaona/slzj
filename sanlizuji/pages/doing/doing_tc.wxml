@@ -1,42 +1,54 @@
 <!--pages/doing/doing_tc.wxml-->
-<view wx:if="{{title=='无正在进行的课程'}}" style="margin: 3%; color: #6177ff;">{{title}}</view>
+<import src="../template/scope/scope.wxml" />
+<template is="scope" wx:if="{{!user}}" />
 <view wx:else>
-    <view class="title">正在活动：<text style="color: #6177ff;">{{title}}</text></view>
-
-    <!-- 一个人一个卡片 -->
-    <block wx:for="{{students}}" wx:key="item">
-        <view class="card" style="height: 300rpx;" data-id="{{item.username}}" bindtap="toStudent">
-            <view class="avator">
-                <image src="{{item.photo==''?'/icon/用户头像.png':item.photo}}" mode="aspectFill"></image>
+    <block wx:if="{{title=='无正在进行的课程'}}">
+        <view class="empty">
+            <image src="/icon/暂无搜索结果.png" mode="widthFix">
+            </image>
+            <view>
+                暂无正在进行的课程
             </view>
-            <view class="infoBox">
-                <view class="info">
-                    <view class="name">{{item.username}}</view>
-                    <image src="{{item.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
-                </view>
-                <view class="info">
-                    <image src="/icon/group.png" mode="widthFix" class="icon"></image>
-                    <view class="desc">小组：<text style="color: #6177ff;">{{item.groupnum==''?"暂未安排":item.groupnum}}</text></view>
-                </view>
-                <view class="info">
-                    <image src="/icon/room.png" mode="widthFix" class="icon"></image>
-                    <view class="desc">房间：<text style="color: #6177ff;">{{item.room==''?"暂未安排":item.room}}</text></view>
-                </view>
-                <view class="info">
-                    <image src="/icon/car.png" mode="widthFix" class="icon"></image>
-                    <view class="desc">车牌：<text style="color: #6177ff;">{{item.car==''?'待定':item.car}}</text></view>
-                </view>
-            </view>
-            <view class="locate">
-                <button class="primary" bindtap="getLocation" data-id="{{item.userid}}">定位</button>
-            </view>
-
         </view>
-        <view class="middle">—— {{item.username}}位置 ——</view>
-        <!-- 学生位置 -->
-        <!-- <button class="primary" bindtap="getLocation">获取定位</button> -->
-        <block wx:if="{{location.length != 0&&stuid==item.userid}}">
-            <map class="middle" style="height: 600rpx;" name="guide" id="guide" latitude="{{item.latitude}}" longitude="{{item.longitude}}" show-location="true" markers="{{mark}}"></map>
-        </block>
     </block>
+    <view wx:else>
+        <view class="title">正在活动：<text style="color: #6177ff;">{{title}}</text></view>
+
+        <!-- 一个人一个卡片 -->
+        <block wx:for="{{students}}" wx:key="item">
+            <view class="card" style="height: 300rpx;" data-id="{{item.username}}">
+                <view class="avator">
+                    <image src="{{item.photo==''?'/icon/用户头像.png':item.photo}}" mode="aspectFill"></image>
+                </view>
+                <view class="infoBox">
+                    <view class="info">
+                        <view class="name">{{item.username}}</view>
+                        <image src="{{item.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
+                    </view>
+                    <view class="info">
+                        <image src="/icon/group.png" mode="widthFix" class="icon"></image>
+                        <view class="desc">小组：<text style="color: #6177ff;">{{item.groupnum==''?"暂未安排":item.groupnum}}</text></view>
+                    </view>
+                    <view class="info">
+                        <image src="/icon/room.png" mode="widthFix" class="icon"></image>
+                        <view class="desc">房间：<text style="color: #6177ff;">{{item.room==''?"暂未安排":item.room}}</text></view>
+                    </view>
+                    <view class="info">
+                        <image src="/icon/car.png" mode="widthFix" class="icon"></image>
+                        <view class="desc">车牌：<text style="color: #6177ff;">{{item.car==''?'待定':item.car}}</text></view>
+                    </view>
+                </view>
+                <view class="locate">
+                    <button class="primary" bindtap="getLocation" data-id="{{item.userid}}">定位</button>
+                </view>
+
+            </view>
+            <view class="middle">—— {{item.username}}位置 ——</view>
+            <!-- 学生位置 -->
+            <!-- <button class="primary" bindtap="getLocation">获取定位</button> -->
+            <block wx:if="{{location.length != 0&&stuid==item.userid}}">
+                <map class="middle" style="height: 600rpx;" name="guide" id="guide" latitude="{{item.latitude}}" longitude="{{item.longitude}}" show-location="true" markers="{{mark}}"></map>
+            </block>
+        </block>
+    </view>
 </view>

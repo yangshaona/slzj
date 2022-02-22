@@ -1,46 +1,58 @@
 <!--pages/course/doing/doing_stu&prt.wxml-->
-<view wx:if="{{doing=='无正在进行的课程'}}" style="margin: 3%;">无正在进行的课程</view>
-<view class="total" wx:else>
-    <!-- 正在活动的标题 -->
-    <view class="actTitle">{{doing.coursename}}</view>
-    <!-- 导师名片 -->
-    <view class="teacherBox" style="height: 300rpx;">
-        <image src="{{teacher.header==''?'/icon/用户头像.png':teacher.header}}" mode="widthFix" class="teacherImg"></image>
-        <view class="teacherInfo">
-            <view class="infoTitle">导师信息</view>
-            <view class="teacherName">
-                {{teacher.name}}
-                <image src="{{teacher.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="teacherSex"></image>
-            </view>
-            <view class="teacherPhone">
-                <text style="color: #666666; border-bottom: 3px #6177ff solid;">联系方式</text>
-                <text>{{teacher.phone}}</text>
+<import src="../template/scope/scope.wxml" />
+<template is="scope" wx:if="{{!user}}" />
+<view wx:else>
+    <block wx:if="{{doing=='无正在进行的课程'}}">
+        <view class="empty">
+            <image src="/icon/暂无搜索结果.png" mode="widthFix">
+            </image>
+            <view>
+                暂无正在进行的课程
             </view>
         </view>
-    </view>
-
-    <!-- 活动信息 -->
-    <view class="middle">—— 活动信息 ——</view>
-    <!-- 信息 -->
-    <view class="dataBox">
-        <block wx:for="{{display}}" wx:key="item">
-            <view class="data">
-                <view class="descBox">
-                    <image src="{{item.icon}}" mode="widthFix" class="descImg"></image>
-                    <view class="desc1">{{item.key}}</view>
+    </block>
+    <view class="total" wx:else>
+        <!-- 正在活动的标题 -->
+        <view class="actTitle">{{doing.coursename}}</view>
+        <!-- 导师名片 -->
+        <view class="teacherBox" style="height: 300rpx;">
+            <image src="{{teacher.header==''?'/icon/用户头像.png':teacher.header}}" mode="widthFix" class="teacherImg"></image>
+            <view class="teacherInfo">
+                <view class="infoTitle">导师信息</view>
+                <view class="teacherName">
+                    {{teacher.name}}
+                    <image src="{{teacher.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="teacherSex"></image>
                 </view>
-                <view class="desc2">
-                    <text>{{item.value}}</text>
+                <view class="teacherPhone">
+                    <text style="color: #666666; border-bottom: 3px #6177ff solid;">联系方式</text>
+                    <text>{{teacher.phone}}</text>
                 </view>
             </view>
-        </block>
-    </view>
-    <!-- 活动信息 -->
-    <view class="middle">—— 导师位置 ——</view>
-    <!-- 导师位置 -->
-    <!-- <button class="primary" bindtap="getLocation">获取定位</button> -->
-    <block wx:if="{{location.length != 0}}">
-        <map style="height: 800rpx;" name="guide" id="guide" latitude="{{location[0]}}" longitude="{{location[1]}}" show-location="true" markers="{{mark}}"></map>
-    </block>
+        </view>
 
+        <!-- 活动信息 -->
+        <view class="middle">—— 活动信息 ——</view>
+        <!-- 信息 -->
+        <view class="dataBox">
+            <block wx:for="{{display}}" wx:key="item">
+                <view class="data">
+                    <view class="descBox">
+                        <image src="{{item.icon}}" mode="widthFix" class="descImg"></image>
+                        <view class="desc1">{{item.key}}</view>
+                    </view>
+                    <view class="desc2">
+                        <text>{{item.value}}</text>
+                    </view>
+                </view>
+            </block>
+        </view>
+        <!-- 活动信息 -->
+        <view class="middle">—— 导师位置 ——</view>
+        <!-- 导师位置 -->
+        <!-- <button class="primary" bindtap="getLocation">获取定位</button> -->
+        <block wx:if="{{location.length != 0}}">
+            <map style="height: 800rpx;" name="guide" id="guide" latitude="{{location[0]}}" longitude="{{location[1]}}" show-location="true" markers="{{mark}}"></map>
+        </block>
+
+    </view>
 </view>

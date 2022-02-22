@@ -1,5 +1,6 @@
 // pages/course/course.js
 const app = getApp();
+let user = wx.getStorageSync('user');
 Page({
 
     /**
@@ -17,7 +18,8 @@ Page({
           actNum: 报名人数
           ddl: 报名截止日期
         */
-        activity: []
+        activity: [],
+        user: user
     },
     //跳转到课程详情
     toCourseDetail: function(e) {
@@ -40,40 +42,51 @@ Page({
      */
     onLoad: function(options) {
         let that = this;
-        let user = wx.getStorageSync('user')
-        wx.request({
-            url: app.globalData.url + 'WxOther/GetTeaAct',
-            data: {
-                id: user.id,
-                openid: user.openid,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("将要进行的活动")
-                console.log(res)
+        user = wx.getStorageSync('user');
+        that.setData({
+            user: user
+        })
+        if (user != null && user != '') {
+            wx.request({
+                url: app.globalData.url + 'WxOther/GetTeaAct',
+                data: {
+                    id: user.id,
+                    openid: user.openid,
+                },
+                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                // header: {}, // 设置请求的 header
+                success: function(res) {
+                    // success
+                    console.log("将要进行的活动")
+                    console.log(res)
 
-                function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                    if (arr1.length == 0) {
-                        return [];
+                    function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
+                        if (arr1.length == 0) {
+                            return [];
+                        }
+                        let arr3 = [];
+                        arr1.map((item, index) => {
+                            arr3.push(Object.assign(item, arr2[index]));
+                        })
+                        return arr3;
                     }
-                    let arr3 = [];
-                    arr1.map((item, index) => {
-                        arr3.push(Object.assign(item, arr2[index]));
+                    that.setData({
+                        activity: mergeArr(res.data.data1, res.data.data2)
                     })
-                    return arr3;
+                },
+                fail: function() {
+                    // fail
+                },
+                complete: function() {
+                    // complete
                 }
-                that.setData({
-                    activity: mergeArr(res.data.data1, res.data.data2)
-                })
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+            })
+        }
+    },
+    //登录查看更多
+    _goLogin: function() {
+        wx.navigateTo({
+            url: '../register/register_stu',
         })
     },
 
@@ -88,7 +101,10 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
+        user = wx.getStorageSync('user');
+        this.setData({
+            user: user
+        })
     },
 
     /**

@@ -1,5 +1,7 @@
 // pages/course/doing/doing_stu&prt.js
 const app = getApp();
+let user = wx.getStorageSync('user')
+let id_flag = wx.getStorageSync('id_flag')
 Page({
 
     /**
@@ -70,12 +72,12 @@ Page({
         })
     },
 
-    // 获取定位
+    // 获取学生自身的定位
     getLocation: function(e) {
         var that = this;
         wx.getLocation({
             type: "gcj02",
-            altitude: 'false',
+            altitude: 'true',
             isHighAccuracy: 'true',
             highAccuracyExpireTime: '3500',
             success: (res) => {
@@ -125,13 +127,17 @@ Page({
                 // success
                 console.log("成功获取导师位置");
                 console.log(res);
-                var latitude = "tea_location.latitude",
-                    longitude = "tea_location.longitude";
-                that.setData({
-                    [latitude]: res.data.data[0].latitude,
-                    [longitude]: res.data.data[0].longitude,
-                });
-                that.getLocation();
+                if (res.data.data.length != 0) {
+
+                    var latitude = "tea_location.latitude",
+                        longitude = "tea_location.longitude";
+                    that.setData({
+                        [latitude]: res.data.data[0].latitude,
+                        [longitude]: res.data.data[0].longitude,
+                    });
+                    that.getLocation();
+                }
+
             },
             fail: function() {
                 // fail
@@ -141,16 +147,31 @@ Page({
             }
         })
     },
+
+    //登录查看更多
+    _goLogin: function() {
+        wx.navigateTo({
+            url: '../register/register_stu',
+        })
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+
         console.log(options)
         var userid = options.userid
         let that = this;
-        let user = wx.getStorageSync('user')
-        let id_flag = wx.getStorageSync('id_flag')
-        if (id_flag != 'parent') userid = user.id
+        user = wx.getStorageSync('user')
+        id_flag = wx.getStorageSync('id_flag');
+        this.setData({
+            id_flag: id_flag,
+            user: user
+        })
+        if (id_flag != 'parent') {
+            userid = user.id;
+        }
+
         wx.request({
             url: app.globalData.url + 'WxSign/ActiveStuDetail&id=' + userid,
             data: {},
@@ -184,6 +205,7 @@ Page({
         });
         that.getLocation();
 
+
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -197,6 +219,12 @@ Page({
      */
     onShow: function() {
         var that = this;
+        user = wx.getStorageSync('user')
+        id_flag = wx.getStorageSync('id_flag');
+        this.setData({
+            id_flag: id_flag,
+            user: user
+        })
         this.data.realTime = setInterval(function() {
 
                 // 请求服务器数据

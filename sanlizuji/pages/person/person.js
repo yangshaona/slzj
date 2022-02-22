@@ -117,6 +117,37 @@ Page({
 
         })
     },
+    //点击头像上传图片
+    upImage: function(e) {
+        wx.chooseMedia({
+            mediaType: ['image'],
+            count: 1,
+            sourceType: ['album', 'camera'],
+            success: (res) => {
+                console.log("成功上传头像")
+                console.log(res)
+                wx.showToast({
+                    title: '保存成功!',
+                    icon: 'success',
+                    duration: 800
+                })
+                console.log("头像保存成功")
+                this.setData({
+                    avator: res.tempFiles[0].tempFilePath,
+                })
+                wx.setStorageSync('avator', this.data.avator)
+                console.log(this.data.avator)
+            },
+            fail: (res) => {
+                wx.showToast({
+                    title: '选择错误',
+                    icon: 'success',
+                    duration: 800
+                })
+                console.log(res);
+            }
+        })
+    },
     /**
      * 生命周期函数--监听页面加载
      */
@@ -124,8 +155,9 @@ Page({
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
         avator = wx.getStorageSync("avator")
-
-
+        if (user != null) console.log("用户信息1", user)
+        if (user != '') console.log("用户信息2", user)
+        if (user == '') console.log("用户信息3", user)
         var height = this.data.width * 0.65 * 0.3;
         this.setData({
             user: user,

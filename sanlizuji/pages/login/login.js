@@ -104,10 +104,13 @@ Page({
                                             icon: "success",
                                             duration: 800,
                                         });
-                                        wx.navigateBack({
-                                            delta: 1, // 回退前 delta(默认为1) 页面
+                                        setTimeout(function() {
+                                            wx.navigateBack({
+                                                delta: 1, // 回退前 delta(默认为1) 页面
 
-                                        })
+                                            })
+                                        }, 800);
+
 
                                     } else {
                                         wx.showToast({

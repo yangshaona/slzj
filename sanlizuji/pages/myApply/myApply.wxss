@@ -1,5 +1,7 @@
 /* pages/myApply/myApply.wxss */
 
+@import '../template/unbounded/unbounded.wxss';
+@import '../template/scope/scope.wxss';
 .top {
     display: block;
     box-sizing: border-box;

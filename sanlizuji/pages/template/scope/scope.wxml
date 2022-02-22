@@ -1,0 +1,8 @@
+<template name="scope">
+  <view class='mifang_icon'>
+    <icon class='icon iconfont icon-home-copy'></icon>
+  </view>
+  <view class='watch-more' catchtap='_goLogin'>
+    <text >登录查看更多</text>
+  </view>
+</template>

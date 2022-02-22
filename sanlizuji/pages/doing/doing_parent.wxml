@@ -2,34 +2,52 @@
 <!-- <view wx:if="{{title=='无正在进行的课程'}}" style="margin: 3%; color: #6177ff;">{{title}}</view>
 <view wx:else>
     <view class="title">正在活动：<text style="color: #6177ff;">{{title}}</text></view> -->
+<import src="../template/unbounded/unbounded.wxml" />
+<import src="../template/scope/scope.wxml" />
+<template is="scope" wx:if="{{!user}}" />
+<view wx:else>
+    <template is="unbounded" wx:if="{{id_flag=='parent'&&user.kids==''}}" />
 
-<!-- 一个人一个卡片 -->
-<block wx:for="{{activity}}" wx:key="item">
-    <view class="card1" data-id="{{item.userid}}" bindtap="toStudentActiviDetail">
-        <view class="coursename">{{item.coursename}}</view>
-        <view class="card2">
-            <view class="avator">
-                <image src="{{item[0].header==''?'/icon/用户头像.png':item[0].header}}" mode="aspectFill"></image>
-            </view>
-            <view class="infoBox">
-
-                <view class="numBox">
-                    <image src="/icon/account.png" mode="widthFix"></image>
-                    <view>导师：{{item[0].name}}</view>
-
-                </view>
-                <view class="numBox">
-                    <image src="/icon/account.png" mode="widthFix"></image>
-                    <view>孩子：{{item.username}}</view>
-
-                </view>
-                <view class="numBox">
-                    <image src="/icon/time1.png" mode="widthFix"></image>
-                    <view>{{item.starttime}}~{{item.endtime}}</view>
-
+    <!-- 一个人一个卡片 -->
+    <view wx:else>
+        <block wx:if="{{activity.length==0}}">
+            <view class="empty">
+                <image src="/icon/暂无搜索结果.png" mode="widthFix">
+                </image>
+                <view>
+                    暂无正在进行的活动
                 </view>
             </view>
+        </block>
+        <view wx:else>
+            <block wx:for="{{activity}}" wx:key="item">
+                <view class="card1" data-id="{{item.userid}}" bindtap="toStudentActiviDetail">
+                    <view class="coursename">{{item.coursename}}</view>
+                    <view class="card2">
+                        <view class="avator">
+                            <image src="{{item[0].header==''?'/icon/用户头像.png':item[0].header}}" mode="aspectFill"></image>
+                        </view>
+                        <view class="infoBox">
+
+                            <view class="numBox">
+                                <image src="/icon/account.png" mode="widthFix"></image>
+                                <view>导师：{{item[0].name}}</view>
+
+                            </view>
+                            <view class="numBox">
+                                <image src="/icon/account.png" mode="widthFix"></image>
+                                <view>孩子：{{item.username}}</view>
+
+                            </view>
+                            <view class="numBox">
+                                <image src="/icon/time1.png" mode="widthFix"></image>
+                                <view>{{item.starttime}}~{{item.endtime}}</view>
+
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
         </view>
     </view>
-</block>
-<!-- </view> -->
+</view>

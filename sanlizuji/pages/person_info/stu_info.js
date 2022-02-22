@@ -100,7 +100,8 @@ Page({
     //退出登录
     logout: function() {
         wx.setStorageSync('user', null)
-        wx.setStorageSync('id_flag', null)
+        wx.setStorageSync('id_flag', null);
+        wx.setStorageSync('avator', null)
         app.globalData.flag_identity = [1, 0, 0]
         wx.switchTab({
             url: '../person/person',

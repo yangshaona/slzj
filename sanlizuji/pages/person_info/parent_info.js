@@ -208,17 +208,20 @@ Page({
             success: function(res) {
                 // success
                 console.log("成功获取孩子信息")
-                console.log(res)
-                    // success
+                console.log(res);
+                var _user = wx.getStorageSync('user');
+                // success
                 if (res.data.data.msg == "获取成功") {
-                    user.kids = res.data.data.data.join(',');
+                    _user.kids = res.data.data.data.join(',');
+                    wx.setStorageSync('user', _user)
 
                 } else {
                     user.kids = "未绑定孩子信息"
                 }
                 that.setData({
                     user: user
-                })
+                });
+                console.log("家长信息", user)
             },
             fail: function() {
                 // fail

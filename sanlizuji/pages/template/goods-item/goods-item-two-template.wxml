@@ -1,0 +1,21 @@
+<template name="itemTwo">
+
+  <view class="goods-item-two" bindtap='goodsDetails' data-id='{{item.id}}'>
+    <view class='item-box'>
+      <view>
+        <view>
+          <image class="border-top" src='{{item.imagesurl}}' binderror="binderrorimg" data-errorimg="{{index}}"/>
+          <view class="block-orange border-bottom flex-space-around ui-padding-10-x" style="display:box">
+              <text>报名倒计时:</text>
+              <text> {{item.endtime}}</text>
+              <!-- <view class="time-count"><count-down></count-down></view> -->
+          </view> 
+        </view>
+        <view class='goods-item-tow-text'>
+          <view class='goods-item-two-title'>{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</template>

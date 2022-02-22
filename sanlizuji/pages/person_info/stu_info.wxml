@@ -12,8 +12,8 @@
         <desc inner-text="学历：{{user.education}}" icon="/icon/edu.png"></desc>
         <desc inner-text="年级：{{user.grade}}年级" icon="/icon/grade.png"></desc>
         <desc inner-text="地址：{{user.province}} {{user.city}}" icon="/icon/address.png"></desc>
-        <desc inner-text="监护人姓名：{{user.parents}}" icon="/icon/guardian.png"></desc>
-        <desc inner-text="监护人手机：{{user.p_phone}}" icon="/icon/phone.png"></desc>
+        <desc inner-text="监护人姓名：{{user.parents==''?'未绑定':user.parents}}" icon="/icon/guardian.png"></desc>
+        <desc inner-text="监护人手机：{{user.p_phone==''?'未绑定':user.p_phone}}" icon="/icon/phone.png"></desc>
         <desc inner-text="备注信息：{{user.aller}}" icon="/icon/remark.png"></desc>
     </view>
     <view>

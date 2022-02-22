@@ -370,7 +370,7 @@ Page({
                                     Userinfo: {
                                         name: data.name,
                                         nikename: data.nickname,
-                                        // header: that.data.avator,
+                                        header: that.data.avator,
                                         openid: that.data.openid,
                                         idnum: data.idnum,
                                         birthday: data.birthday,

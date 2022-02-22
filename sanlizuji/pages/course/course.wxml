@@ -51,7 +51,14 @@
         </view>
     </view>
     <!-- 全部活动 -->
-    <view class="actTop" style="opacity: {{ctnOpacity}}">
+    <view wx:if="{{activity==''}}">
+        <view style="display: flex;justify-content: center;">
+            <image style="width: 400rpx; margin-top:30%;" mode="widthFix" src="/icon/没有找到匹配结果.png">
+            </image>
+        </view>
+        <view style="display: flex;justify-content: center;color: rgb(82, 80, 80); margin-top: 10rpx;">没有找到匹配结果...</view>
+    </view>
+    <view class="actTop" style="opacity: {{ctnOpacity}}" wx:else>
         <!-- 活动卡片 -->
         <block wx:for="{{activity}}" wx:key="item">
             <view class="actBox" style="height: {{height*0.35+'px'}};" bindtap="toCourseDetail" data-fid="{{item.id}}">

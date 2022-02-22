@@ -1,0 +1,16 @@
+<template name="search-header">
+  <view class=''>
+    <view class='index_header'>
+      <view class='header_left'>
+        <image class="small-icon-img" src="../../images/shl.png"></image>
+      </view>
+      <view class='index_search' catchtap='searchShop'>
+        <icon class="icon iconfont icon-sousuo"></icon>
+        <text>搜优惠商品</text>
+      </view>
+      <view class='header_right' catchtap='_goCollectGoods'>
+        <icon class="icon iconfont icon-ico_shoucangjia-copy"></icon>
+      </view>
+    </view>
+  </view>
+</template>

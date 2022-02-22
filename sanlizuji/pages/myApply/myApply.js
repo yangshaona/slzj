@@ -29,6 +29,7 @@ Page({
         cmt_display: true,
         //身份
         id_flag: id_flag,
+        user: user,
         now: "",
     },
 
@@ -127,7 +128,8 @@ Page({
             console.log("教师")
         } else if (id_flag == 'parent') {
             identity = "parent";
-            console.log("父母")
+            console.log("父母");
+            that.setTitle("孩子的报名")
         }
 
         console.log(identity)
@@ -144,11 +146,13 @@ Page({
                 console.log(res)
                 var total = [];
                 if (id_flag == 'parent') {
-                    console.log(res.data.data.data[0])
-                    console.log(res.data.data.data[0].data1)
-                    console.log(res.data.data.data[0].data2)
-                    total = mergerArr(res.data.data.data[0].data1, res.data.data.data[0].data2);
-                    console.log(total)
+                    if (user.kids != '') {
+                        console.log(res.data.data.data[0])
+                        console.log(res.data.data.data[0].data1)
+                        console.log(res.data.data.data[0].data2)
+                        total = mergerArr(res.data.data.data[0].data1, res.data.data.data[0].data2);
+                        console.log(total)
+                    }
                 } else {
                     total = mergerArr(res.data.data1, res.data.data2)
                 }
@@ -203,13 +207,38 @@ Page({
 
 
     },
+    //登录查看更多
+    _goLogin: function() {
+        wx.navigateTo({
+            url: '../register/register_stu',
+        })
+    },
+    // 监护人绑定孩子
+    _goBound: function() {
+        id_flag = wx.getStorageSync('id_flag');
+
+        wx.navigateTo({
+            url: '../person_info/parent_info',
+        })
+
+    },
+    // 设置标题
+    setTitle: function(tname) {
+        wx.setNavigationBarTitle({ title: tname })
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
         let that = this;
-        let user = wx.getStorageSync('user');
-        if (user != '') {
+        user = wx.getStorageSync('user');
+        this.setData({
+            user: user,
+            id_flag: id_flag
+        })
+
+
+        if (user != null && user != '') {
             that.setFilter();
 
         }
@@ -229,6 +258,10 @@ Page({
 
         user = wx.getStorageSync('user')
         id_flag = wx.getStorageSync('id_flag')
+        this.setData({
+            user: user,
+            id_flag: id_flag
+        })
     },
 
     /**

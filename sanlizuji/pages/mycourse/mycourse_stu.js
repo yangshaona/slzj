@@ -21,7 +21,15 @@ Page({
         */
         activity: [],
         activity2: {},
-        id_flag: ""
+        id_flag: "",
+        user: user
+    },
+    // 跳转到报名
+    //前往报名
+    goToApply: function() {
+        wx.switchTab({
+            url: '../course/course',
+        })
     },
     // 导师详情
     showTeacherDetail: function(e) {
@@ -34,7 +42,7 @@ Page({
     GetKidsActivity: function(e) {
         let that = this;
         user = wx.getStorageSync('user');
-        let id_flag = wx.getStorageSync('id_flag')
+        id_flag = wx.getStorageSync('id_flag');
         that.setData({
                 id_flag: id_flag,
             })
@@ -69,9 +77,8 @@ Page({
                 that.setData({
                     activity: activity
                 })
-                console.log("哈哈哈哈哈");
+                console.log("我的活动数据")
                 console.log(activity)
-                console.log("数据");
                 console.log(that.data.activity)
             },
             fail: function() {
@@ -124,16 +131,44 @@ Page({
             }
         });
     },
+
+    //登录查看更多
+    _goLogin: function() {
+        wx.navigateTo({
+            url: '../register/register_stu',
+        })
+    },
+
+    // 监护人绑定孩子已经孩子绑定监护人
+    _goBound: function() {
+        id_flag = wx.getStorageSync('id_flag');
+        wx.navigateTo({
+            url: '../person_info/parent_info',
+        })
+
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
         let that = this;
         console.log(options);
-
-        let id_flag = wx.getStorageSync('id_flag')
+        user = wx.getStorageSync('user')
+        id_flag = wx.getStorageSync('id_flag');
+        that.setData({
+            id_flag: id_flag,
+            user: user
+        })
         if (id_flag == "student") that.GetStuActivity();
-        else if (id_flag == "parent") that.GetKidsActivity();
+        else if (id_flag == "parent") {
+            that.GetKidsActivity();
+            that.setTitle("孩子的活动");
+        }
+
+    },
+    // 设置标题
+    setTitle: function(tname) {
+        wx.setNavigationBarTitle({ title: tname })
     },
     //点击跳转到活动课程详情
     toCoursesDetail: function(e) {
@@ -156,7 +191,12 @@ Page({
      */
     onShow: function() {
         let that = this;
-        let id_flag = wx.getStorageSync('id_flag')
+        user = wx.getStorageSync('user')
+        id_flag = wx.getStorageSync('id_flag');
+        that.setData({
+            id_flag: id_flag,
+            user: user
+        })
         if (id_flag == "student") that.GetStuActivity();
         else if (id_flag == "parent") that.GetKidsActivity();
     },
