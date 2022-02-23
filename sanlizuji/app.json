@@ -1,7 +1,6 @@
 {
     "pages": [
         "pages/index/index",
-        "pages/index1/index",
         "pages/register/register_stu",
         "pages/register/register_parent",
         "pages/register/register_teacher",

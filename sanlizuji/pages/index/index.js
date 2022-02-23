@@ -18,8 +18,24 @@ Page({
         interval: "5000", //自动切换时间间隔
         duration: "1000", //滑动动画时长//uploads/temp/WxImg/turn_img1.jpg
         isHideLoadMore: true,
-        activity: {},
-        history: {},
+        activity: [{
+                'PicUrl': '/icon/图标未加载.png',
+                'Name': ''
+            },
+            {
+                'PicUrl': '/icon/图标未加载.png',
+                'Name': ''
+            }
+        ],
+        history: [{
+                'PicUrl': '/icon/图标未加载.png',
+                'Name': ''
+            },
+            {
+                'PicUrl': '/icon/图标未加载.png',
+                'Name': ''
+            }
+        ],
         img: app.globalData.imgUrl + "turn_img1.jpg",
         imgUrl: [
             app.globalData.imgUrl + "turn_img1.jpg", app.globalData.imgUrl + "turn_img2.jpg",
@@ -28,10 +44,10 @@ Page({
         // 顶部导航栏
         //imgUrl为icon链接，text为导航文字,url为所在页面链接
         navigation: [
-            { 'imgUrl': '/icon/activity.png', 'text': '亲子活动', 'url': '' },
-            { 'imgUrl': '/icon/bubble.png', 'text': '研学课程', 'url': '' },
-            { 'imgUrl': '/icon/exp.png', 'text': '冬夏令营', 'url': '' },
-            { 'imgUrl': '/icon/video.png', 'text': '活动直播', 'url': '' }
+            { 'imgUrl': '/icon/activity.png', 'text': '亲子活动', 'url': '', 'class': 'selected' },
+            { 'imgUrl': '/icon/bubble.png', 'text': '研学课程', 'url': '', 'class': 'select' },
+            { 'imgUrl': '/icon/exp.png', 'text': '冬夏令营', 'url': '', 'class': 'select' },
+            { 'imgUrl': '/icon/video.png', 'text': '活动直播', 'url': '', 'class': 'select' }
         ],
         // 搜索框
         searchClass: "srcFold",
@@ -132,8 +148,24 @@ Page({
         })
     },
     reReadData: function(e) {
+        console.log(e.currentTarget.dataset.id);
+        var text = e.currentTarget.dataset.id;
+        // 样式改变
+        var navigation = this.data.navigation;
+        for (var item in navigation) {
+            console.log("item", navigation[item])
+            if (navigation[item].text == text) {
+                navigation[item].class = 'selected';
+            } else {
+                navigation[item].class = 'select';
+            }
+        }
+        this.setData({
+            navigation: navigation,
+        })
         this.readData(e.currentTarget.dataset.id);
-        console.log(e.currentTarget.dataset.id)
+
+
     },
     /**
      * 生命周期函数--监听页面加载

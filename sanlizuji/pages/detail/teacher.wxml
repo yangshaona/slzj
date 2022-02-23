@@ -6,7 +6,8 @@
         <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
             <block wx:for="{{schoolImg}}" wx:key="item">
                 <swiper-item class="swiper-item">
-                    <image class="actImg" src="{{item.pic}}" mode="widthFix"></image>
+                    <image class="actImg" src="{{item.imagesurl}}" mode="widthFix"></image>
+
                 </swiper-item>
             </block>
         </swiper>
@@ -43,8 +44,8 @@
     <view class="infoBox" wx:else>
         <block wx:for="{{schoolImg}}" wx:key="item">
             <view class="schoolImg">
-                <image src="{{item.pic}}" mode="widthFix"></image>
-                <view class="schoolDesc">{{item.name}}</view>
+                <image src="{{item.imagesurl}}" mode="widthFix"></image>
+                <view class="schoolDesc">{{item.coursename}}</view>
             </view>
         </block>
     </view>

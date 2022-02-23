@@ -69,9 +69,9 @@
 			"current": -1,
 			"list": [
 				{
-					"id": 5,
-					"name": "pages/index/index",
-					"pathName": "pages/index/index",
+					"id": 0,
+					"name": "pages/index1/index",
+					"pathName": "pages/index1/index",
 					"query": "",
 					"scene": null
 				},
@@ -289,6 +289,7 @@
 					"id": -1,
 					"name": "pages/willDo/willDo",
 					"pathName": "pages/willDo/willDo",
+					"query": "",
 					"scene": null
 				}
 			]

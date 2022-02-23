@@ -11,7 +11,7 @@
             <block wx:for="{{imgUrl}}" wx:key="item">
                 <swiper-item>
                     <view class="swiper-item" data-index='{{index}}' data-id="{{item.id}}">
-                        <image lazy-load='true' src='{{item.ad_img}}' mode="aspectFill" bindchange="swiperChange"></image>
+                        <image lazy-load='true' src='{{item.ad_img}}' mode="widthFix" bindchange="swiperChange"></image>
                     </view>
                 </swiper-item>
             </block>
@@ -24,16 +24,16 @@
                 <!-- icon -->
                 <image src="{{item.imgUrl}}" mode="widthFix"></image>
                 <!-- text -->
-                <view>{{item.text}}</view>
+                <view class="{{item.class}}">{{item.text}}</view>
             </view>
         </block>
     </view>
 
     <!-- 搜索框 -->
-    <view class="{{searchClass}}">
+    <!-- <view class="{{searchClass}}">
         <image src="/icon/search2.png" mode="widthFix" class="srcImg" bindtap="searchTap"></image>
         <input type="text" name="search" id="search" placeholder="找点东西" class="{{inputClass}}" bindinput="writeData" />
-    </view>
+    </view> -->
     <!-- 热门活动 -->
     <view class="actTop" wx:if="{{activity!=''}}">
         <view class="title">

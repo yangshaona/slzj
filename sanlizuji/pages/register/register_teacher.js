@@ -249,7 +249,7 @@ Page({
                                         resume: data.exp,
                                         name: data.name,
                                         sex: data.sex,
-                                        sexid: that.data.sexid,
+                                        sex_id: that.data.sexid,
                                         type: data.type,
                                         phone: data.phone,
                                         province: data.region[0],

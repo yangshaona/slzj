@@ -57,7 +57,15 @@ Page({
         status: [],
         start: "",
         end: "",
-        activity: "",
+        activity: [{
+                'pic': '/icon/图标未加载.png',
+                'title': ''
+            },
+            {
+                'pic': '/icon/图标未加载.png',
+                'title': ''
+            }
+        ],
         navig_name: '',
         title_name: '课程',
         seacher_word: "",
