@@ -1,17 +1,10 @@
 <!--pages/course/course.wxml-->
 <!-- 总页面 -->
-<view class="total" id="total">
-    <!-- 顶部标题-->
-    <view class="top" style="padding-top: {{statusHeight+16}}px;">
-        {{title_name==''?'课程':title_name}}
-    </view>
-    <!-- 筛选按钮 -->
-    <view class="filterTop" catchtap="filterTap">
-        <image src="/icon/filter.png" mode="widthFix"></image>
-        <view>筛选</view>
-    </view>
-    <!-- 筛选框 -->
-    <view class="{{filterClass}}">
+
+<!-- 筛选框 -->
+<view class="{{filterHide?'':'zhezhao'}}" bindtap="filterTap" catchtouchmove='ture'>
+
+    <view class="{{filterClass}}" catchtouchmove='ture'>
         <block wx:for="{{filter}}" wx:key="item">
             <view class="filter">
                 <view class="filterTtl">{{item.title}}</view>
@@ -33,8 +26,20 @@
                 {{end == "" ? "结束时间" : end}}
             </picker>
         </view>
-        <button class="confirm" bindtap="filterTap">确认</button>
+        <button class="confirm" catchtap="filterTap">确认</button>
     </view>
+</view>
+<view class="total" id="total">
+    <!-- 顶部标题-->
+    <view class="top" style="padding-top: {{statusHeight+16}}px;">
+        {{title_name==''?'课程':title_name}}
+    </view>
+
+    <view class="filterTop" catchtap="filterTap">
+        <image src="/icon/filter.png" mode="widthFix"></image>
+        <view>筛选</view>
+    </view>
+
     <!-- 顶部搜索框 -->
     <!-- <view class="search">
         <view class="srcExt">
@@ -43,7 +48,6 @@
         </view>
         <button class="{{isSearch=='0' ? 'choose' : 'noChoose'}}" bindtap="getSearchContent">搜索</button>
     </view> -->
-
     <!-- 顶部搜索框 -->
     <view class="search">
         <view class="srcExt">
@@ -82,6 +86,5 @@
             </view>
         </block>
     </view>
-
 
 </view>

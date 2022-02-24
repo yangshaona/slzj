@@ -15,7 +15,6 @@ Page({
     },
     //跳转到对应孩子的正在活动
     toStudentActiviDetail: function(e) {
-        console.log("111111111");
         console.log(e.currentTarget.dataset.id);
         wx.navigateTo({
             url: './doing_stuprt?userid=' + e.currentTarget.dataset.id,

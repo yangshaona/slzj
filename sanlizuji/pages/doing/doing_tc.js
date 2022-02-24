@@ -32,6 +32,7 @@ Page({
         stuid: "",
         realTime: null, //实时数据对象(用于关闭实时刷新方法)
         user: user,
+        request_code: 0,
     },
     //获取学生定位
     getStuGps: function(id) {
@@ -81,12 +82,14 @@ Page({
         var id = '';
         console.log(e)
         if (isNumber(e)) {
+            console.log("1111")
             id = e;
         } else {
+            console.log("2223")
             id = e.currentTarget.dataset.id;
-
         }
-        //判断是否为数字
+        console.log("idshi:", id)
+            //判断是否为数字
         function isNumber(val) {
             var regPos = /^\d+(\.\d+)?$/; //非负浮点数io
             if (regPos.test(val)) {
@@ -118,12 +121,28 @@ Page({
                             // success
                             console.log("导师请求获取某个学生的位置信息");
                             console.log(res)
+                            that.setData({
+                                request_code: res.data.data.code,
+                            })
                             if (res.data.data.code == 1) {
-                                that.getStuGps(id)
+                                that.getStuGps(id);
                             } else {
                                 wx.showToast({
-                                    title: '获取失败',
+                                    title: '请求失败',
                                     duration: 800,
+                                });
+                                that.data.realTime = setInterval(function() {
+                                        // 请求服务器数据
+                                        console.log('请求接口：刷新数据')
+                                        that.TeaNowCourse();
+                                        that.getLocation(id)
+
+                                    }, 10000) //间隔时间
+
+                                // 更新数据
+                                that.setData({
+                                    realTime: that.data.realTime, //实时数据对象(用于关闭实时刷新方法)
+
                                 })
                             }
                         },
@@ -234,20 +253,20 @@ Page({
         })
         var that = this;
         if (user != null && user != '') {
-            this.data.realTime = setInterval(function() {
+            // this.data.realTime = setInterval(function() {
+            // 
+            // 请求服务器数据
+            console.log('请求接口：刷新数据')
+            that.TeaNowCourse();
+            // that.getLocation(that.data.stuid)
 
-                    // 请求服务器数据
-                    console.log('请求接口：刷新数据')
-                    that.TeaNowCourse();
-                    that.getLocation(that.data.stuid)
-
-                }, 30000) //间隔时间
+            // }, 30000) //间隔时间
 
             // 更新数据
-            this.setData({
-                realTime: this.data.realTime, //实时数据对象(用于关闭实时刷新方法)
+            // this.setData({
+            //     realTime: this.data.realTime, //实时数据对象(用于关闭实时刷新方法)
 
-            })
+            // })
         }
     },
 

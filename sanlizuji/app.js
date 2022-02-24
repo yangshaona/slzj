@@ -119,8 +119,8 @@ App({
         longtitude: "",
         realTime: null, //实时数据对象(用于关闭实时刷新方法)
         // imgUrl: 'https://shenhailao.com/hsreport/uploads/temp/WxImg/',
-        // imgUrl: 'https://sanli-tracks.com/sanli/uploads/temp/WxImg/',
-        imgUrl: 'http://localhost/gitSanli/sanli/uploads/temp/WxImg/',
+        imgUrl: 'https://sanli-tracks.com/sanli/uploads/temp/WxImg/',
+        // imgUrl: 'http://localhost/gitSanli/sanli/uploads/temp/WxImg/',
         okayapiHost: "http://test_phalapi.com", // TODO: 配置成你所在的接口域名
         okayApiAppKey: "appkey", // TODO：改为你的APP_KEY 在http://open.yesapi.cn/?r=App/Mine寻找
         okayApiAppSecrect: "appsecret" // TODO：改为你的APP_SECRECT
@@ -139,6 +139,7 @@ App({
             success: function(res) {},
             fail: function(res) {
                 if (res.errMsg && (res.errMsg == 'navigateTo:fail can not navigateTo a tabbar page' || res.errMsg == 'navigateTo:fail can not navigate to a tabbar page')) {
+
                     wx.switchTab({ url: myurl, })
                 }
             },
@@ -267,18 +268,18 @@ App({
         console.log(user);
         var that = this;
         if (user != null && user != '') {
-            that.globalData.realTime = setInterval(function() {
-                    // 请求服务器数据
+            // that.globalData.realTime = setInterval(function() {
+            // 请求服务器数据
 
-                    if (id_flag == "teacher") {
-                        that.TeaNowCourse()
+            if (id_flag == "teacher") {
+                that.TeaNowCourse()
 
-                    }
-                    if (id_flag == 'student') {
-                        that.ActiveStuDetail();
-                    }
+            }
+            if (id_flag == 'student') {
+                that.ActiveStuDetail();
+            }
 
-                }, 30000) //间隔时间
+            // }, 30000) //间隔时间
 
             // 更新数据
             that.globalData.realTime = that.globalData.realTime; //实时数据对象(用于关闭实时刷新方法)

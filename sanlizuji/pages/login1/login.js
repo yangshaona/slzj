@@ -106,9 +106,10 @@ Page({
             console.log(app.globalData.openid)
             console.log("身份", that.data.id_flag)
             wx.request({
-                url: app.globalData.url + 'WxUser/GetUserInfo2',
+                url: app.globalData.url + 'WxUser/GetUserInfo',
                 data: {
-                    openid: app.globalData.openid,
+                    // openid: app.globalData.openid,
+                    name: data.name,
                     phone: data.phone,
                     id_flag: that.data.id_flag,
                 },

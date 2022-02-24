@@ -9,16 +9,16 @@
 <view wx:if="{{id_flag=='teacher'}}">
     <view class="infoBox">
         <view class="avator" style="height: {{imgHeight}}px;">
-            <view wx:if="{{user!=null}}">
-                <open-data type="userAvatarUrl"></open-data>
-            </view>
-            <view wx:else>
-                <image src="/icon/默认头像.png" mode="widthFix"></image>
-            </view>
+            <!-- <view wx:if="{{!user}}"> -->
+            <image src="{{avator}}" mode="widthFix"></image>
+            <!-- </view> -->
+            <!-- <view wx:else> -->
+            <!-- <image src="/icon/默认头像.png" mode="widthFix"></image> -->
+            <!-- </view> -->
         </view>
         <view style="display: block; width: 55%;">
             <view class="infoCtn">
-                <open-data type="userNickName"></open-data>
+                <view>{{user.name}}</view>
                 <image src="{{user.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
             </view>
             <view class="identity">{{identity}}</view>
@@ -53,16 +53,16 @@
 <view wx:elif="{{id_flag=='parent'}}">
     <view class="infoBox">
         <view class="avator" style="height: {{imgHeight}}px;">
-            <view wx:if="{{user!=null}}">
-                <open-data type="userAvatarUrl"></open-data>
-            </view>
-            <view wx:else>
-                <image src="/icon/默认头像.png" mode="widthFix"></image>
-            </view>
+            <!-- <view wx:if="{{user!=null}}"> -->
+            <image src="{{avator}}}" mode="widthFix"></image>
+            <!-- </view> -->
+            <!-- <view wx:else> -->
+            <!-- <image src="/icon/默认头像.png" mode="widthFix"></image> -->
+            <!-- </view> -->
         </view>
         <view style="display: block; width: 55%;">
             <view class="infoCtn">
-                <open-data type="userNickName"></open-data>
+                <view>{{user.name}}</view>
                 <image src="{{user.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
             </view>
             <view class="identity">{{identity}}</view>
@@ -97,7 +97,8 @@
 <view wx:else>
     <view class="infoBox">
         <view class="avator" style="height: {{imgHeight}}px;" bindtap="upImage">
-            <image src="{{avator==''?'/icon/默认头像.png':avator}}" mode="widthFix"></image>
+            <!-- <image src="{{avator==''?'/icon/默认头像.png':avator}}" mode="widthFix"></image> -->
+            <image src="{{user.header}}" mode="widthFix"></image>
         </view>
         <view style="display: block; width: 55%;" wx:if="{{user!=null&&user!=''}}">
             <view class="infoCtn">

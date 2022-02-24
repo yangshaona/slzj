@@ -32,7 +32,8 @@ Page({
         location: "",
         multiArray: [],
         multiIndex: [0, 0, 0],
-        province: []
+        province: [],
+        header: "",
     },
     //获取地区
     bindMultiPickerChange: function(e) {
@@ -124,8 +125,11 @@ Page({
                 console.log(res);
                 this.setData({
                     cangetUserInfo: true,
-                    nickName: res.userInfo.nickName
+                    nickName: res.userInfo.nickName,
+                    header: res.userInfo.avatarUrl,
                 })
+
+                wx.setStorageSync('avator', res.userInfo.avatarUrl)
             },
             fail: (res) => {
                 console.log(res.errMsg)
@@ -227,6 +231,7 @@ Page({
                                         name: data.name,
                                         nikename: data.nickname,
                                         openid: that.data.openid,
+                                        header: that.data.header,
                                         sex: data.sex,
                                         sexid: that.data.sexid,
                                         phone: data.phone,

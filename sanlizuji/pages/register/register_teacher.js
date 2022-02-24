@@ -61,6 +61,7 @@ Page({
                     nickName: res.userInfo.nickName,
                     header: res.userInfo.avatarUrl,
                 })
+                wx.setStorageSync('avator', res.userInfo.avatarUrl)
             },
             fail: (res) => {
                 console.log(res.errMsg)

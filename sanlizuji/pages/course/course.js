@@ -69,22 +69,29 @@ Page({
         navig_name: '',
         title_name: '课程',
         seacher_word: "",
+        filterHide: true,
+
     },
 
     // 筛选栏弹出/折叠
     filterTap: function(e) {
         var filterCSS = this.data.filterClass;
-        if (filterCSS == "filterHide") {
+        var filterHide = this.data.filterHide;
+        console.log("遮罩是。。。。。")
+        console.log(filterHide)
+        if (filterHide) {
             console.log("筛选栏展开");
             this.setData({
                 filterClass: "filterShow",
-                ctnOpacity: "40%"
+                ctnOpacity: "40%",
+                filterHide: false,
             })
         } else {
             console.log("筛选栏折叠");
             this.setData({
                     filterClass: "filterHide",
-                    ctnOpacity: "100%"
+                    ctnOpacity: "100%",
+                    filterHide: true
                 })
                 // 向服务端提供的条件
             var condition = this.data.condition;
@@ -104,13 +111,9 @@ Page({
                 theme: theme,
                 duration: duration,
                 status: status
-            })
-            console.log("筛选条件分类成功！");
-            console.log("theme: " + theme);
-            console.log("duration: " + duration);
-            console.log("status: " + status);
-            console.log("start: " + this.data.start);
-            console.log("end: " + this.data.end);
+            });
+
+            this.getSearchData();
         }
     },
     //获取筛选数据
@@ -233,13 +236,31 @@ Page({
     getSearchData: function() {
         let that = this;
         var para = app.globalData.navigate_name;
+        var status = '',
+            duration = '';
+        if (that.data.status != '') {
+            status = that.data.status;
+        }
+        if (that.data.duration != '') {
+            duration = that.data.duration;
+        }
+        if (that.data.theme != '') {
+            para = that.data.theme;
+        }
         this.setData({
             title_name: para,
         })
+
         wx.request({
             url: app.globalData.url + 'WxCourse/GetMoreNews',
             data: {
                 'keyword': that.data.seacher_word,
+                province: '',
+                city: '',
+                start_time: that.data.start,
+                end_time: that.data.end,
+                activeStatus: status,
+                duration: duration,
                 'type': para,
             },
             success(res) {
@@ -262,9 +283,9 @@ Page({
         var now = new Date;
         var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         this.setData({
-            date: date
-        })
-        that.getFilter()
+                date: date
+            })
+            // that.getFilter()
 
     },
     timeFormat(param) {

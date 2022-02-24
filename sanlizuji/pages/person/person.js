@@ -53,7 +53,7 @@ Page({
         // 性别
         sex: '男',
         // 头像
-        avator: '',
+        avator: avator,
         // 服务端获取用户关注/粉丝
         follow: '',
         fans: '',
@@ -155,6 +155,7 @@ Page({
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
         avator = wx.getStorageSync("avator")
+
         if (user != null) console.log("用户信息1", user)
         if (user != '') console.log("用户信息2", user)
         if (user == '') console.log("用户信息3", user)
@@ -211,7 +212,9 @@ Page({
     onShow: function() {
         id_flag = wx.getStorageSync('id_flag');
         user = wx.getStorageSync('user');
+
         avator = wx.getStorageSync('avator');
+
         this.setData({
             id_flag: id_flag
         })
