@@ -26,12 +26,12 @@
         <!-- 有内容 -->
         <block wx:if="{{filter.length != 0}}">
             <block wx:for="{{filter}}" wx:key="id">
-                <view class="ctnBox" style="height: 50%;">
+                <view class="ctnBox" style="height: 50%;" data-courseid="{{item.courseid}}" bindtap="goToDetail">
                     <view class="title">{{item.coursename}}</view>
                     <image src="{{item.imagesurl}}" mode="widthFix" class="ctnImg"></image>
                     <view class="ctnLine"></view>
                     <view class="ctnButton">
-                        <button class="blue" wx:if="{{item.status==2}}" bindtap="applyTap1" data-id="{{item.courseid}}">提交订单</button>
+                        <button class="blue" wx:if="{{item.status==2}}" bindtap="applyTap1" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}">待付款</button>
                         <button class="blue" bindtap="applyTap2" data-id="{{item.courseid}}" wx:else>继续报名</button>
                         <button class="border" wx:if="{{item.status==3}}" data-id="{{item.courseid}}" bindtap="commentTap">评价</button>
                         <button class="border" data-id="{{item.courseid}}" bindtap="teacherTap">查看导师</button>

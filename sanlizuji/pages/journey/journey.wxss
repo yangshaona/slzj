@@ -2,6 +2,7 @@
 
 @import '../template/scope/scope.wxss';
 @import '../template/unbounded/unbounded.wxss';
+@import '../template/not_found/not_found.wxss';
 .total {
     display: block;
     box-sizing: border-box;

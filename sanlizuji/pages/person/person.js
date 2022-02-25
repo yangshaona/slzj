@@ -155,7 +155,8 @@ Page({
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
         avator = wx.getStorageSync("avator")
-
+        console.log("用户头像");
+        console.log(avator)
         if (user != null) console.log("用户信息1", user)
         if (user != '') console.log("用户信息2", user)
         if (user == '') console.log("用户信息3", user)
@@ -213,8 +214,9 @@ Page({
         id_flag = wx.getStorageSync('id_flag');
         user = wx.getStorageSync('user');
 
-        avator = wx.getStorageSync('avator');
-
+        avator = wx.getStorageSync("avator")
+        console.log("用户头像11");
+        console.log(avator)
         this.setData({
             id_flag: id_flag
         })
@@ -245,7 +247,10 @@ Page({
             userInfo: info,
             user: user,
             avator: avator,
-        })
+        });
+        console.log("yonghu111111111");
+        console.log(this.data.avator);
+        console.log(user)
     },
 
     /**

@@ -77,7 +77,7 @@ Page({
     filterTap: function(e) {
         var filterCSS = this.data.filterClass;
         var filterHide = this.data.filterHide;
-        console.log("遮罩是。。。。。")
+
         console.log(filterHide)
         if (filterHide) {
             console.log("筛选栏展开");
@@ -235,7 +235,8 @@ Page({
     },
     getSearchData: function() {
         let that = this;
-        var para = app.globalData.navigate_name;
+        var para = [];
+        para.push(app.globalData.navigate_name);
         var status = '',
             duration = '';
         if (that.data.status != '') {
@@ -246,11 +247,20 @@ Page({
         }
         if (that.data.theme != '') {
             para = that.data.theme;
+            this.setData({
+                title_name: "课程",
+            })
+        } else {
+            this.setData({
+                title_name: app.globalData.navigate_name,
+            })
         }
-        this.setData({
-            title_name: para,
-        })
 
+        if (para[0] == "") {
+            para = "";
+        }
+
+        // app.globalData.navigate_name = "";
         wx.request({
             url: app.globalData.url + 'WxCourse/GetMoreNews',
             data: {

@@ -125,10 +125,12 @@ Page({
     readData: function(e) {
         var that = this;
         //   console.log(app.globalData.url + "WxCourse/GetClubNews");
-        app.globalData.navigate_name = e;
+        console.log("hhh", e)
         this.setData({
             navigat_name: e,
         })
+        console.log(that.data.navigat_name)
+        app.globalData.navigate_name = this.data.navigat_name
         wx.request({
             url: app.globalData.url + "WxCourse/GetClubNews",
             data: { id: e, },

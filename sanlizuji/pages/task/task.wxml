@@ -4,7 +4,7 @@
 <view wx:else>
     <block wx:if="{{task=='无正在进行的活动行程'||task.length==0}}">
         <view class="empty">
-            <image src="/icon/暂无搜索结果.png" mode="widthFix">
+            <image src="/icon/not found.png" mode="widthFix">
             </image>
             <view>
                 暂无活动任务

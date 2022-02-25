@@ -52,10 +52,10 @@ Page({
         console.log("选择：" + this.data.select);
         this.setFilter();
     },
-    // 点击查看详情按钮
-    detailTap: function(e) {
+    // 点击查看详情
+    goToDetail: function(e) {
         // 点击的id
-        var id = e.currentTarget.dataset.id;
+        var id = e.currentTarget.dataset.courseid;
         wx.navigateTo({
             url: '../detail/detail?id=' + id,
         })
@@ -72,11 +72,16 @@ Page({
     },
     // 点击提交订单按钮
     applyTap1: function(e) {
-        var id = e.currentTarget.dataset.id;
+        var courseid = e.currentTarget.dataset.courseid;
+        var orderid = e.currentTarget.dataset.orderid;
+        var userid = e.currentTarget.dataset.userid;
+        var that = this;
         console.log("提交订单")
-        console.log(id)
+        console.log(courseid)
+        console.log(orderid)
         wx.navigateTo({
-            url: '../pay/confirm?id=' + id,
+            url: '../pay/waiting_pay?id=' + courseid + '&orderid=' + orderid + '&userid=' + userid,
+
         })
     },
     // 点击继续报名按钮
@@ -183,6 +188,7 @@ Page({
                 that.setData({
                     filter: filter
                 })
+                console.log("所有报名数据")
                 console.log(that.data.filter)
 
                 function mergerArr(arr1, arr2) {
@@ -231,6 +237,8 @@ Page({
      */
     onLoad: function(options) {
         let that = this;
+        console.log("返回的数据是")
+        console.log(options)
         user = wx.getStorageSync('user');
         this.setData({
             user: user,

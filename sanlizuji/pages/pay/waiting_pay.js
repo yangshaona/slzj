@@ -20,14 +20,12 @@ Page({
         // 用户选择的学员
         stu: '',
         stuinfo: user,
-        kid: '',
         // 设备信息
         screenHeight: '',
         //订单详情
         order: '',
         //用户信息
         userinfo: user,
-        stuname: '',
         id_flag: id_flag,
     },
     // 初始化学员选择器
@@ -36,7 +34,6 @@ Page({
         let that = this;
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
-
         wx.request({
             url: app.globalData.url + 'WxUser/GetKidsList',
             data: {
@@ -56,11 +53,10 @@ Page({
                             that.setData({
                                 stuinfo: item,
                             })
-                            console.log("选中的孩子信息");
+                            console.log("选中的孩子信息11111");
                             console.log(item);
                             console.log(that.data.stuinfo);
                         }
-
                     }
                     console.log(kid)
                     that.setData({
@@ -76,18 +72,22 @@ Page({
                 // complete
             }
         })
-
     },
 
     // 学员选择器改变
     stuChange: function(e) {
         var stu_arr = this.data.stu_arr;
+        // var stu = stu_arr[e.detail.value];
+        var idx = e.detail.value;
+        // if (id_flag == "student") {
+        //     stu = user.name;
+        //     idx = 0;
+        // }
         this.setData({
-            idx: e.detail.value,
-            stu: stu_arr[e.detail.value].name,
-            kid: stu_arr[e.detail.value],
+            idx: idx,
+            stu: stu_arr[e.detail.value]
         });
-        console.log("学生的数据");
+        console.log("学者的数据");
         console.log(this.data.stu)
     },
     //跳转进入购买须知
@@ -112,7 +112,7 @@ Page({
         // }
         console.log(87);
         console.log(that.options);
-        var id = e.currentTarget.dataset.id;
+        var id = e.currentTarget.dataset.id
         console.log("正在获取MD5和account");
         // if (that.data.idx != -1) {
         wx.request({
@@ -139,19 +139,13 @@ Page({
                         paySign: pay_res.paySign,
                         success(res) {
                             console.log(res);
-
-
                             wx.showToast({
                                 title: '支付成功',
-                                icon: 'success',
-                                duration: 800,
+                                icon: 'success'
+                            });
+                            wx.navigateTo({
+                                url: '../myApply/myApply',
                             })
-
-                            setTimeout(function() {
-                                wx.navigateTo({
-                                    url: '../myApply/myApply',
-                                })
-                            }, 1000)
                         },
                         fail(res) {
                             console.log(res);
@@ -159,12 +153,13 @@ Page({
                                 title: '支付失败',
                                 icon: 'none'
                             });
-                            wx.redirectTo({
-                                url: './waiting_pay?id=' + id + "&orderid=" + that.options.orderid + '&userid=' + that.data.stuinfo.id,
-
+                            wx.navigateTo({
+                                url: '../myApply/myApply',
                             })
-                        }
+                        },
+
                     })
+
 
                 }
             })
@@ -192,13 +187,16 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        this.getSysInfo();
-        if (id_flag == 'parent') { this.loadStu(); }
-        console.log("确认订单");
+        // this.getSysInfo();
+
+        console.log("待付款订单");
         console.log(options);
         let that = this;
         user = wx.getStorageSync('user');
-        id_flag = wx.getStorageSync('id_flag')
+        id_flag = wx.getStorageSync('id_flag');
+        if (id_flag == 'parent') {
+            this.loadStu();
+        }
         that.setData({
             userinfo: user,
             id_flag: id_flag

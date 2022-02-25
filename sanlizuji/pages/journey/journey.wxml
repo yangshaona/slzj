@@ -2,20 +2,14 @@
 <!-- 顶部标题 -->
 <import src="../template/scope/scope.wxml" />
 <import src="../template/unbounded/unbounded.wxml" />
+<import src="../template/not_found/not_found.wxml" />
+
 <template is="scope" wx:if="{{!user}}" />
 <view wx:else>
     <template is="unbounded" wx:if="{{id_flag=='parent'&&user.kids==''}}" />
     <view wx:else>
         <!-- 活动展示卡片 -->
-        <block wx:if="{{journey=='无正在进行的活动行程'||journey==''}}">
-            <view class="empty">
-                <image src="/icon/暂无搜索结果.png" mode="widthFix">
-                </image>
-                <view>
-                    暂无活动行程安排
-                </view>
-            </view>
-        </block>
+        <template is="not_found" wx:if="{{journey=='无正在进行的活动行程'||journey==''}}" />
         <view wx:else>
             <block wx:for="{{journey}}" wx:key="item">
                 <view class="total">

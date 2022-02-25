@@ -1,6 +1,7 @@
 <!--pages/detail/teacher.wxml-->
 <!--pages/detail/school.wxml-->
-<view wx:if="{{teacher_info=='该活动暂无导师'}}" style="margin: 3%;">该活动暂无导师</view>
+<import src="../template/not_found/not_found.wxml" />
+<template is="not_found" wx:if="{{teacher_info=='该活动暂无导师'}}" />
 <view wx:else>
     <view class="top">
         <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
@@ -43,7 +44,7 @@
 
     <view class="infoBox" wx:else>
         <block wx:for="{{schoolImg}}" wx:key="item">
-            <view class="schoolImg">
+            <view class="schoolImg" bindtap="toCourseDetail" data-courseid="{{item.courseid}}">
                 <image src="{{item.imagesurl}}" mode="widthFix"></image>
                 <view class="schoolDesc">{{item.coursename}}</view>
             </view>

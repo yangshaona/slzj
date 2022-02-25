@@ -1,5 +1,7 @@
 <!--pages/doing/doing_tc.wxml-->
 <import src="../template/scope/scope.wxml" />
+<import src="../template/not_found/not_found.wxml" />
+
 <template is="scope" wx:if="{{!user}}" />
 <view wx:else>
     <block wx:if="{{title=='无正在进行的课程'}}">

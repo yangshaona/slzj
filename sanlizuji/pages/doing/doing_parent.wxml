@@ -10,15 +10,8 @@
 
     <!-- 一个人一个卡片 -->
     <view wx:else>
-        <block wx:if="{{activity.length==0}}">
-            <view class="empty">
-                <image src="/icon/暂无搜索结果.png" mode="widthFix">
-                </image>
-                <view>
-                    暂无正在进行的活动
-                </view>
-            </view>
-        </block>
+        <template is="not_found" wx:if="{{activity.length==0}}" />
+
         <view wx:else>
             <block wx:for="{{activity}}" wx:key="item">
                 <view class="card1" data-id="{{item.userid}}" bindtap="toStudentActiviDetail">

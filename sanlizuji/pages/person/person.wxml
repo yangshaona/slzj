@@ -54,7 +54,7 @@
     <view class="infoBox">
         <view class="avator" style="height: {{imgHeight}}px;">
             <!-- <view wx:if="{{user!=null}}"> -->
-            <image src="{{avator}}}" mode="widthFix"></image>
+            <image src="{{avator}}" mode="widthFix"></image>
             <!-- </view> -->
             <!-- <view wx:else> -->
             <!-- <image src="/icon/默认头像.png" mode="widthFix"></image> -->
