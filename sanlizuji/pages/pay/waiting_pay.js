@@ -139,11 +139,25 @@ Page({
                         paySign: pay_res.paySign,
                         success(res) {
                             console.log(res);
-                            wx.showToast({
-                                title: '支付成功',
-                                icon: 'success'
-                            });
-                            wx.navigateTo({
+                            wx.request({                            
+                                url:  app.globalData.url  +  "WxSign/orderFind",
+                                data: {
+                                    lowOrderId: that.options.orderid,
+                                       //后台雪花算法生成的订单号
+                                     status: "SUCCESS",
+                                },
+                                    method: 'GET',
+                                    success: function(res) {  
+                                    console.log("支付成功111");                              
+                                    console.log(res);                                
+                                    wx.showToast({
+                                        title: '支付成功',
+                                        icon: 'success',
+                                        duration: 800,
+                                    })                            
+                                }                                                
+                            })
+                            wx.redirectTo({
                                 url: '../myApply/myApply',
                             })
                         },
@@ -153,10 +167,23 @@ Page({
                                 title: '支付失败',
                                 icon: 'none'
                             });
-                            wx.navigateTo({
-                                url: '../myApply/myApply',
-                            })
+                            wx.navigateBack({
+                                    delta: 2, // 回退前 delta(默认为1) 页面
+                                    // success: function(res){
+                                    //     // success
+                                    // },
+                                    // fail: function() {
+                                    //     // fail
+                                    // },
+                                    // complete: function() {
+                                    //     // complete
+                                    // }
+                                })
+                                // wx.redirectTo({
+                                //     url: '../myApply/myApply',
+                                // })
                         },
+
 
                     })
 

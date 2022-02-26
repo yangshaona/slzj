@@ -4,7 +4,7 @@
 
 <template is="scope" wx:if="{{!user}}" />
 <view wx:else>
-    <block wx:if="{{doing=='无正在进行的课程'}}">
+    <!-- <block wx:if="{{doing=='无正在进行的课程'}}">
         <view class="empty">
             <image src="/icon/暂无搜索结果.png" mode="widthFix">
             </image>
@@ -12,7 +12,8 @@
                 暂无正在进行的课程
             </view>
         </view>
-    </block>
+    </block> -->
+    <template is="not_found" wx:if="{{doing=='无正在进行的课程'}}" />
     <view class="total" wx:else>
         <!-- 正在活动的标题 -->
         <view class="actTitle">{{doing.coursename}}</view>

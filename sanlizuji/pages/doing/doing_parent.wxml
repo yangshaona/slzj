@@ -4,6 +4,7 @@
     <view class="title">正在活动：<text style="color: #6177ff;">{{title}}</text></view> -->
 <import src="../template/unbounded/unbounded.wxml" />
 <import src="../template/scope/scope.wxml" />
+<import src="../template/not_found/not_found.wxml" />
 <template is="scope" wx:if="{{!user}}" />
 <view wx:else>
     <template is="unbounded" wx:if="{{id_flag=='parent'&&user.kids==''}}" />

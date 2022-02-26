@@ -8,7 +8,7 @@
     <view wx:else>
         <block wx:if="{{activity == ''}}">
             <view class="empty">
-                <image src="/icon/Noactivity.png" mode="widthFix">
+                <image src="/icon/not_found.png" mode="widthFix">
                 </image>
                 <view>
                     暂无参加任何活动

@@ -14,13 +14,16 @@ Page({
         k_name: '',
         k_phone: '',
         k_idnum: "",
+        tmp: "",
     },
     /**
      * 控制显示
      */
-    Bind: function() {
+    Bind: function(e) {
         this.setData({
-            showModal: true
+            showModal: true,
+            trigger: e.currentTarget.dataset.trigger,
+
         })
     },
 
@@ -57,6 +60,14 @@ Page({
             k_idnum: e.detail.value
         })
     },
+    // 修改姓名
+    parentName: function(e) {
+        this.setData({
+            tmp: e.detail.value
+        })
+        console.log("修改姓名");
+        console.log(this.data.tmp);
+    },
     /**
      * 点击确定按钮获取input值并且关闭弹窗
      */
@@ -66,45 +77,54 @@ Page({
         console.log(that.data.k_name);
         console.log(that.data.k_phone);
         console.log(that.data.k_idnum);
-        wx.request({
-            url: app.globalData.url + 'WxUser/SearchKids',
-            data: {
-                name: that.data.k_name,
-                phone: that.data.k_phone,
-                idnum: that.data.k_idnum,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("孩子信息");
-                console.log(res)
-                if (res.data.data.msg == "请输入姓名、身份证和电话") {
-                    wx.showModal({
-                        content: res.data.data.msg,
-                        showCancel: false,
-                    })
-
-                } else {
-                    if (res.data.data.length == 0) {
+        var trigger = that.data.trigger;
+        console.log("trigger", trigger);
+        // 绑定事件
+        if (trigger == 'bind') {
+            wx.request({
+                url: app.globalData.url + 'WxUser/SearchKids',
+                data: {
+                    name: that.data.k_name,
+                    phone: that.data.k_phone,
+                    idnum: that.data.k_idnum,
+                },
+                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                // header: {}, // 设置请求的 header
+                success: function(res) {
+                    // success
+                    console.log("孩子信息");
+                    console.log(res)
+                    if (res.data.data.msg == "请输入姓名、身份证和电话") {
                         wx.showModal({
-                            content: "该用户未注册",
+                            content: res.data.data.msg,
                             showCancel: false,
                         })
+
                     } else {
-                        that.kidBindParent(res.data.data[0].id);
+                        if (res.data.data.length == 0) {
+                            wx.showModal({
+                                content: "该用户未注册",
+                                showCancel: false,
+                            })
+                        } else {
+                            that.kidBindParent(res.data.data[0].id);
 
+                        }
                     }
+                },
+                fail: function() {
+                    // fail
+                },
+                complete: function() {
+                    // complete
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+            })
+        } else if (trigger == 'name') {
+            that.checkInfo(trigger);
+        }
+        that.setData({
+            user: user,
         })
-
     },
     //退出登录
     logout: function() {
@@ -116,7 +136,7 @@ Page({
         })
     },
 
-    //孩子绑定父母
+    //父母绑定孩子
     kidBindParent: function(kid) {
         let that = this;
         console.log("孩子id", kid)
@@ -137,41 +157,8 @@ Page({
                     showModal: false
                 })
                 if (res.data.code == 200) {
-                    wx.request({
-                        url: app.globalData.url + 'WxUser/UpdateUserInfo',
-                        data: {
-                            id: user.id,
-                            modelName: "UserParent",
-                            UserParent: {
-                                name: user.name,
-                                nikename: user.nickname,
-                                openid: user.openid,
-                                sex: user.sex,
-                                sexid: user.sexid,
-                                phone: user.phone,
-                                province: user.province,
-                                city: user.city,
-                                district: user.district,
-                                kids: that.data.k_name,
-                                k_phone: that.data.k_phone,
-                            }
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log("更改个人信息")
-                            console.log(res)
+                    that.SaveInfo();
 
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
-                        }
-
-                    })
                     wx.showToast({
                         title: "绑定成功",
                         icon: "success",
@@ -229,6 +216,71 @@ Page({
             complete: function() {
                 // complete
             }
+        })
+        this.setData({
+            user: user,
+        })
+    },
+    //修改信息
+    checkInfo: function(trigger) {
+        var _user = user;
+        var that = this;
+        if (that.data.tmp == '') {
+            wx.showModal({
+                content: "请输入内容",
+                showCancel: false,
+            })
+        } else {
+            _user[trigger] = that.data.tmp;
+
+            wx.setStorageSync('user', _user);
+            that.SaveInfo();
+            console.log("2222222");
+            console.log(user);
+            that.setData({
+                showModal: false,
+                tmp: '',
+            })
+
+        }
+    },
+    // 保存更改信息
+    SaveInfo: function() {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxUser/UpdateUserInfo',
+            data: {
+                id: user.id,
+                modelName: "UserParent",
+                UserParent: {
+                    name: user.name,
+                    nikename: user.nickname,
+                    openid: user.openid,
+                    sex: user.sex,
+                    sexid: user.sexid,
+                    phone: user.phone,
+                    province: user.province,
+                    city: user.city,
+                    district: user.district,
+                    kids: that.data.k_name,
+                    k_phone: that.data.k_phone,
+                }
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("更改个人信息")
+                console.log(res)
+
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+
         })
     },
     /**

@@ -6,7 +6,7 @@
 <view wx:else>
     <block wx:if="{{title=='无正在进行的课程'}}">
         <view class="empty">
-            <image src="/icon/暂无搜索结果.png" mode="widthFix">
+            <image src="/icon/not_found.png" mode="widthFix">
             </image>
             <view>
                 暂无正在进行的课程

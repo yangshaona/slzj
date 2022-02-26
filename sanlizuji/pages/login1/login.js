@@ -125,9 +125,10 @@ Page({
                             showCancel: true,
                         })
                     } else {
-                        wx.showModal({
-                            content: '登录成功', //提示的内容,
-                            showCancel: false, //是否显示取消按钮,
+                        wx.showToast({
+                            title: '登录成功',
+                            icon: 'success',
+                            duration: 800,
                         });
                         //保存用户登录状态
                         wx.setStorageSync('user', res.data.data)

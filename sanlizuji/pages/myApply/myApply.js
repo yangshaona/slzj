@@ -171,11 +171,13 @@ Page({
                     var ctn = total[idx];
                     var status = "";
                     var endTime = new Date(ctn['endTime']);
+
                     if (ctn['status'] == 1) {
                         status = "报名失败";
                     } else if (ctn['status'] == 2) {
                         status = "待付款";
-                    } else if (ctn['status'] == 3 && endTime < now) {
+                    } else if (ctn['status'] == 3 && endTime > now) {
+
                         status = "报名成功";
                         ctn['endTime'] = 'false';
                     } else {

@@ -139,16 +139,28 @@ Page({
                         paySign: pay_res.paySign,
                         success(res) {
                             console.log(res);
-
-
-                            wx.showToast({
-                                title: '支付成功',
-                                icon: 'success',
-                                duration: 800,
+                            wx.request({                            
+                                url:  app.globalData.url  +  "WxSign/orderFind",
+                                data: {
+                                    lowOrderId: that.options.orderid,
+                                       //后台雪花算法生成的订单号
+                                     status: "SUCCESS",
+                                },
+                                    method: 'GET',
+                                    success: function(res) {  
+                                    console.log("支付成功");                              
+                                    console.log(res);                                
+                                    wx.showToast({
+                                        title: '支付成功',
+                                        icon: 'success',
+                                        duration: 800,
+                                    })                            
+                                }                                                
                             })
 
+
                             setTimeout(function() {
-                                wx.navigateTo({
+                                wx.redirectTo({
                                     url: '../myApply/myApply',
                                 })
                             }, 1000)
@@ -201,7 +213,8 @@ Page({
         id_flag = wx.getStorageSync('id_flag')
         that.setData({
             userinfo: user,
-            id_flag: id_flag
+            id_flag: id_flag,
+            stuinfo: user,
         })
         wx.request({
             url: app.globalData.url + 'WxCourse/GetDetail',
@@ -244,7 +257,8 @@ Page({
         id_flag = wx.getStorageSync('id_flag')
         that.setData({
             userinfo: user,
-            id_flag: id_flag
+            id_flag: id_flag,
+            stuinfo: user,
         })
     },
 

@@ -23,20 +23,20 @@
             </view>
             <view class="identity">{{identity}}</view>
             <view wx:if="{{user.phone!=''}}">
-                <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone2.png"></desc>
+                <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone1.png"></desc>
             </view>
         </view>
     </view>
 
     <!-- 数据展示栏 -->
-    <view class="dataBox">
+    <!-- <view class="dataBox">
         <block wx:for="{{userInfo}}" wx:key="item">
             <view class="data">
                 <view>{{item.data}}</view>
                 <view>{{item.desc}}</view>
             </view>
         </block>
-    </view>
+    </view> -->
 
     <!-- 小组件 -->
     <view class="widgetsBox">
@@ -67,20 +67,20 @@
             </view>
             <view class="identity">{{identity}}</view>
             <view wx:if="{{user.phone!=''}}">
-                <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone2.png"></desc>
+                <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone1.png"></desc>
             </view>
         </view>
     </view>
 
     <!-- 数据展示栏 -->
-    <view class="dataBox">
+    <!-- <view class="dataBox">
         <block wx:for="{{userInfo}}" wx:key="item">
             <view class="data">
                 <view>{{item.data}}</view>
                 <view>{{item.desc}}</view>
             </view>
         </block>
-    </view>
+    </view> -->
 
     <!-- 小组件 -->
     <view class="widgetsBox">
@@ -109,7 +109,7 @@
             <view class="identity">{{identity}}</view>
             <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
             <view wx:if="{{user.phone!=null}}">
-                <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone2.png"></desc>
+                <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone1.png"></desc>
             </view>
 
         </view>

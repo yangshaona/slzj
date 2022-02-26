@@ -250,7 +250,7 @@ Page({
                                         resume: data.exp,
                                         name: data.name,
                                         sex: data.sex,
-                                        sex_id: that.data.sexid,
+                                        sexid: that.data.sexid,
                                         type: data.type,
                                         phone: data.phone,
                                         province: data.region[0],
