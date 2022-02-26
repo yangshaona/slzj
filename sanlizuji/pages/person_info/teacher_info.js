@@ -1,5 +1,7 @@
 // pages/person_info/teacher_info.js
-
+import {
+    SaveInfo
+} from '../../utils/text.js'
 let user = wx.getStorageSync('user')
 const app = getApp();
 Page({
@@ -16,9 +18,10 @@ Page({
     },
     //退出登录
     logout: function() {
-        wx.setStorageSync('user', null)
-        wx.setStorageSync('id_flag', null)
-        app.globalData.flag_identity = [1, 0, 0]
+        wx.setStorageSync('user', null);
+        wx.setStorageSync('id_flag', null);
+        wx.setStorageSync('avator', null);
+        app.globalData.flag_identity = [1, 0, 0];
         wx.switchTab({
             url: '../person/person',
         })
@@ -146,7 +149,24 @@ Page({
             _user[trigger] = that.data.tmp;
 
             wx.setStorageSync('user', _user);
-            that.SaveInfo();
+            var modelName = "Teacher";
+            var modelData = {
+                name: user.name,
+                header: user.header,
+                openid: user.openid,
+                idnum: user.idnum,
+                birthday: user.birthday,
+                sex: user.sex,
+                sexid: user.sexid,
+                phone: user.phone,
+                province: user.province,
+                city: user.city,
+                district: user.district,
+                type: user.type,
+                resume: user.exp,
+            }
+            SaveInfo(modelData, modelName);
+
             console.log("2222222");
             console.log(user);
             that.setData({
@@ -167,45 +187,5 @@ Page({
         that.setData({
             user: user
         })
-    },
-    // 信息更改后的保存
-    SaveInfo: function() {
-        let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/UpdateUserInfo',
-            data: {
-                id: user.id,
-                modelName: "Teacher",
-                Teacher: {
-                    name: user.name,
-                    header: user.header,
-                    openid: user.openid,
-                    idnum: user.idnum,
-                    birthday: user.birthday,
-                    sex: user.sex,
-                    sexid: user.sexid,
-                    phone: user.phone,
-                    province: user.province,
-                    city: user.city,
-                    district: user.district,
-                    type: user.type,
-                    resume: user.exp,
-                }
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("更改个人信息")
-                console.log(res)
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
-
     }
 })

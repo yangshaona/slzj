@@ -1,3 +1,15 @@
-<view>
-    <button bindtap="submit">Submit</button>
+<view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
+    <view catchtouchmove="catchtouchmove" class="tips">
+        <view class="tips_box">
+            <view class="hint_view">
+                <view class="text">
+                    <view class="hint1">《小程序》使用协议</view>
+                    <view class="hint2"><text>小程序使用协议小程序使用协议小程序使用协议小程序使用协议小程序使用协议...........等等</text></view>
+                </view>
+            </view>
+            <button bindtap='tipAgree' class="login" type='primary' formType="submit">我同意</button>
+        </view>
+    </view>
+
+
 </view>

@@ -106,7 +106,7 @@
 
         <view class='modal-btn-wrapper'>
             <view class='cancel-btn' style='color:rgba(7,17,27,0.6)' bindtap='back'>取消</view>
-            <view class='confirm-btn' style='color:#1677ff' bindtap='ok'>确定</view>
+            <view class='confirm-btn' style='color:#1677ff;' bindtap='ok'>确定</view>
         </view>
 
     </view>

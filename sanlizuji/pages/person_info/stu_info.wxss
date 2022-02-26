@@ -191,10 +191,6 @@
     /* vertical-align: middle; */
 }
 
-.input {
-    /* text-align: center; */
-}
-
 .info {
     width: 100%;
 }

@@ -7,6 +7,9 @@
  * @param html
  * @returns {void|string|*}
  */
+const app = getApp();
+let user = wx.getStorageSync('user');
+
 function formatRichText(html) {
     let newContent = html.replace(/<img[^>]*>/gi, function(match, capture) {
         match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
@@ -22,7 +25,34 @@ function formatRichText(html) {
     newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-top:0;margin-bottom:0;"');
     return newContent;
 }
+// 保存更改信息
+function SaveInfo(modelData, modelName) {
+    wx.request({
+        url: app.globalData.url + 'WxUser/UpdateUserInfo',
+        // data: data,
+        data: {
+            id: user.id,
+            modelName: modelName,
+            [`${modelName}`]: modelData,
+        },
+        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+        // header: {}, // 设置请求的 header
+        success: function(res) {
+            // success
+            console.log("更改个人信息")
+            console.log(res)
 
+        },
+        fail: function() {
+            // fail
+        },
+        complete: function() {
+            // complete
+        }
+
+    })
+}
 module.exports = {
-    formatRichText
+    formatRichText,
+    SaveInfo
 }

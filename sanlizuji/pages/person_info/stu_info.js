@@ -1,4 +1,7 @@
 // pages/person_info/stu_info.js
+import {
+    SaveInfo
+} from '../../utils/text.js'
 let user = wx.getStorageSync('user');
 const app = getApp();
 Page({
@@ -191,7 +194,35 @@ Page({
             _user[trigger] = that.data.tmp;
 
             wx.setStorageSync('user', _user);
-            that.SaveInfo();
+            // that.SaveInfo();
+
+
+            var modelName = "Userinfo";
+            var modelData = {
+                name: user.name,
+                nikename: user.nickname,
+                header: user.header,
+                openid: user.openid,
+                idnum: user.idnum,
+                birthday: user.birthday,
+                sex: user.sex,
+                sexid: user.sexid,
+                education: user.education,
+                phone: user.phone,
+                schoolname: user.schoolname,
+                grade: user.grade,
+                class: user.class,
+                province: user.province,
+                city: user.city,
+                district: user.district,
+                parents: that.data.parent_name,
+                p_phone: that.data.parent_phone,
+                aller: user.aller,
+                regsterdate: user.regsterdate,
+            }
+            SaveInfo(modelData, modelName);
+
+
             console.log("2222222");
             console.log(user);
             that.setData({
@@ -259,10 +290,10 @@ Page({
     },
     //退出登录
     logout: function() {
-        wx.setStorageSync('user', null)
+        wx.setStorageSync('user', null);
         wx.setStorageSync('id_flag', null);
-        wx.setStorageSync('avator', null)
-        app.globalData.flag_identity = [1, 0, 0]
+        wx.setStorageSync('avator', null);
+        app.globalData.flag_identity = [1, 0, 0];
         wx.switchTab({
             url: '../person/person',
         })
@@ -353,7 +384,7 @@ Page({
     },
     //手机号码输入检查
     checkPhone: function(phNum, id) {
-        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
         if (phNum.length != 11 || !reg.test(phNum)) {
             wx.showModal({
                 content: id + '输入有误', //提示的内容,
@@ -388,53 +419,7 @@ Page({
             console.log("身份证号验证通过")
             return true;
         }
-    },
-
-    // 信息更改后的保存
-    SaveInfo: function() {
-        let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/UpdateUserInfo',
-            data: {
-                id: user.id,
-                modelName: "Userinfo",
-                Userinfo: {
-                    name: user.name,
-                    nikename: user.nickname,
-                    header: user.header,
-                    openid: user.openid,
-                    idnum: user.idnum,
-                    birthday: user.birthday,
-                    sex: user.sex,
-                    sexid: user.sexid,
-                    education: user.education,
-                    phone: user.phone,
-                    schoolname: user.schoolname,
-                    grade: user.grade,
-                    class: user.class,
-                    province: user.province,
-                    city: user.city,
-                    district: user.district,
-                    parents: that.data.parent_name,
-                    p_phone: that.data.parent_phone,
-                    aller: user.aller,
-                    regsterdate: user.regsterdate,
-                }
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("更改个人信息")
-                console.log(res)
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
-
     }
+
+
 })

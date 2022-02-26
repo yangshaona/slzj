@@ -1,5 +1,8 @@
 <!--pages/register/register_stu.wxml-->
 <!-- 照片上传还没搞 -->
+<view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
+    <include src="../template/agree_protocol/agree_protocol"></include>
+</view>
 <!-- 注册框 -->
 <block wx:if="{{!cangetUserInfo}}">
     <view class="primary">
@@ -81,18 +84,7 @@
                     {{cls_idx == null ? "请选择" : cls[cls_idx]}}
                 </picker>
             </view>
-            <!-- <view>
-                <view class="desc">监护人姓名
-                    <image mode="widthFix" src="/icon/guardian.png"></image>
-                </view>
-                <input type="text" name="parents" id="parents" placeholder="监护人姓名" />
-            </view>
-            <view>
-                <view class="desc">监护人手机号
-                    <image mode="widthFix" src="/icon/phone.png"></image>
-                </view>
-                <input type="text" name="p_phone" id="p_phone" placeholder="监护人手机号" maxlength="11" />
-            </view> -->
+
             <view>
                 <view class="desc">地区
                     <image mode="widthFix" src="/icon/address.png"></image>
@@ -114,8 +106,10 @@
                 <button class="chooseImg" bindtap="chooseImg">选择文件</button>
                 <input type="text" name="avator" id="avator" value="{{avator}}" disabled="true" style="display:none;" />
             </view>
+            <!-- <image mode="widthFix" src="{{avator}}"></image> -->
             <!-- 提交检查/注册 -->
             <button form-type="submit" class="submit">注册</button>
         </form>
     </view>
 </block>
+<view class=""> </view>

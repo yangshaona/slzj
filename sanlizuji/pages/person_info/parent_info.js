@@ -1,4 +1,7 @@
 // pages/person_info/parent_info.js
+import {
+    SaveInfo
+} from '../../utils/text.js'
 let user = wx.getStorageSync('user')
 const app = getApp();
 Page({
@@ -128,9 +131,10 @@ Page({
     },
     //退出登录
     logout: function() {
-        wx.setStorageSync('user', null)
-        wx.setStorageSync('id_flag', null)
-        app.globalData.flag_identity = [1, 0, 0]
+        wx.setStorageSync('user', null);
+        wx.setStorageSync('id_flag', null);
+        wx.setStorageSync('avator', null);
+        app.globalData.flag_identity = [1, 0, 0];
         wx.switchTab({
             url: '../person/person',
         })
@@ -225,6 +229,7 @@ Page({
     checkInfo: function(trigger) {
         var _user = user;
         var that = this;
+        var id = 'id';
         if (that.data.tmp == '') {
             wx.showModal({
                 content: "请输入内容",
@@ -234,7 +239,21 @@ Page({
             _user[trigger] = that.data.tmp;
 
             wx.setStorageSync('user', _user);
-            that.SaveInfo();
+            var modelName = "UserParent";
+            var modelData = {
+                name: user.name,
+                nikename: user.nickname,
+                openid: user.openid,
+                sex: user.sex,
+                sexid: user.sexid,
+                phone: user.phone,
+                province: user.province,
+                city: user.city,
+                district: user.district,
+                kids: that.data.k_name,
+                k_phone: that.data.k_phone,
+            }
+            SaveInfo(modelData, modelName);
             console.log("2222222");
             console.log(user);
             that.setData({
@@ -244,45 +263,7 @@ Page({
 
         }
     },
-    // 保存更改信息
-    SaveInfo: function() {
-        let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/UpdateUserInfo',
-            data: {
-                id: user.id,
-                modelName: "UserParent",
-                UserParent: {
-                    name: user.name,
-                    nikename: user.nickname,
-                    openid: user.openid,
-                    sex: user.sex,
-                    sexid: user.sexid,
-                    phone: user.phone,
-                    province: user.province,
-                    city: user.city,
-                    district: user.district,
-                    kids: that.data.k_name,
-                    k_phone: that.data.k_phone,
-                }
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("更改个人信息")
-                console.log(res)
 
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-
-        })
-    },
     /**
      * 生命周期函数--监听页面加载
      */
