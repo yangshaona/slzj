@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "desc": "/components/desc/desc"
+  },
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "支付确认",
+  "navigationBarBackgroundColor": "#f6f6f6"
+}

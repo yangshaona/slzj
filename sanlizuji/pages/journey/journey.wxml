@@ -19,7 +19,7 @@
         <view wx:else>
             <block wx:for="{{journey}}" wx:key="item">
                 <view class="total">
-                    <view class="actCard" style="height: 600rpx;" data-fid="{{item[0].courseid}}" bindtap="toCourseDetail">
+                    <view class="actCard" style="height: auto" data-fid="{{item[0].courseid}}" bindtap="toCourseDetail">
                         <image src="{{item[0].pic}}" mode="widthFix" class="actImg"></image>
                         <view class="actInfo">
                             <text class="actName">{{item[0].course_name}}</text>

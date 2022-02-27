@@ -47,7 +47,7 @@ Page({
             { 'imgUrl': '/icon/activity.png', 'text': '亲子活动', 'url': '', 'class': 'selected' },
             { 'imgUrl': '/icon/bubble.png', 'text': '研学课程', 'url': '', 'class': 'select' },
             { 'imgUrl': '/icon/exp.png', 'text': '冬夏令营', 'url': '', 'class': 'select' },
-            { 'imgUrl': '/icon/video.png', 'text': '活动直播', 'url': '', 'class': 'select' }
+            { 'imgUrl': '/icon/mind.png', 'text': '更多活动', 'url': '', 'class': 'select' }
         ],
         // 搜索框
         searchClass: "srcFold",
