@@ -1,0 +1,11 @@
+<template name="not_found">
+  <block>
+    <view class="empty">
+        <image src="/icon/not_found.png" mode="widthFix">
+        </image>
+        <view>
+            未找到相关信息
+        </view>
+    </view>
+</block>
+</template>

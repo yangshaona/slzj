@@ -38,17 +38,25 @@ Page({
                 'ctn': '爱住了'
             },
         ],
-        user:user,
+        user: user,
 
+    },
+    //跳转到活动详情
+    toCourseDetail: function(e) {
+        var id = e.currentTarget.dataset.courseid;
+        wx.navigateTo({
+            url: './detail?id=' + id,
+
+        })
     },
     //获取导师之前的活动
     GetTeaReviewActiv: function(id) {
-      console.log("id是：",id)
+        console.log("id是：", id)
         let that = this;
         wx.request({
-          url: app.globalData.url + 'WxOther/GetTeaReviewAct',
-          data: {
-            id: id,
+            url: app.globalData.url + 'WxOther/GetTeaReviewAct',
+            data: {
+                id: id,
             },
             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             // header: {}, // 设置请求的 header
@@ -57,20 +65,20 @@ Page({
                 console.log("成功获取导师该活动的回顾")
                 console.log(res)
                 that.setData({
-                  schoolImg: mergeArr(res.data.data1, res.data.data2)
+                    schoolImg: mergeArr(res.data.data1, res.data.data2)
                 })
                 console.log(that.data.schoolImg)
 
-              function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                if (arr1.length == 0) {
-                  return [];
+                function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
+                    if (arr1.length == 0) {
+                        return [];
+                    }
+                    let arr3 = [];
+                    arr1.map((item, index) => {
+                        arr3.push(Object.assign(item, arr2[index]));
+                    })
+                    return arr3;
                 }
-                let arr3 = [];
-                arr1.map((item, index) => {
-                  arr3.push(Object.assign(item, arr2[index]));
-                })
-                return arr3;
-              }
             },
             fail: function() {
                 // fail
@@ -78,7 +86,7 @@ Page({
             complete: function() {
                 // complete
             }
-            
+
         })
     },
 
@@ -88,11 +96,11 @@ Page({
     onLoad: function(options) {
         console.log("导师详情界面")
         console.log(options)
-      let that = this; 
-      user = wx.getStorageSync('user');
-      that.setData({
-        user: user
-      })
+        let that = this;
+        user = wx.getStorageSync('user');
+        that.setData({
+            user: user
+        })
         wx.request({
             url: app.globalData.url + 'WxSign/GetTeacherDetail',
             data: {
@@ -112,7 +120,7 @@ Page({
                     that.setData({
                         teacher_info: res.data.data
                     })
-                  that.GetTeaReviewActiv(res.data.data.id)
+                    that.GetTeaReviewActiv(res.data.data.id)
                 }
                 console.log(that.data.teacher_info)
             },
@@ -137,10 +145,10 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-      user = wx.getStorageSync('user');
-      this.setData({
-        user: user
-      })
+        user = wx.getStorageSync('user');
+        this.setData({
+            user: user
+        })
     },
 
     /**

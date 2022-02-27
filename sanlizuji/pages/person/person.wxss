@@ -1,5 +1,6 @@
 /* pages/person/demo.wxss */
 
+@import '../template/agree_protocol/agree_protocol.wxss';
 .me-title {
     height: 80px;
     width: 100%;

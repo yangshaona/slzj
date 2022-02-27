@@ -32,7 +32,7 @@
     box-sizing: border-box;
     position: relative;
     width: 100%;
-    margin: 2.5% 0;
+    margin: 2.5% 0 5% 0;
     padding: 5%;
     background-image: linear-gradient(to left, #f5f5f5, #ffffff);
     box-shadow: 0px 0px 10px lightgray;
@@ -290,13 +290,14 @@
 
 .bottom {
     display: flex;
-    position: relative;
+    /* position: relative; */
+    position: fixed;
     z-index: 2;
     bottom: 0%;
     width: 100%;
     padding: 0;
-    margin: 2.5% 0;
-    padding: 0 1%;
+    /* margin: 2.5% 0; */
+    /* padding: 0 1%; */
     background-image: linear-gradient(to left, #f5f5f5, #ffffff);
 }
 
@@ -323,36 +324,70 @@
 
 .bottomHalf2 {
     display: flex;
-    width: 80%;
+    width: 90%;
+    margin-left: 10%;
+}
+
+
+/* button {
+    display: block;
+    box-sizing: border-box;
+    height: fit-content;
+    margin: auto 2.5%;
+    padding: 2.5%;
+    border-radius: 0.5rem !important;
+    font-weight: normal;
+    font-size: 0.85rem;
+    border-radius: 0;
+} */
+
+button[disabled] {
+    color: #fff !important;
+    background: #cacecf !important;
+    border-color: #cacecf !important;
+}
+
+picker[disabled] {
+    color: #fff !important;
+    background: #cacecf !important;
+    border-color: #cacecf !important;
 }
 
 .button1 {
     display: block;
     box-sizing: border-box;
     height: fit-content;
-    padding: 2.5%;
     margin: auto 2.5%;
-    width: 35% !important;
+    padding: 2.5%;
     border-radius: 0.5rem !important;
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 0;
+    width: 40% !important;
     color: #6177ff;
     background: #ced4ff;
-    font-weight: normal;
-    font-size: 0.85rem;
-    border-radius: 0;
 }
 
 .button2 {
+    border-radius: 0.5rem !important;
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 0;
+    width: 60%;
+    background-image: linear-gradient(to right, #6177ff, #8898ff);
+}
+
+button::after {
+    border: none;
+}
+
+.button3 {
     display: block;
+    margin: auto 2.5%;
     box-sizing: border-box;
     height: fit-content;
-    margin: auto 2.5%;
     padding: 2.5%;
-    width: 55% !important;
-    border-radius: 0.5rem !important;
     color: white;
-    font-weight: normal;
-    font-size: 0.85rem;
-    border-radius: 0;
     background-image: linear-gradient(to right, #6177ff, #8898ff);
 }
 
@@ -407,4 +442,11 @@
     border-radius: 1rem;
     white-space: pre-wrap;
     margin: 5% 0;
+}
+
+.stu {
+    display: block;
+    width: 70%;
+    text-align: right;
+    font-size: 0.75rem;
 }

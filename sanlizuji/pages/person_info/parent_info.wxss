@@ -1,5 +1,6 @@
 /* pages/person_info/parent_info.wxss */
 
+@import './stu_info.wxss';
 .primary {
     display: block;
     box-sizing: border-box;

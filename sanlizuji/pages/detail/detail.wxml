@@ -156,12 +156,14 @@
         <image src="/icon/kefu.png" mode="widthFix"></image>
         <view>客服</view>
     </view>
-    <!-- <view class="bottomHalf1" bindtap="commentTap">
-        <image src="/icon/message2.png" mode="widthFix"></image>
-        <view>评论</view>
-    </view> -->
+
     <view class="bottomHalf2">
-        <button class="button1" id="teacher" bindtap="teacherSignUp">教师报名</button>
-        <button class="button2" id="student" bindtap="studentSignUp">学生报名</button>
+        <button class="button1" id="teacher" bindtap="teacherSignUp" disabled="{{isOutDate}}">教师报名</button>
+
+        <picker wx:if=" {{id_flag=='parent' }} " disabled="{{isOutDate}}" class="button2 " mode="selector " range="{{stu_arr}} " range-key="name " value="{{idx}} " bindchange="stuChange ">
+            <button class="button3" disabled="{{isOutDate}}">学生报名</button>
+        </picker>
+        <button wx:else class="button2 button3" id="student " bindtap="studentSignUp ">学生报名</button>
+
     </view>
 </view>

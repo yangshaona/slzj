@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+        "desc": "/components/desc/desc"
+    },
+    "navigationBarTitleText": "待付款",
+    "backgroundColor": "#f6f6f6"
+}

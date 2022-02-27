@@ -61,6 +61,7 @@ Page({
         identity: '',
         id_flag: id_flag,
         user: user,
+        header: "",
     },
     //已登录直接跳到个人信息
     toInfo: function(e) {
@@ -152,51 +153,11 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        user = wx.getStorageSync('user');
-        id_flag = wx.getStorageSync('id_flag');
-        avator = wx.getStorageSync("avator")
-
-        if (user != null) console.log("用户信息1", user)
-        if (user != '') console.log("用户信息2", user)
-        if (user == '') console.log("用户信息3", user)
+        this.judgeIdentity();
         var height = this.data.width * 0.65 * 0.3;
         this.setData({
-            user: user,
-            id_flag: id_flag,
-            avator: avator,
             imgHeight: height,
         })
-        console.log("身份")
-        console.log(this.data.id_flag)
-            // 从服务端获取关注/粉丝
-        this.setData({
-            follow: 10,
-            fans: 187625,
-
-        })
-        if (id_flag == 'parent') {
-            this.setData({
-                identity: '家长'
-            })
-        } else if (id_flag == 'teacher') {
-            this.setData({
-                identity: '导师'
-            })
-        } else {
-            this.setData({
-                identity: '学生'
-            })
-        }
-        // 设置数据展示栏
-        var info = [
-            { 'data': this.data.follow, 'desc': '关注' },
-            { 'data': this.data.fans, 'desc': '粉丝' },
-        ]
-        this.setData({
-            userInfo: info,
-            user: user
-        });
-        console.log("用户", user)
     },
 
     /**
@@ -210,19 +171,14 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-        id_flag = wx.getStorageSync('id_flag');
+        this.judgeIdentity();
+
+    },
+    // 判断类型
+    judgeIdentity: function() {
         user = wx.getStorageSync('user');
-
-        avator = wx.getStorageSync('avator');
-
-        this.setData({
-            id_flag: id_flag
-        })
-        this.setData({
-            follow: 10,
-            fans: 187625,
-
-        })
+        id_flag = wx.getStorageSync('id_flag');
+        avator = wx.getStorageSync("avator");
         if (id_flag == 'parent') {
             this.setData({
                 identity: '家长'
@@ -236,14 +192,9 @@ Page({
                 identity: '学生'
             })
         }
-        // 设置数据展示栏
-        var info = [
-            { 'data': this.data.follow, 'desc': '关注' },
-            { 'data': this.data.fans, 'desc': '粉丝' },
-        ]
         this.setData({
-            userInfo: info,
             user: user,
+            id_flag: id_flag,
             avator: avator,
         })
     },

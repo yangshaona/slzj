@@ -69,9 +69,13 @@
                 <view class="desc">简历
                     <image mode="widthFix" src="/icon/remark.png"></image>
                 </view>
-                <input name="exp" id="exp" type="text" disabled="true" value="{{exp}}" hidden="true" />
                 <!-- 只支持上传聊天文件 -->
                 <button class="choose" bindtap="chooseFiles">选择文件</button>
+
+                <input name="exp" id="exp" type="text" disabled="true" value="{{exp}}" hidden="{{exp==''?true:false}}" />
+
+                <!-- <image mode="widthFix" src="{{filePath}}"></image>
+                <view>{{filepath}}</view> -->
             </view>
 
             <!-- 提交检查/注册 -->
