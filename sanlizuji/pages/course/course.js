@@ -66,7 +66,6 @@ Page({
         filterHide: true,
 
     },
-
     // checkTap
     checkTap: function (e) {
         console.log(e);
@@ -252,7 +251,8 @@ Page({
     },
     getSearchData: function () {
         let that = this;
-        var para = app.globalData.navigate_name;
+        var para = [];
+        para.push(app.globalData.navigate_name);
         var status = '',
             duration = '';
         if (that.data.status != '') {
@@ -263,11 +263,20 @@ Page({
         }
         if (that.data.theme != '') {
             para = that.data.theme;
+            this.setData({
+                title_name: "课程",
+            })
+        } else {
+            this.setData({
+                title_name: app.globalData.navigate_name,
+            })
         }
-        this.setData({
-            title_name: para,
-        })
 
+        if (para[0] == "") {
+            para = "";
+        }
+
+        // app.globalData.navigate_name = "";
         wx.request({
             url: app.globalData.url + 'WxCourse/GetMoreNews',
             data: {

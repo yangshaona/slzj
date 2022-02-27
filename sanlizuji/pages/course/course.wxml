@@ -1,5 +1,6 @@
 <!--pages/course/course.wxml-->
 <!-- 总页面 -->
+<import src="../template/not_found/not_found.wxml" />
 <!-- 筛选框 -->
 <view class="{{filterHide?'':'zhezhao'}}" bindtap="filterTap">
 
@@ -61,13 +62,14 @@
         </view>
     </view>
     <!-- 全部活动 -->
-    <view wx:if="{{activity==''}}">
+    <!-- <view wx:if="{{activity==''}}">
         <view style="display: flex;justify-content: center; transition: all 0.5s;">
             <image style="width: 400rpx; margin-top:30%;" mode="widthFix" src="/icon/没有找到匹配结果.png">
             </image>
         </view>
         <view style="display: flex;justify-content: center;color: rgb(82, 80, 80); margin-top: 10rpx;">没有找到匹配结果...</view>
-    </view>
+    </view> -->
+    <template is="not_found" wx:if="{{activity==''}}" />
     <view wx:elif="{{!filterHide}}">
         <view style="display: flex;justify-content: center; transition: all 0.5s;">
         </view>

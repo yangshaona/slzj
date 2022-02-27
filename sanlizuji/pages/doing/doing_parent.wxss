@@ -2,6 +2,7 @@
 
 @import '../template/unbounded/unbounded.wxss';
 @import '../template/scope/scope.wxss';
+@import '../template/not_found/not_found.wxss';
 .title {
     display: block;
     padding: 1% 2.5%;

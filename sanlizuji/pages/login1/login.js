@@ -20,7 +20,7 @@ Page({
 
     //手机号码输入检查
     checkPhone: function(phNum, id) {
-        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
         if (phNum.length != 11) {
             wx.showToast({
                 title: id + '有误',
@@ -125,9 +125,10 @@ Page({
                             showCancel: true,
                         })
                     } else {
-                        wx.showModal({
-                            content: '登录成功', //提示的内容,
-                            showCancel: false, //是否显示取消按钮,
+                        wx.showToast({
+                            title: '登录成功',
+                            icon: 'success',
+                            duration: 800,
                         });
                         //保存用户登录状态
                         wx.setStorageSync('user', res.data.data)

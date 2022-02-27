@@ -1,5 +1,6 @@
 /* pages/doing/doing_tc.wxss */
 
+@import '../template/not_found/not_found.wxss';
 @import '../template/scope/scope.wxss';
 .title {
     display: block;

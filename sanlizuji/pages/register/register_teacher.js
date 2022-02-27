@@ -9,6 +9,7 @@ Page({
      */
 
     data: {
+        filepath: '',
         // 能否获得用户微信昵称
         cangetUserInfo: false,
         //表单各个小标题
@@ -94,7 +95,8 @@ Page({
 
     //手机号码输入检查
     checkPhone: function(phNum) {
-        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
+
         if (phNum.length != 11 || !reg.test(phNum)) {
             wx.showModal({
                 content: '手机号输入有误',
@@ -132,6 +134,7 @@ Page({
     },
     // 选择文件
     chooseFiles: function(e) {
+        console.log("上传文件");
         wx.chooseMessageFile({
             count: 1,
             type: "all",
@@ -141,8 +144,12 @@ Page({
                     icon: 'success',
                     duration: 800
                 });
+                console.log("上传文件返回的结果");
                 console.log(res);
                 var files = res.tempFiles;
+                this.setData({
+                    filepath: files,
+                })
                 var exp = [];
                 for (var idx in files) {
                     exp.push(files[idx].path);
@@ -250,7 +257,7 @@ Page({
                                         resume: data.exp,
                                         name: data.name,
                                         sex: data.sex,
-                                        sex_id: that.data.sexid,
+                                        sexid: that.data.sexid,
                                         type: data.type,
                                         phone: data.phone,
                                         province: data.region[0],

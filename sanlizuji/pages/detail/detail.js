@@ -3,6 +3,8 @@ const app = getApp();
 import {
     formatRichText
 } from '../../utils/text.js'
+let user = wx.getStorageSync('user');
+let id_flag = wx.getStorageSync('id_flag');
 Page({
 
     /**
@@ -16,11 +18,7 @@ Page({
         //行程id
         index: 1,
         course_detail: {},
-        // 活动缩略图 数组放url 可多张
-        actImg: [
-            "https://s3.bmp.ovh/imgs/2022/01/6ab7032e3f6c3bde.jpg",
-            "https://s3.bmp.ovh/imgs/2022/01/817aed11996fdc0b.jpg"
-        ],
+
         //服务商机构
         // logo: 'https://bkimg.cdn.bcebos.com/pic/21a4462309f79052982290b94eb9c0ca7bcb0b467fab?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto',
 
@@ -90,6 +88,14 @@ Page({
         teacher_star: '',
         // 文字评价
         cmt: "",
+        // 学员选择器，需要后端初始化
+        stu_arr: [],
+        idx: -1, //如果是家长报名就需要先选择孩子才能报名
+        stu: '',
+        user: user,
+        id_flag: id_flag,
+        isOutDate: false,
+
     },
 
     // 评价星级
@@ -182,7 +188,14 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        let that = this
+        let that = this;
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag')
+        that.setData({
+            user: user,
+            id_flag: id_flag,
+        })
+        if (id_flag == 'parent') { that.loadStu(); }
         wx.request({
             url: app.globalData.url + 'WxCourse/GetDetail',
             data: {
@@ -203,7 +216,16 @@ Page({
                     course_detail: res.data.data[0],
 
                 });
+                var now = new Date;
+                var sign_date_end = new Date(res.data.data[0].sign_date_end);
 
+                if (sign_date_end < now) {
+                    that.setData({
+                        isOutDate: true,
+                    })
+                }
+                console.log("报名时间是否小于当前时间");
+                console.log(that.data.isOutDate)
                 that.getSchedule(res.data.data[0].id)
                 that.getComments(res.data.data[0].id);
                 that.getClub(res.data.data[0].club_id)
@@ -324,61 +346,131 @@ Page({
         let user = wx.getStorageSync('user');
         console.log(user)
         if (!user) {
+            that.isLoaded('../register/register_teacher')
 
-            wx.showModal({
-                content: '还未登录，请先登录再报名！', //提示的内容,
-                showCancel: false, //是否显示取消按钮,
-                success: function(res) {
-                    if (res.confirm) {
-                        console.log('确定')
-                        wx.navigateTo({
-                            url: '../register/register_teacher'
-                        })
-                    } else {
-                        console.log('取消')
-                    }
-                }
-
-            });
         } else {
-            wx.request({
-                url: app.globalData.url + "WxSign/Teasign",
-                data: {
-                    userid: user.id,
-                    courseid: that.data.course_detail.id,
-                    username: user.name
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    if (res.data.data.msg == "报名成功") {
+            wx.showModal({
+                content: '是否确定报名',
+                success(res) {
+                    if (res.cancel) {
 
-                        console.log("报名成功")
-                        console.log(res);
-                        wx.navigateTo({
-                                url: '../pay/confirm?id=' + that.data.course_detail.id,
-                            })
-                            // wx.showToast({
-                            //     title: "报名成功",
-                            //     icon: 'success',
-                            //     duration: 1600,
-                            // })
-                    } else {
-                        wx.showModal({
-                            content: '报名失败',
-                            showCancel: false
+                    } else if (res.confirm) {
+                        wx.request({
+                            url: app.globalData.url + "WxSign/Teasign",
+                            data: {
+                                userid: user.id,
+                                courseid: that.data.course_detail.id,
+                                username: user.name
+                            },
+                            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                            // header: {}, // 设置请求的 header
+                            success: function(res) {
+                                // success
+                                if (res.data.data.msg == "报名成功") {
+
+                                    console.log("报名成功")
+                                    console.log(res);
+                                    wx.navigateTo({
+                                        url: '../myApply/myApply',
+                                    })
+                                    wx.showToast({
+                                        title: "报名成功",
+                                        icon: 'success',
+                                        duration: 1600,
+                                    })
+                                } else {
+                                    wx.showModal({
+                                        content: '报名失败',
+                                        showCancel: false
+                                    })
+                                }
+                            },
+                            fail: function() {
+                                // fail
+                            },
+                            complete: function() {
+                                // complete
+                            }
                         })
                     }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
                 }
             })
+
         }
+    },
+    // 学员选择器改变
+    stuChange: function(e) {
+        var stu_arr = this.data.stu_arr;
+        this.setData({
+            idx: e.detail.value,
+            stu: stu_arr[e.detail.value].name,
+            kid: stu_arr[e.detail.value],
+        });
+        console.log("学生的数据");
+        console.log(this.data.stu);
+        console.log(this.data.kid);
+        if (this.data.stu != '') {
+            this.studentSignUp();
+        }
+    },
+    // 初始化学员选择器
+    loadStu: function(e) {
+        // 和后台拿东西setData
+        let that = this;
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag');
+
+        console.log("家长身份")
+        wx.request({
+            url: app.globalData.url + 'WxUser/GetKidsList',
+            data: {
+                id: user.id
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("孩子信息");
+                console.log(res);
+                if (res.data.data.length > 0) {
+                    var kid = [];
+                    for (var item of res.data.data) {
+                        kid.push(item);
+                    }
+                    console.log(kid)
+                    that.setData({
+                        stu_arr: kid
+                    })
+                    console.log(that.data.stu_arr)
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+
+    },
+    // 判断是否已登录
+    isLoaded: function(url) {
+
+        wx.showModal({
+            content: '还未登录，请先登录再报名！', //提示的内容,
+            showCancel: false, //是否显示取消按钮,
+            success: function(res) {
+                if (res.confirm) {
+                    console.log('确定')
+                    wx.navigateTo({
+                        url: url
+                    })
+                } else {
+                    console.log('取消')
+                }
+            }
+
+        });
     },
     //学生报名
     studentSignUp: function(options) {
@@ -388,61 +480,64 @@ Page({
         let that = this;
         console.log(user)
         if (!user) {
-
-            wx.showModal({
-                content: '还未登录，请先登录再报名！', //提示的内容,
-                showCancel: false, //是否显示取消按钮,
-                success: function(res) {
-                    if (res.confirm) {
-                        console.log('确定')
-                        wx.navigateTo({
-                            url: '../register/register_stu'
-                        })
-                    } else {
-                        console.log('取消')
-                    }
-                }
-
-            });
+            that.isLoaded('../register/register_stu');
         } else {
-
-            wx.request({
-                url: app.globalData.url + "WxSign/Stusign",
-                data: {
-                    userid: user.id,
-                    courseid: that.data.course_detail.id,
-                    username: user.name
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("报名数据")
-                    console.log(res)
-                    if (res.data.data.msg == "报名成功") {
-                        wx.navigateTo({
-                                url: '../pay/confirm?id=' + that.data.course_detail.id,
-                            })
-                            // wx.showToast({
-                            //     title: "报名成功",
-                            //     icon: 'success',
-                            //     duration: 1600,
-                            // })
-                    } else {
-                        wx.showModal({
-                            content: '报名失败',
-                            showCancel: false
-                        })
-                    }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+            if (id_flag == 'parent') {
+                if (that.data.idx != -1) {
+                    that.GenerateOrder(that.data.kid.id, that.data.kid.name);
+                } else {
+                    console.log('err');
+                    wx.showToast({
+                        title: '请选择孩子',
+                        icon: 'error',
+                        duration: 800
+                    })
                 }
-            })
+            } else {
+                that.GenerateOrder(user.id, user.name);
+            }
+
         }
+    },
+    // 生成订单
+    GenerateOrder: function(id, name) {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + "WxSign/Stusign",
+            data: {
+                userid: id,
+                courseid: that.data.course_detail.id,
+                username: name
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("报名数据")
+                console.log(res)
+                if (res.data.data.msg == "报名成功") {
+                    wx.navigateTo({
+                            url: '../pay/confirm?id=' + that.data.course_detail.id + '&orderid=' + res.data.data.id + '&userid=' + id,
+                        })
+                        // wx.showToast({
+                        //     title: "报名成功",
+                        //     icon: 'success',
+                        //     duration: 1600,
+                        // })
+                } else {
+                    wx.showModal({
+                        content: '报名失败',
+                        showCancel: false
+                    })
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -455,7 +550,13 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
+        let that = this;
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag')
+        that.setData({
+            user: user,
+            id_flag: id_flag,
+        })
     },
 
     /**

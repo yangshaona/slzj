@@ -66,20 +66,13 @@ Page({
 
                                     //     })
                                     // }, 800);
-                                    wx.navigateTo({
-                                        url: '../login1/login?id=' + options.id,
-                                        success: function(res) {
-                                            // success
-                                        },
-                                        fail: function() {
-                                            // fail
-                                        },
-                                        complete: function() {
-                                            // complete
-                                        }
-                                    })
+                                    setTimeout(function() {
+                                        wx.redirectTo({
+                                            url: '../login1/login?id=' + options.id,
 
+                                        })
 
+                                    }, 100)
                                 } else {
                                     // wx.showToast({
                                     //     title: '登录成功',

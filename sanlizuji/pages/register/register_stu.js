@@ -69,11 +69,13 @@ Page({
         multiArray: [],
         multiIndex: [0, 0, 0],
         province: [],
-
-
+        //是否显示用户协议
+        isTipTrue: true,
     },
     // 选择图像
     chooseImg: function(e) {
+        console.log("上传实名头像");
+        console.log(e);
         wx.chooseMedia({
             mediaType: ['image'],
             count: 1,
@@ -87,9 +89,13 @@ Page({
                     duration: 800
                 })
                 console.log("头像保存成功")
+                console.log(res);
+                console.log(res.tempFiles);
+                console.log(res.tempFiles[0]);
                 this.setData({
                     avator: res.tempFiles[0].tempFilePath,
                 })
+                console.log(res.tempFiles[0].tempFilePath);
                 console.log(this.data.avator)
             },
             fail: (res) => {
@@ -245,7 +251,7 @@ Page({
 
     //手机号码输入检查
     checkPhone: function(phNum, id) {
-        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
         if (phNum.length != 11 || !reg.test(phNum)) {
             wx.showModal({
                 content: id + '输入有误', //提示的内容,
@@ -534,7 +540,12 @@ Page({
         })
     },
 
-
+    // 阅读协议
+    tipAgree: function() {
+        this.setData({
+            isTipTrue: false
+        })
+    },
     /**
      * 生命周期函数--监听页面加载
      */
@@ -545,7 +556,9 @@ Page({
         // that.getLocation();//获取省市区
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         that.setData({
-            time: time
+            time: time,
+            isTipTrue: true,
+
         })
         var province = [],
             city = [],

@@ -4,21 +4,15 @@
     <view class="title">正在活动：<text style="color: #6177ff;">{{title}}</text></view> -->
 <import src="../template/unbounded/unbounded.wxml" />
 <import src="../template/scope/scope.wxml" />
+<import src="../template/not_found/not_found.wxml" />
 <template is="scope" wx:if="{{!user}}" />
 <view wx:else>
     <template is="unbounded" wx:if="{{id_flag=='parent'&&user.kids==''}}" />
 
     <!-- 一个人一个卡片 -->
     <view wx:else>
-        <block wx:if="{{activity.length==0}}">
-            <view class="empty">
-                <image src="/icon/暂无搜索结果.png" mode="widthFix">
-                </image>
-                <view>
-                    暂无正在进行的活动
-                </view>
-            </view>
-        </block>
+        <template is="not_found" wx:if="{{activity.length==0}}" />
+
         <view wx:else>
             <block wx:for="{{activity}}" wx:key="item">
                 <view class="card1" data-id="{{item.userid}}" bindtap="toStudentActiviDetail">

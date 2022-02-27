@@ -227,30 +227,32 @@ App({
                 if (res.data.data[0] == "无正在进行的课程") {
 
                 } else {
-                    courseid = res.data.data[0].courseid;
-                    wx.request({
-                        url: that.globalData.url + 'WxOther/GpsAccept',
-                        data: {
-                            courseid: res.data.data[0].courseid,
-                            teacherid: res.data.data[0].teacherid,
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log("学生接收的请求是")
-                            console.log(res)
-                            if (res.data.data.code == 1) {
-                                that.GetLocation(courseid);
+                    that.globalData.realTime = setTimeout(function() {
+                        courseid = res.data.data[0].courseid;
+                        wx.request({
+                            url: that.globalData.url + 'WxOther/GpsAccept',
+                            data: {
+                                courseid: res.data.data[0].courseid,
+                                teacherid: res.data.data[0].teacherid,
+                            },
+                            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                            // header: {}, // 设置请求的 header
+                            success: function(res) {
+                                // success
+                                console.log("学生接收的请求是")
+                                console.log(res)
+                                if (res.data.data.code == 1) {
+                                    that.GetLocation(courseid);
+                                }
+                            },
+                            fail: function() {
+                                // fail
+                            },
+                            complete: function() {
+                                // complete
                             }
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
-                        }
-                    })
+                        })
+                    }, 30000)
                 }
             },
             fail: function() {

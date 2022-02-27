@@ -7,7 +7,7 @@
 <view wx:else>
     <block wx:if="{{activity==''}}">
         <view class="empty">
-            <image src="/icon/暂无搜索结果.png" mode="widthFix">
+            <image src="/icon/not_found.png" mode="widthFix">
             </image>
             <view>
                 暂无要进行的活动

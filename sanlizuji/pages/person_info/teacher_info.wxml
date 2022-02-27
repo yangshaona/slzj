@@ -3,24 +3,73 @@
 <view class="primary">
     <view class="info_desc">
         <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
-        <desc inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
-        <desc inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
-        <desc inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
-        <desc inner-text="联系方式：{{user.phone==''?'无':tools.sub(user.phone, 3, 1)}}" icon="/icon/phone.png"></desc>
-
-        <view wx:if="{{user.type==0}}">
-            <desc inner-text="类型：企业" icon="/icon/edu.png"></desc>
-        </view>
-        <view wx:elif="{{user.type==1}}">
-            <desc inner-text="类型：学校" icon="/icon/edu.png"></desc>
-        </view>
-        <view wx:elif="{{user.type==1}}">
-            <desc inner-text="类型：兼职" icon="/icon/edu.png"></desc>
-        </view>
-        <view wx:else>
-            <desc inner-text="类型：未知" icon="/icon/edu.png"></desc>
+        <desc bindtap="Bind" data-trigger="name" inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
+        <desc bindtap="Bind" data-trigger="birthday" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
+        <desc bindtap="Bind" data-trigger="idnum" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
+        <desc bindtap="Bind" data-trigger="phone" inner-text="联系方式：{{user.phone==''?'无':tools.sub(user.phone, 3, 1)}}" icon="/icon/phone.png"></desc>
+        <view bindtap="Bind" data-trigger="type">
+            <view wx:if="{{user.type==0}}">
+                <desc inner-text="类型：企业" icon="/icon/edu.png"></desc>
+            </view>
+            <view wx:elif="{{user.type==1}}">
+                <desc inner-text="类型：学校" icon="/icon/edu.png"></desc>
+            </view>
+            <view wx:elif="{{user.type==1}}">
+                <desc inner-text="类型：兼职" icon="/icon/edu.png"></desc>
+            </view>
+            <view wx:else>
+                <desc inner-text="类型：未知" icon="/icon/edu.png"></desc>
+            </view>
         </view>
         <desc inner-text="住址：{{user.province}}{{user.city}}" icon="/icon/address.png"></desc>
     </view>
     <button class="logout" bindtap="logout" type="button">退出登录</button>
+</view>
+
+
+<view wx:if="{{trigger=='name'||trigger=='idnum'||trigger=='phone'}}">
+    <view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'></view>
+    <view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
+
+        <!-- 姓名的修改 -->
+        <view wx:if="{{trigger=='name'}}" class="info">
+
+            <view class='change-name'>
+                <text class=''>修改姓名</text>
+            </view>
+            <view class='input-name'>
+                <input type='text' class="input" bindinput='teaName' placeholder='请输入姓名'></input>
+            </view>
+        </view>
+
+        <!-- 身份证的修改 -->
+        <view wx:if="{{trigger=='idnum'}}" class="info">
+
+            <view class='change-name'>
+                <text class=''>修改身份证</text>
+            </view>
+            <view class='input-name'>
+                <input type='text' class="input" bindinput='teaIdNum' placeholder='请输入身份证'></input>
+            </view>
+        </view>
+
+        <!-- 手机号的修改 -->
+        <view wx:if="{{trigger=='phone'}}" class="info">
+
+            <view class='change-name'>
+                <text class=''>修改手机号</text>
+            </view>
+            <view class='input-name'>
+                <input type='text' class="input" bindinput='teaPhone' placeholder='请输入内容'></input>
+            </view>
+        </view>
+
+
+
+        <view class='modal-btn-wrapper'>
+            <view class='cancel-btn' style='color:rgba(7,17,27,0.6)' bindtap='back'>取消</view>
+            <view class='confirm-btn' style='color:#1677ff' bindtap='ok'>确定</view>
+        </view>
+
+    </view>
 </view>
