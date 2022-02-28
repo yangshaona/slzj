@@ -24,7 +24,7 @@ Page({
             { 'id': 0, 'icon': '/icon/course2.png', 'desc': '我的活动', 'url': '../mycourse/mycourse_stu' },
             { 'id': 1, 'icon': '/icon/ScheduleOutlined.png', 'desc': '活动行程', 'url': '../journey/journey' },
             { 'id': 2, 'icon': '/icon/time2.png', 'desc': '正在活动', 'url': '../doing/doing_stuprt' },
-            { 'id': 3, 'icon': '/icon/ylab-backlog1.png', 'desc': '任务中心', 'url': '../task/task' },
+            { 'id': 3, 'icon': '/icon/todos.png', 'desc': '任务中心', 'url': '../task/task' },
             { 'id': 4, 'icon': '/icon/ceng2.png', 'desc': '我的报名', 'url': '../myApply/myApply' },
             // { 'id': 5, 'icon': '/icon/deal2.png', 'desc': '我的订单', 'url': '../myApply/myApply' },
             { 'id': 5, 'icon': '/icon/idnetify2.png', 'desc': '身份认证', 'url': '../register/register_stu' },

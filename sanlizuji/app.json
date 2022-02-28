@@ -36,7 +36,8 @@
         "pages/protocol/protocol",
         "pages/privacy_policy/privacy_policy",
         "pages/teaApply/teaApply",
-        "pages/teaApply/comment"
+        "pages/teaApply/comment",
+        "pages/pay/pay"
     ],
     "window": {
         "backgroundColor": "#ffffff",

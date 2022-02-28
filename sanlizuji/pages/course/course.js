@@ -6,6 +6,7 @@ Page({
      * 页面的初始数据
      */
     data: {
+        width: app.globalData.width,
         // 今日日期
         date: "",
         // 设备状态栏高度
@@ -57,74 +58,89 @@ Page({
         status: [],
         start: "",
         end: "",
-        activity: [{
-                'pic': '/icon/图标未加载.png',
-                'title': ''
-            },
-            {
-                'pic': '/icon/图标未加载.png',
-                'title': ''
-            }
-        ],
+        region: [],
+        activity: [],
         navig_name: '',
         title_name: '课程',
         seacher_word: "",
         filterHide: true,
 
     },
+    // checkTap
+    checkTap: function (e) {
+        console.log(e);
+        const width = this.data.width;
+        let tapX = e.detail.x;
+        if (this.data.filterHide || tapX / width >= 0.75) {
+            return true;
+        } else {
+            return false;
+        }
+    },
 
     // 筛选栏弹出/折叠
-    filterTap: function(e) {
-        var filterCSS = this.data.filterClass;
-        var filterHide = this.data.filterHide;
-
-        console.log(filterHide)
-        if (filterHide) {
-            console.log("筛选栏展开");
-            this.setData({
-                filterClass: "filterShow",
-                ctnOpacity: "40%",
-                filterHide: false,
-            })
-        } else {
-            console.log("筛选栏折叠");
-            this.setData({
+    filterTap: function (e) {
+        if (this.checkTap(e) || e.currentTarget.dataset.id == 'confirm') {
+            var filterCSS = this.data.filterClass;
+            var filterHide = this.data.filterHide;
+            console.log("遮罩是。。。。。")
+            console.log(filterHide)
+            if (filterHide) {
+                console.log("筛选栏展开");
+                this.setData({
+                    filterClass: "filterShow",
+                    ctnOpacity: "40%",
+                    filterHide: false,
+                })
+            } else {
+                console.log("筛选栏折叠");
+                this.setData({
                     filterClass: "filterHide",
                     ctnOpacity: "100%",
                     filterHide: true
                 })
                 // 向服务端提供的条件
-            var condition = this.data.condition;
-            var theme = [],
-                duration = "",
-                status = [];
-            for (var key of condition) {
-                if (key.length == 4) {
-                    theme.push(key);
-                } else if (key.length == 2) {
-                    duration = key;
-                } else {
-                    status.push(key);
+                var condition = this.data.condition;
+                var theme = [],
+                    duration = "",
+                    status = [];
+                for (var key of condition) {
+                    if (key.length == 4) {
+                        theme.push(key);
+                    } else if (key.length == 2) {
+                        duration = key;
+                    } else {
+                        status.push(key);
+                    }
                 }
-            }
-            this.setData({
-                theme: theme,
-                duration: duration,
-                status: status
-            });
+                this.setData({
+                    theme: theme,
+                    duration: duration,
+                    status: status
+                });
 
-            this.getSearchData();
+                this.getSearchData();
+            }
         }
+
+    },
+
+    // 地区选择器改变
+    regionChange: function (e) {
+        let data = e.detail.value;
+        this.setData({
+            region: data
+        })
     },
     //获取筛选数据
-    getFilter: function() {
+    getFilter: function () {
         let that = this;
         wx.request({
             url: app.globalData.url + 'WxOther/activitytype',
             data: {},
             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             // header: {}, // 设置请求的 header2
-            success: function(res) {
+            success: function (res) {
                 // success
                 console.log("活动主题类型")
                 console.log(res)
@@ -136,16 +152,16 @@ Page({
                 }
 
             },
-            fail: function() {
+            fail: function () {
                 // fail
             },
-            complete: function() {
+            complete: function () {
                 // complete
             }
         })
     },
     // 筛选框选中
-    filterCheck: function(e) {
+    filterCheck: function (e) {
         var id = e.currentTarget.dataset.id;
         var key = e.currentTarget.dataset.value;
         var condition = this.data.condition;
@@ -179,7 +195,7 @@ Page({
             var filter = this.data.filterID;
             filter[key] = 0;
             Array.prototype.indexOf
-                // 删除数组中的元素
+            // 删除数组中的元素
             condition.splice(condition.indexOf(key), 1);
             this.setData({
                 filterID: filter,
@@ -191,20 +207,20 @@ Page({
     },
 
     // 时间选择器改变
-    startChange: function(e) {
+    startChange: function (e) {
         this.setData({
             start: e.detail.value,
             end: e.detail.value
         })
     },
-    endChange: function(e) {
+    endChange: function (e) {
         this.setData({
             end: e.detail.value
         })
     },
 
     //跳转到课程详情
-    toCourseDetail: function(e) {
+    toCourseDetail: function (e) {
         console.log(e)
         var fid = e.currentTarget.dataset.fid
         wx.navigateTo({
@@ -212,7 +228,7 @@ Page({
         })
     },
     // 搜索
-    searchTap: function(e) {
+    searchTap: function (e) {
         console.log("提交检索");
         var ctn = e.detail.value;
         // 清空内容
@@ -225,15 +241,15 @@ Page({
             duration: 500
         })
         this.getSearchContent();
-        setTimeout(function() {
+        setTimeout(function () {
             e.detail.value = "";
         }, 500)
     },
     //搜索内容
-    getSearchContent: function(e) {
+    getSearchContent: function (e) {
         this.getSearchData();
     },
-    getSearchData: function() {
+    getSearchData: function () {
         let that = this;
         var para = [];
         para.push(app.globalData.navigate_name);
@@ -276,26 +292,30 @@ Page({
             success(res) {
                 console.log("成功获取课程数据")
                 console.log(res)
-                that.setData({ activity: res.data.data });
+                that.setData({
+                    activity: res.data.data
+                });
             }
         })
     },
-    setTitle: function(tname) {
-        wx.setNavigationBarTitle({ title: tname })
+    setTitle: function (tname) {
+        wx.setNavigationBarTitle({
+            title: tname
+        })
     },
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function(options) {
+    onLoad: function (options) {
         var that = this;
         this.getSearchData(0);
         // 自动获取注册时间
         var now = new Date;
         var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         this.setData({
-                date: date
-            })
-            // that.getFilter()
+            date: date
+        })
+        // that.getFilter()
 
     },
     timeFormat(param) {
@@ -304,49 +324,49 @@ Page({
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
-    onReady: function() {
+    onReady: function () {
 
     },
 
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function() {
+    onShow: function () {
         this.getSearchData();
     },
 
     /**
      * 生命周期函数--监听页面隐藏
      */
-    onHide: function() {
+    onHide: function () {
 
     },
 
     /**
      * 生命周期函数--监听页面卸载
      */
-    onUnload: function() {
+    onUnload: function () {
 
     },
 
     /**
      * 页面相关事件处理函数--监听用户下拉动作
      */
-    onPullDownRefresh: function() {
+    onPullDownRefresh: function () {
 
     },
 
     /**
      * 页面上拉触底事件的处理函数
      */
-    onReachBottom: function() {
+    onReachBottom: function () {
 
     },
 
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function() {
+    onShareAppMessage: function () {
 
     }
 })

@@ -54,7 +54,7 @@ Page({
     getData: function() {
         var data = this.data.doing;
         var url = this.data.icon;
-        var trans = { 'groupnum': '小组', 'room': '房间', 'car': '车牌', 'starttime': '日期' }
+        var trans = { 'groupnum': '小组', 'room': '酒店', 'car': '车牌', 'starttime': '日期' }
         var display = [];
         for (var idx in data) {
             if (idx == 'coursename') continue;
@@ -255,6 +255,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function() {
+        clearInterval(this.data.realTime)
         wx.navigateBack({
             delta: 0,
         })

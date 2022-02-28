@@ -312,6 +312,12 @@
 					"pathName": "pages/teaApply/teaApply",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/pay/pay",
+					"pathName": "pages/pay/pay",
+					"scene": null
 				}
 			]
 		}

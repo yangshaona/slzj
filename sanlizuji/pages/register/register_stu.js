@@ -11,7 +11,7 @@ Page({
         // 能否获得用户微信昵称
         cangetUserInfo: false,
         //表单各个小标题
-        formTitle: { 'name': '姓名', 'idnum': '身份证号', 'birthday': '生日', 'sex': '性别', 'education': '在读学历', 'nikename': '昵称', 'phone': '手机号', 'schoolname': '学校名称', 'region': '地区', 'grade': '年级', 'class': '班级', 'parents': '监护人姓名', 'p_phone': '监护人手机', 'aller': '备注' },
+        formTitle: { 'name': '姓名', 'idnum': '身份证号', 'birthday': '生日', 'sex': '性别', 'education': '在读学历', 'nikename': '昵称', 'phone': '手机号', 'schoolname': '学校名称', 'region': '地区', 'grade': '年级', 'class': '班级', 'parents': '监护人姓名', 'p_phone': '监护人手机', 'aller': '备注', 'avatar':'头像' },
         // 学历picker
         edu: ['小学', '初中', '高中', '专科', '本科', '硕士', '博士'],
         edu_idx: null,
@@ -424,8 +424,8 @@ Page({
                                         education: that.data.edu[data.education],
                                         phone: data.phone,
                                         schoolname: data.schoolname,
-                                        grade: that.data.grd[data.grade],
-                                        class: that.data.cls[data.class],
+                                        grade: data.grade,
+                                        class: data.class,
                                         province: data.region[0],
                                         city: data.region[1],
                                         district: data.region[2],

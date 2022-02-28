@@ -151,8 +151,8 @@
 }
 
 .widgets image {
-    width: 50%;
-    margin: 5% 25%;
+    width: 40%;
+    margin: 5% 30%;
     opacity: 90%;
 }
 

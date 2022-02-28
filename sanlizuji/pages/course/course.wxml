@@ -1,11 +1,10 @@
 <!--pages/course/course.wxml-->
 <!-- 总页面 -->
-
 <import src="../template/not_found/not_found.wxml" />
 <!-- 筛选框 -->
-<view class="{{filterHide?'':'zhezhao'}}" bindtap="filterTap" catchtouchmove='ture'>
+<view class="{{filterHide?'':'zhezhao'}}" bindtap="filterTap">
 
-    <view class="{{filterClass}}" catchtouchmove='ture'>
+    <view class="{{filterClass}}">
         <block wx:for="{{filter}}" wx:key="item">
             <view class="filter">
                 <view class="filterTtl">{{item.title}}</view>
@@ -27,7 +26,14 @@
                 {{end == "" ? "结束时间" : end}}
             </picker>
         </view>
-        <button class="confirm" catchtap="filterTap">确认</button>
+        <!-- 地区选择器 -->
+        <view class="filterTtl">活动地区</view>
+        <view class="filterBox">
+            <picker mode="region" value="{{region}}" bindchange="regionChange" class="filterCtn">
+            {{region.length ? region : '选择地区'}}
+            </picker>
+        </view>
+        <button class="confirm" catchtap="filterTap" data-id="confirm">确认</button>
     </view>
 </view>
 <view class="total" id="total">
@@ -57,15 +63,27 @@
     </view>
     <!-- 全部活动 -->
     <!-- <view wx:if="{{activity==''}}">
+        <view style="display: flex;justify-content: center; transition: all 0.5s;">
+            <image style="width: 400rpx; margin-top:30%;" mode="widthFix" src="/icon/没有找到匹配结果.png">
+            </image>
+        </view>
+        <view style="display: flex;justify-content: center;color: rgb(82, 80, 80); margin-top: 10rpx;">没有找到匹配结果...</view>
+    </view> -->
+    <template is="not_found" wx:if="{{activity==''}}" />
+    <view wx:elif="{{!filterHide}}">
+        <view style="display: flex;justify-content: center; transition: all 0.5s;">
+        </view>
+        <view style="display: flex;justify-content: center;color: rgb(82, 80, 80); margin-top: 10rpx;">正在筛选...</view>
+    </view>
+    <view class="actTop" style="opacity: {{ctnOpacity}};" wx:else >
+    <!-- <view wx:if="{{activity==''}}">
         <view style="display: flex;justify-content: center;">
             <image style="width: 400rpx; margin-top:30%;" mode="widthFix" src="/icon/search_not_found.png">
             </image>
         </view>
         <view style="display: flex;justify-content: center;color: rgb(82, 80, 80); margin-top: 10rpx;">没有找到匹配结果...</view>
     </view> -->
-    <template is="not_found" wx:if="{{activity==''}}" />
-
-    <view class="actTop" style="opacity: {{ctnOpacity}}" wx:else>
+    
         <!-- 活动卡片 -->
         <block wx:for="{{activity}}" wx:key="item">
             <view class="actBox" style="height: {{height*0.35+'px'}};" bindtap="toCourseDetail" data-fid="{{item.id}}">
