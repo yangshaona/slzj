@@ -1,0 +1,9 @@
+/* pages/myApply/comment.wxss */
+
+@import '../detail/detail.wxss';
+input {
+    display: block;
+    padding: 2.5%;
+    margin: 5% 2.5%;
+    border-bottom: 1px lightgray solid;
+}

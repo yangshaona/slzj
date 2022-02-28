@@ -1,0 +1,50 @@
+<!--pages/myApply/myApply.wxml-->
+<import src="../template/unbounded/unbounded.wxml" />
+<import src="../template/scope/scope.wxml" />
+<template is="scope" wx:if="{{!user}}" />
+<view wx:else>
+    <template is="unbounded" wx:if="{{id_flag=='parent'&&user.kids==''}}" />
+
+    <view wx:else>
+        <!-- 选择框 -->
+        <view class="selectBox">
+            <block wx:for="{{selectBox}}" wx:key="id">
+                <view class="{{item.class}}" data-id="{{item.id}}" bindtap="selectTap">{{item.ctn}}</view>
+            </block>
+        </view>
+
+        <!-- 内容 -->
+        <!-- 缺省 -->
+        <block wx:if="{{filter.length == 0}}">
+            <view class="empty">
+                <image src="/icon/empty.png" mode="widthFix"></image>
+                <view>没有搜索到相关记录...</view>
+                <button bindtap="goToApply">前往报名</button>
+            </view>
+        </block>
+
+        <!-- 有内容 -->
+        <block wx:if="{{filter.length != 0}}">
+            <block wx:for="{{filter}}" wx:key="id">
+                <view class="ctnBox" style="height: 50%;" data-courseid="{{item.courseid}}" bindtap="goToDetail">
+                    <view class="title">{{item.coursename}}</view>
+                    <image src="{{item.imagesurl}}" mode="widthFix" class="ctnImg"></image>
+                    <view class="ctnLine"></view>
+                    <view class="ctnButton">
+                        <!-- <button class="blue" wx:if="{{item.status==2}}" catchtap="applyTap1" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}"></button> -->
+                        <button class="blue" catchtap="applyTap2" wx:if="{{item.status==3&&!item.endTime}}" data-id="{{item.courseid}}">继续报名</button>
+                        <button class="border" wx:if="{{item.status==3}}" data-id="{{item.courseid}}" catchtap="commentTap">评价</button>
+                        <button class="border" data-id="{{item.courseid}}" catchtap="teacherTap">查看导师</button>
+                        <button class="border" wx:if="{{item.status!=3}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">删除</button>
+                    </view>
+                    <view wx:if="{{item.status==1}}" class="status">报名失败</view>
+                    <view wx:elif="{{item.status==2}}" class="status">待审核</view>
+                    <view wx:elif="{{item.status==3&&item.endTime=='false'}}" class="status">报名成功</view>
+                    <view wx:else class="status">已完成</view>
+
+                    <view class="price">￥{{item.price}}</view>
+                </view>
+            </block>
+        </block>
+    </view>
+</view>

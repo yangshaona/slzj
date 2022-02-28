@@ -1,0 +1,14 @@
+/* pages/protocol/protocol.wxss */
+
+.protocol {
+    width: 90%;
+    align-items: center;
+    margin-left: 5%;
+    margin-bottom: 5%;
+}
+
+.strong {
+    font-weight: bold;
+    font-size: 40rpx;
+    margin: 5% 0;
+}

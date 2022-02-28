@@ -1,0 +1,209 @@
+/* pages/myApply/myApply.wxss */
+
+@import '../template/unbounded/unbounded.wxss';
+@import '../template/scope/scope.wxss';
+.top {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    padding: 5%;
+}
+
+
+/* 选择框 */
+
+.selectBox {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0%;
+    background-image: linear-gradient(to right, white, #fafafa);
+}
+
+.select {
+    display: block;
+    width: 25%;
+    margin: 0;
+    padding: 2.5%;
+    font-size: 0.75rem;
+    text-align: center;
+    transition: all 0.5s;
+}
+
+.selected {
+    display: block;
+    position: relative;
+    width: 25%;
+    margin: 0;
+    padding: 2.5%;
+    font-size: 0.75rem;
+    color: #6177ff;
+    text-align: center;
+    transition: all 0.5s;
+}
+
+.selected::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 30%;
+    height: 8px;
+    background-image: linear-gradient(to right, #91a0ff, #6177ff);
+    margin: 0 25%;
+    z-index: -1;
+    border-radius: 1rem;
+    transition: all 0.5s;
+}
+
+
+/* 显示内容 */
+
+.empty {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 20% 10%;
+}
+
+.empty image {
+    display: block;
+    width: 60%;
+    margin: 0 20%;
+    opacity: 70%;
+}
+
+.empty view {
+    text-align: center;
+    color: #888888;
+}
+
+.empty button {
+    display: block;
+    box-sizing: border-box;
+    width: 80%;
+    margin: 10%;
+    padding: 2.5%;
+    background-image: linear-gradient(to right, #91a0ff, #6177ff);
+    color: white;
+    border-radius: 0.5rem;
+}
+
+.ctnBox {
+    display: block;
+    position: relative;
+    width: 90%;
+    box-sizing: border-box;
+    margin: 5%;
+    padding: 5%;
+    background: #f8f8f8;
+    border-radius: 2rem;
+    box-shadow: 0px 0px 10px lightgray;
+}
+
+.title {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    font-weight: bolder;
+    padding: 0 2.5%;
+    margin: 2.5% 0;
+    border-left: 4px #6177ff solid;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    z-index: 99;
+    margin: 5% 0;
+}
+
+.ctnTitle {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    font-weight: bolder;
+    padding: 0 2.5%;
+    margin: 2.5% 0;
+    border-left: 4px #6177ff solid;
+}
+
+.ctnImg {
+    display: block;
+    width: 60%;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 10px #d4d4d4;
+    margin: 2.5% 0;
+}
+
+.ctnLine {
+    content: '';
+    display: block;
+    box-sizing: border-box;
+    width: 95%;
+    margin: 5% 2.5%;
+    height: 1px;
+    border-bottom: 1px #888888 dashed;
+}
+
+.ctnButton {
+    display: flex;
+    box-sizing: border-box;
+    width: 80%;
+    margin: 0 0 0 20%;
+    flex-direction: row-reverse;
+    /* float: right; */
+}
+
+.ctnButton button {
+    display: block;
+    box-sizing: border-box;
+    width: 30% !important;
+    padding: 2.5%;
+    margin: 0 1.25%;
+    font-weight: normal;
+    font-size: 0.75rem;
+    border-radius: 1rem;
+    float: right;
+}
+
+
+/* .ctnButton button:nth-child(1) {
+    border: 1px #888888 solid;
+}
+
+.ctnButton button:nth-child(2) {
+    border: 1px #888888 solid;
+}
+
+.ctnButton button:nth-child(3) {
+    background-image: linear-gradient(to right, #91a0ff, #6177ff);
+    color: white;
+} */
+
+.border {
+    border: 1px #888888 solid;
+}
+
+.blue {
+    background-image: linear-gradient(to right, #91a0ff, #6177ff);
+    color: white;
+}
+
+.status {
+    display: block;
+    position: absolute;
+    top: 3%;
+    right: 7.5%;
+    /* margin-top: 20rpx; */
+    font-size: 0.85rem;
+}
+
+.price {
+    display: block;
+    position: absolute;
+    top: 30%;
+    right: 7.5%;
+    font-size: 1rem;
+}
