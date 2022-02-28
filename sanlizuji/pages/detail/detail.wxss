@@ -156,7 +156,7 @@
 
 .journey {
     width: 90%;
-    margin: 2% 0% 8% 6%;
+    margin: 2% 0% 20% 6%;
 }
 
 .journeyTop {

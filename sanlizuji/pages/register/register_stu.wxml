@@ -1,8 +1,10 @@
 <!--pages/register/register_stu.wxml-->
 <!-- 照片上传还没搞 -->
+
 <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
     <include src="../template/agree_protocol/agree_protocol"></include>
 </view>
+
 <!-- 注册框 -->
 <block wx:if="{{!cangetUserInfo}}">
     <view class="primary">
@@ -112,4 +114,4 @@
         </form>
     </view>
 </block>
-<view class=""> </view>
+<!-- <view class=""> </view> -->

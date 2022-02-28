@@ -103,13 +103,6 @@ Page({
     // 点击确认订单先浅检查一下有没有填学员
     checkSubmit: function(e) {
         var that = this;
-        // if (id_flag == "student") {
-        //     // stu = user.name;
-        //     this.setData({
-        //         idx: 0,
-        //         stu: user.name,
-        //     });
-        // }
         console.log(87);
         console.log(that.options);
         var id = e.currentTarget.dataset.id
@@ -149,12 +142,20 @@ Page({
                                     method: 'GET',
                                     success: function(res) {  
                                     console.log("支付成功111");                              
-                                    console.log(res);                                
-                                    wx.showToast({
-                                        title: '支付成功',
-                                        icon: 'success',
-                                        duration: 800,
-                                    })                            
+                                    console.log(res); 
+                                    if (res.data.data.code == 100) {                            
+                                        wx.showToast({
+                                            title: '支付成功',
+                                            icon: 'success',
+                                            duration: 800,
+                                        })
+                                    } else {
+                                        wx.showToast({
+                                            title: '支付失败',
+                                            icon: 'cancel',
+                                            duration: 800,
+                                        })
+                                    }                      
                                 }                                                
                             })
                             wx.redirectTo({

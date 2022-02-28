@@ -291,6 +291,27 @@
 					"pathName": "pages/willDo/willDo",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/protocol/protocol",
+					"pathName": "pages/protocol/protocol",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/privacy_policy/privacy_policy",
+					"pathName": "pages/privacy_policy/privacy_policy",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/teaApply/teaApply",
+					"pathName": "pages/teaApply/teaApply",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

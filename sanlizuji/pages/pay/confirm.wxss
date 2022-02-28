@@ -1,100 +1,115 @@
 /* pages/pay/confirm.wxss */
+
 .card {
-  display: block;
-  box-sizing: border-box;
-  position: relative;
-  width: 95%;
-  margin: 5% 2.5%;
-  padding: 2.5%;
-  border-radius: 1.5rem;
-  background: white;
-  box-shadow: 0 0 5px #d3d3d3;
+    display: block;
+    box-sizing: border-box;
+    position: relative;
+    width: 95%;
+    margin: 5% 2.5%;
+    padding: 2.5%;
+    border-radius: 1.5rem;
+    background: white;
+    box-shadow: 0 0 5px #d3d3d3;
 }
+
 .title {
-  display: block;
-  position: relative;
-  height: fit-content;
-  padding:0 3%;
-  z-index: 999;
-  font-size: 0.85rem;
-  margin: 5% 2.5%;
+    display: block;
+    position: relative;
+    height: fit-content;
+    padding: 0 3%;
+    z-index: 999;
+    font-size: 1rem;
+    margin: 5% 2.5%;
 }
+
 .title::after {
-  content: '';
-  display: block;
-  position: absolute;
-  width: 5px;
-  height: 100%;
-  background: linear-gradient(to bottom, #8595ff, #6177ff);
-  left: 0%;
-  top: 0%;
-  border-radius: 2rem;
+    content: '';
+    display: block;
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to bottom, #8595ff, #6177ff);
+    left: 0%;
+    top: 0%;
+    border-radius: 2rem;
 }
 
 .price {
-  display: block;
-  box-sizing: border-box;
-  font-size: 0.85rem;
-  color: #6177ff;
-  text-align: right;
-  margin: 2.5% 5%;
+    display: block;
+    box-sizing: border-box;
+    font-size: 0.85rem;
+    color: #6177ff;
+    text-align: right;
+    margin: 2.5% 5%;
 }
+
 
 /* 学员信息 */
+
 .stu_title {
-  display: block;
-  margin: 2.5%;
-  font-size: 0.85rem;
-  padding: 0 0 2.5% 0;
-  border-bottom: 0.5px #666666 dashed;
-}
-.stu_box {
-  display: flex;
-  width: 95%;
-  margin: 5% 2.5%;
-}
-.stu_desc {
-  display: block;
-  width: 30%;
-  font-size: 0.85rem;
-}
-.stu {
-  display: block;
-  width: 70%;
-  text-align: right;
-  font-size: 0.75rem;
-}
-/* 温馨提示 */
-.tips {
-  display: block;
-  margin: 10% 2.5%;
-  font-size: 0.75rem;
+    display: block;
+    margin: 2.5%;
+    font-size: 1rem;
+    padding: 0 0 2.5% 0;
+    border-bottom: 0.5px #666666 dashed;
 }
 
+.stu_box {
+    display: flex;
+    width: 95%;
+    margin: 5% 2.5%;
+}
+
+.stu_desc {
+    display: block;
+    width: 30%;
+    font-size: 1rem;
+}
+
+.stu {
+    display: block;
+    width: 70%;
+    text-align: right;
+    font-size: 1rem;
+}
+
+
+/* 温馨提示 */
+
+.tips {
+    display: block;
+    margin: 10% 2.5%;
+    font-size: 0.85rem;
+}
+
+
 /* 底部 */
+
 .bottom {
-  display: flex;
-  width: 100%;
-  height: 50px;
-  box-shadow: 0 0 5px #d3d3d3;
-  position: fixed;
+    display: flex;
+    width: 100%;
+    height: 50px;
+    box-shadow: 0 0 5px #d3d3d3;
+    position: fixed;
 }
+
 .bottom_desc {
-  display: block;
-  height: fit-content;
-  margin: auto 5%;
-  padding: auto 2.5%;
+    display: block;
+    height: fit-content;
+    margin: auto 5%;
+    padding: auto 2.5%;
 }
+
 .submit {
-  height: 35px;
-  font-size: 0.85rem;
-  vertical-align: middle;
-  width: 30%;
-  margin: auto 5% auto auto;
-  border-radius: 0.5rem;
-  background-image: linear-gradient(to right, #8595ff, #6177ff);
-  color: white;
-  font-weight: 400;
-  border: none;
-  line-height: 35px;
+    height: 35px;
+    font-size: 1rem;
+    vertical-align: middle;
+    width: 30%;
+    margin: auto 5% auto auto;
+    border-radius: 0.5rem;
+    background-image: linear-gradient(to right, #8595ff, #6177ff);
+    color: white;
+    font-weight: 400;
+    border: none;
+    line-height: 35px;
 }

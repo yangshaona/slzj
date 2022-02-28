@@ -70,7 +70,8 @@ Page({
         multiIndex: [0, 0, 0],
         province: [],
         //是否显示用户协议
-        isTipTrue: true,
+        isTipTrue: false,
+        isAgree: false,
     },
     // 选择图像
     chooseImg: function(e) {
@@ -189,27 +190,65 @@ Page({
             reg: tmp,
         })
     },
+    // 同意协议
+    tipAgree: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: true,
+        })
+    },
+    tipCancel: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: false,
+        })
+        wx.showToast({
+            title: "请先同意服务协议",
+            duration: 1000,
+        })
+    },
+    // 跳转到用户协议
+    toProtocol: function() {
+        wx.navigateTo({
+            url: '../protocol/protocol',
 
+        })
+    }, // 跳转到用户隐私
+    toPrivacy: function() {
+        wx.navigateTo({
+            url: '../privacy_policy/privacy_policy',
+
+        })
+    },
     //获取用户昵称
     getNickName: function(e) {
-        wx.getUserProfile({
-            desc: '获取用户昵称',
-            success: (res) => {
-                console.log("获取用户微信昵称成功");
-                console.log(res)
-                this.setData({
-                    cangetUserInfo: true,
-                    nickName: res.userInfo.nickName,
-                    header: res.userInfo.avatarUrl
-                })
+        if (!this.data.isAgree) {
+            this.setData({
+                isTipTrue: true,
+            })
+        }
+        if (this.data.isAgree) {
+            wx.getUserProfile({
+                desc: '获取用户昵称',
+                success: (res) => {
+                    console.log("获取用户微信昵称成功");
+                    console.log(res)
+                    this.setData({
+                        cangetUserInfo: true,
+                        nickName: res.userInfo.nickName,
+                        header: res.userInfo.avatarUrl
+                    })
 
-                // console.log(this.data.stu_info.nickName);
-                // console.log(header)
-            },
-            fail: (res) => {
-                console.log(res.errMsg)
-            }
-        })
+                    // console.log(this.data.stu_info.nickName);
+                    // console.log(header)
+                },
+                fail: (res) => {
+                    console.log(res.errMsg)
+                }
+            })
+        } // else if (!this.data.isAgree) {
+
+        // }
     },
 
     // 学历选择器改变
@@ -540,12 +579,7 @@ Page({
         })
     },
 
-    // 阅读协议
-    tipAgree: function() {
-        this.setData({
-            isTipTrue: false
-        })
-    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -557,7 +591,7 @@ Page({
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         that.setData({
             time: time,
-            isTipTrue: true,
+            isTipTrue: false,
 
         })
         var province = [],

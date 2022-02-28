@@ -22,6 +22,9 @@ Page({
         wx.setStorageSync('id_flag', null);
         wx.setStorageSync('avator', null);
         app.globalData.flag_identity = [1, 0, 0];
+        this.setData({
+            user: '',
+        })
         wx.switchTab({
             url: '../person/person',
         })

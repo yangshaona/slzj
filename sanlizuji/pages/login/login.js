@@ -55,17 +55,7 @@ Page({
                                 console.log("登录表单检查成功");
                                 console.log(res);
                                 if (res.data.data[0] == "该用户未注册") {
-                                    // wx.showToast({
-                                    //     title: '该用户未注册',
-                                    //     icon: "success",
-                                    //     duration: 800,
-                                    // });
-                                    // setTimeout(function() {
-                                    //     wx.navigateBack({
-                                    //         delta: 1, // 回退前 delta(默认为1) 页面
 
-                                    //     })
-                                    // }, 800);
                                     setTimeout(function() {
                                         wx.redirectTo({
                                             url: '../login1/login?id=' + options.id,
@@ -74,11 +64,7 @@ Page({
 
                                     }, 100)
                                 } else {
-                                    // wx.showToast({
-                                    //     title: '登录成功',
-                                    //     icon: "success",
-                                    //     duration: 800,
-                                    // });
+
                                     //保存用户登录状态
                                     wx.setStorageSync('user', res.data.data)
                                     wx.setStorageSync('id_flag', options.id)
@@ -116,6 +102,11 @@ Page({
                     //用户按了允许授权按钮
                     wx.setStorageSync('avator', res.userInfo.avatarUrl)
                     var avator = wx.getStorageSync('avator');
+                    console.log(avator);
+                    var _user = wx.getStorageSync('user');
+                    _user.header = avator;
+                    wx.setStorageSync('user', _user);
+                    // user=wx.getStorageSync('user');
                     setTimeout(function() {
                         wx.switchTab({
                             url: '../index/index'

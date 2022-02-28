@@ -287,9 +287,18 @@ Page({
             success(res) {
                 console.log("评论数据");
                 console.log(res)
+                console.log(res.data.data);
                 that.setData({
                     comment: res.data.data
                 });
+                if (that.data.comment.length == 0) {
+                    console.log("没有评论")
+                    console.log(that.data.comment);
+
+                } else {
+                    console.log(that.data.comment)
+                }
+
             },
         })
     },
@@ -371,12 +380,12 @@ Page({
                                     console.log("报名成功")
                                     console.log(res);
                                     wx.navigateTo({
-                                        url: '../myApply/myApply',
+                                        url: '../teaApply/teaApply',
                                     })
                                     wx.showToast({
                                         title: "报名成功",
                                         icon: 'success',
-                                        duration: 1600,
+                                        duration: 500,
                                     })
                                 } else {
                                     wx.showModal({
@@ -406,7 +415,7 @@ Page({
             stu: stu_arr[e.detail.value].name,
             kid: stu_arr[e.detail.value],
         });
-        console.log("学生的数据");
+        console.log("学生的数据1111");
         console.log(this.data.stu);
         console.log(this.data.kid);
         if (this.data.stu != '') {
@@ -476,7 +485,7 @@ Page({
     studentSignUp: function(options) {
         console.log("学生报名信息");
         console.log(options);
-        let user = wx.getStorageSync('user')
+        user = wx.getStorageSync('user')
         let that = this;
         console.log(user)
         if (!user) {
@@ -494,6 +503,7 @@ Page({
                     })
                 }
             } else {
+                console.log('学生报名');
                 that.GenerateOrder(user.id, user.name);
             }
 
@@ -551,6 +561,8 @@ Page({
      */
     onShow: function() {
         let that = this;
+        id_flag = wx.getStorageSync('id_flag');
+        if (id_flag == 'parent') { that.loadStu(); }
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag')
         that.setData({

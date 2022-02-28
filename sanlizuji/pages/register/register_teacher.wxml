@@ -1,6 +1,9 @@
 <!--pages/register/register_teacher.wxml-->
 <!-- 照片上传还没搞 -->
 <!-- 注册框 -->
+<view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
+    <include src="../template/agree_protocol/agree_protocol"></include>
+</view>
 <block wx:if="{{!cangetUserInfo}}">
     <view class="primary">
         <button class="submit" bindtap="getNickName">注册</button>

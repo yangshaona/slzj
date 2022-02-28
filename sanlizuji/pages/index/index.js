@@ -125,7 +125,7 @@ Page({
     readData: function(e) {
         var that = this;
         //   console.log(app.globalData.url + "WxCourse/GetClubNews");
-        console.log("hhh", e)
+
         this.setData({
             navigat_name: e,
         })

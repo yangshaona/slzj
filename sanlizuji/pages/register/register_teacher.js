@@ -47,27 +47,66 @@ Page({
         //地区
         multiArray: [],
         multiIndex: [0, 0, 0],
-        province: []
+        province: [],
+        //是否显示用户协议
+        isTipTrue: false,
+        isAgree: false,
     },
+    // 同意协议
+    tipAgree: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: true,
+        })
+    },
+    tipCancel: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: false,
+        })
+        wx.showToast({
+            title: "请先同意服务协议",
+            duration: 1000,
+        })
+    },
+    // 跳转到用户协议
+    toProtocol: function() {
+        wx.navigateTo({
+            url: '../protocol/protocol',
 
+        })
+    }, // 跳转到用户隐私
+    toPrivacy: function() {
+        wx.navigateTo({
+            url: '../privacy_policy/privacy_policy',
+
+        })
+    },
     //获取用户昵称
     getNickName: function(e) {
-        wx.getUserProfile({
-            desc: '获取用户昵称',
-            success: (res) => {
-                console.log("获取用户微信昵称成功"),
-                    console.log(res)
-                this.setData({
-                    cangetUserInfo: true,
-                    nickName: res.userInfo.nickName,
-                    header: res.userInfo.avatarUrl,
-                })
-                wx.setStorageSync('avator', res.userInfo.avatarUrl)
-            },
-            fail: (res) => {
-                console.log(res.errMsg)
-            }
-        })
+        if (!this.data.isAgree) {
+            this.setData({
+                isTipTrue: true,
+            })
+        }
+        if (this.data.isAgree) {
+            wx.getUserProfile({
+                desc: '获取用户昵称',
+                success: (res) => {
+                    console.log("获取用户微信昵称成功"),
+                        console.log(res)
+                    this.setData({
+                        cangetUserInfo: true,
+                        nickName: res.userInfo.nickName,
+                        header: res.userInfo.avatarUrl,
+                    })
+                    wx.setStorageSync('avator', res.userInfo.avatarUrl)
+                },
+                fail: (res) => {
+                    console.log(res.errMsg)
+                }
+            })
+        }
     },
 
     // 类型选择器改变
