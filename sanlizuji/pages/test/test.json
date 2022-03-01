@@ -1,8 +1,8 @@
 {
-    "usingComponents": {},
+    "usingComponents": { "count-down": "../components/count-down/count-down" },
     "navigationBarTextStyle": "black",
     "enablePullDownRefresh": true,
-    "navigationBarTitleText": "三立足迹",
+    "navigationBarTitleText": "测试",
 
     "backgroundTextStyle": "dark"
 }

@@ -4,7 +4,11 @@
         <desc inner-text="下单时间: {{order.registrationtime}}" icon="/icon/time2.png" class="deal-desc"></desc>
         <desc inner-text="订单号: {{order.id}}" icon="/icon/deal2.png" class="deal-desc"></desc>
     </view>
-
+    <view class="tip {{remain_time<=0?'isShow':''}}">
+        <view class="dis">
+            <view class='dis_time left'>剩余时间：{{countDown}}</view>
+        </view>
+    </view>
     <view class="apply-info-box">
         <view class="apply-ttl">{{order.coursename}}</view>
         <view class="apply-second-ttl">- 报名信息 -</view>
@@ -15,9 +19,17 @@
             <view class="price">￥{{price}}</view>
         </view>
         <view class="btn-box">
-            <view class="btn-useless"></view>
-            <button class="invalid" bindtap="Cancel">取消订单</button>
-            <button class="pay" bindtap="Submit">确认支付</button>
+            <view wx:if="{{order.status==2}}">
+                <view class="btn-useless"></view>
+                <button class="invalid" bindtap="Cancel">取消订单</button>
+                <button class="pay" bindtap="Submit">确认支付</button>
+            </view>
+            <view wx:elif="{{order.status==1}}" style="color:#6177ff;float: right;margin-right:5%">
+                交易失败
+            </view>
+            <view wx:elif="{{order.status==3}}" style="color:#6177ff;float: right;margin-right:5%">
+                交易成功
+            </view>
         </view>
     </view>
 </view>

@@ -54,11 +54,16 @@ Page({
         this.setFilter();
     },
     // 点击查看详情
-    goToDetail: function(e) {
+    goToOrderDetail: function(e) {
         // 点击的id
         var id = e.currentTarget.dataset.courseid;
+        var price = e.currentTarget.dataset.price;
+        // wx.navigateTo({
+        //     url: '../pay/pay?orderid=' + id+,
+        // })
         wx.navigateTo({
-            url: '../detail/detail?id=' + id,
+            url: '../pay/pay?orderid=' + id + '&price=' + price,
+
         })
     },
     // 删除一条订单记录
@@ -68,55 +73,54 @@ Page({
         console.log(e)
         var orderid = e.currentTarget.dataset.id;
         var modelName = "SignList";
-        let that=this;
-      wx.showModal({
-        content: "是否删除该记录",
-        success(res) {
-            if(res.confirm){
-            wx.request({
-                url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
-                data: {
-                    modelName: modelName,
-                    id: orderid,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("删除结果");
-                    console.log(res);
-                    if (res.data.data == '不存在该ID，删除失败') {
-                        wx.showToast({
-                            title: "删除失败",
-                            icon: 'cancel',
-                            duration: 800,
-                        })
-                        
+        let that = this;
+        wx.showModal({
+            content: "是否删除该记录",
+            success(res) {
+                if (res.confirm) {
+                    wx.request({
+                        url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
+                        data: {
+                            modelName: modelName,
+                            id: orderid,
+                        },
+                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                        // header: {}, // 设置请求的 header
+                        success: function(res) {
+                            // success
+                            console.log("删除结果");
+                            console.log(res);
+                            if (res.data.data == '不存在该ID，删除失败') {
+                                wx.showToast({
+                                    title: "删除失败",
+                                    icon: 'cancel',
+                                    duration: 800,
+                                })
 
-                    } else {
-                        wx.showToast({
-                            title: "删除成功",
-                            icon: 'success',
-                            duration: 800,
-                        });
-                        that.setFilter();
-                    }
 
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+                            } else {
+                                wx.showToast({
+                                    title: "删除成功",
+                                    icon: 'success',
+                                    duration: 800,
+                                });
+                                that.setFilter();
+                            }
+
+                        },
+                        fail: function() {
+                            // fail
+                        },
+                        complete: function() {
+                            // complete
+                        }
+                    })
+                } else {
+                    console.log("取消删除");
                 }
-            })
-            }
-            else{
-                console.log("取消删除");
-            }
 
-        }
-    })
+            }
+        })
     },
     // 点击评价按钮
     commentTap: function(e) {

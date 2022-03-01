@@ -25,6 +25,11 @@ Page({
         // 活动课程
         order: '',
         price: '',
+        // 订单信息
+        listData: [],
+        // 剩余时间
+        remain_time: 0,
+        countDown: 0,
     },
 
     /**
@@ -38,6 +43,7 @@ Page({
         })
         this.getCourse(options.orderid);
         user = wx.getStorageSync('user');
+
     },
     // 获取课程接口
     getCourse: function(orderid) {
@@ -57,7 +63,16 @@ Page({
                 console.log(res.data.data[0])
                 that.setData({
                     order: res.data.data[0],
+                });
+                var listData = [];
+                listData.push(that.data.order);
+                that.setData({
+                    listData: listData,
                 })
+                console.log("数据");
+                console.log(listData);
+                that.setCountDown();
+                that.setTimeCount();
             },
             fail: function() {
                 // fail
@@ -129,6 +144,7 @@ Page({
                             icon: 'none',
                             duration: 800,
                         });
+
                         wx.redirectTo({
                             url: './waiting_pay?id=' + that.data.order.courseid + "&orderid=" + that.options.orderid + '&userid=' + that.data.order.userid,
 
@@ -187,5 +203,106 @@ Page({
      */
     onShareAppMessage: function() {
 
+    },
+    /**
+     * 60s倒计时
+     */
+    setTimeCount: function() {
+        let time = this.data.time
+        time--;
+        if (time <= 0) {
+            time = 0;
+        }
+        this.setData({
+            time: time
+        })
+        setTimeout(this.setTimeCount, 1000);
+    },
+    /**
+     * 倒计时
+     */
+    setCountDown: function() {
+        console.log("倒计时");
+        let time = 1000,
+            that = this;
+        let listData = this.data.order;
+        var now = new Date;
+        var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+        that.setData({
+            now: date
+        })
+        var registrationtime = new Date('2022-03-01 21:59:05');
+        console.log(listData.registrationtime);
+        var remain_time = registrationtime - now;
+        console.log(remain_time)
+        that.setData({
+            remain_time: remain_time,
+        })
+
+        // if (remain_time != 0) {
+        //     console.log("时间不为零");
+        //     console.log(remain_time)
+        // }
+
+        let formatTime = this.getFormat(remain_time);
+        remain_time -= time;
+        var countDown = `${formatTime.hh}:${formatTime.mm}:${formatTime.ss}`;
+        // return v;
+
+        this.setData({
+            listData: listData,
+            countDown: countDown,
+        });
+        var i = 1;
+        if (remain_time > 0) {
+            // console.log("时间为零");
+            setTimeout(this.setCountDown, time);
+
+        } else if (remain_time <= 0) {
+            console.log("等于0");
+            // if (i == 1) {
+            wx.request({
+                    url: app.globalData.url + 'WxSign/UpdateOneOrder',
+                    data: {
+                        id: listData.id,
+                    },
+                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                    // header: {}, // 设置请求的 header
+                    success: function(res) {
+                        // success
+                        console.log("修改结果");
+                        console.log(res);
+                    },
+                    fail: function() {
+                        // fail
+                    },
+                    complete: function() {
+                        // complete
+                    }
+                })
+                //     i++;
+                // }
+        }
+    },
+    /**
+     * 格式化时间
+     */
+    getFormat: function(msec) {
+        let ss = parseInt(msec / 1000);
+        let ms = parseInt(msec % 1000);
+        let mm = 0;
+        let hh = 0;
+        if (ss > 60) {
+            mm = parseInt(ss / 60);
+            ss = parseInt(ss % 60);
+            if (mm > 60) {
+                hh = parseInt(mm / 60);
+                mm = parseInt(mm % 60);
+            }
+        }
+        ss = ss > 9 ? ss : `0${ss}`;
+        mm = mm > 9 ? mm : `0${mm}`;
+        hh = hh > 9 ? hh : `0${hh}`;
+        return { ss, mm, hh };
     }
 })

@@ -78,3 +78,54 @@
     display: flex;
     color: #6177ff;
 }
+
+page {
+    height: 100%;
+    background: #fff;
+    position: relative;
+}
+
+.item {
+    height: 4%;
+    background: #fff;
+    text-align: center;
+}
+
+.content {
+    border: 1px solid rgb(167, 159, 159);
+    background: #F6F8F8;
+    margin-bottom: 300rpx;
+    border-bottom: none;
+}
+
+.no {
+    text-align: center;
+    position: absolute;
+    top: 8%;
+    z-index: -11;
+}
+
+.tip {
+    position: relative;
+    background: #fff;
+    width: 100%;
+    height: 100rpx;
+    margin-bottom: 5rpx;
+    padding: 20rpx 0;
+    border-bottom: 1px solid gainsboro;
+}
+
+.isShow {
+    display: none;
+}
+
+.dis {
+    width: 100%;
+    font-size: 35rpx;
+    color: #009FE5;
+    box-sizing: border-box;
+}
+
+.dis_time {
+    width: 50%;
+}

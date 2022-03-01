@@ -1,21 +1,10 @@
-<!-- <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
-    <view catchtouchmove="catchtouchmove" class="tips">
-        <view class="tips_box">
-            <view class="hint_view">
-                <view class="text">
-                    <view class="hint1">《小程序》使用协议</view>
-                    <view class="hint2"><text>小程序使用协议小程序使用协议小程序使用协议小程序使用协议小程序使用协议...........等等</text></view>
-                </view>
+<!-- 如果是待付款状态则会显示倒计时 -->
+<view class="content">
+    <block wx:for="{{listData}}" wx:key="idx" wx:for-item="item" wx:for-index="{{idx}}">
+        <view class="tip {{item.time<=0?'isShow':''}}">
+            <view class="dis">
+                <view class='dis_time left'>剩余时间：{{item.countDown}}</view>
             </view>
-            <button bindtap='tipAgree' class="login" type='primary' formType="submit">我同意</button>
         </view>
-    </view>
-
-
-</view> -->
-<view>
-    <input bindinput='InputIdNum' name="idNum" id="idNum" placeholder="身份证号" maxlength="18" value="{{idnum}}"></input>
-
+    </block>
 </view>
-<button bindtap='SaveIdNum'>保存</button>
-<!-- <button bindtap="UpLoadImage" class="">上传图片</button> -->
