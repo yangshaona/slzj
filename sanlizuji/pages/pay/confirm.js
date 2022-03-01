@@ -103,91 +103,15 @@ Page({
     // 点击确认订单先浅检查一下有没有填学员
     checkSubmit: function(e) {
         var that = this;
-        // if (id_flag == "student") {
-        //     // stu = user.name;
-        //     this.setData({
-        //         idx: 0,
-        //         stu: user.name,
-        //     });
-        // }
         console.log(87);
         console.log(that.options);
         var id = e.currentTarget.dataset.id;
-        console.log("正在获取MD5和account");
-        // if (that.data.idx != -1) {
-        wx.request({
-                url: app.globalData.url + "WxSign/tgPay",
-                data: {
-                    lowOrderId: that.options.orderid, //后台雪花算法生成的订单号
-                    payMoney: 0.01, //支付金额
-                    body: that.data.order.title, //商品描述
-                    notifyUrl: app.globalData.url + "WxSign/AccepttgPay", //回调地址
-                    isMinipg: 1, //是否是小程序
-                    openId: that.data.userinfo.openid, //openId
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    console.log(res);
-                    console.log(res.data.pay_info);
-                    var pay_res = JSON.parse(res.data.pay_info);
-                    wx.requestPayment({
-                        timeStamp: pay_res.timeStamp.toString(),
-                        nonceStr: pay_res.nonceStr,
-                        package: pay_res.package,
-                        signType: pay_res.signType,
-                        paySign: pay_res.paySign,
-                        success(res) {
-                            console.log(res);
-                            wx.request({                            
-                                url:  app.globalData.url  +  "WxSign/orderFind",
-                                data: {
-                                    lowOrderId: that.options.orderid,
-                                       //后台雪花算法生成的订单号
-                                     status: "SUCCESS",
-                                },
-                                    method: 'GET',
-                                    success: function(res) {  
-                                    console.log("支付成功");                              
-                                    console.log(res);                                
-                                    wx.showToast({
-                                        title: '支付成功',
-                                        icon: 'success',
-                                        duration: 800,
-                                    })                            
-                                }                                                
-                            })
+        wx.redirectTo({
+            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.order.price,
+
+        })
 
 
-                            setTimeout(function() {
-                                wx.redirectTo({
-                                    url: '../myApply/myApply',
-                                })
-                            }, 1000)
-                        },
-                        fail(res) {
-                            console.log(res);
-                            wx.showToast({
-                                title: '支付失败',
-                                icon: 'none'
-                            });
-                            wx.redirectTo({
-                                url: './waiting_pay?id=' + id + "&orderid=" + that.options.orderid + '&userid=' + that.data.stuinfo.id,
-
-                            })
-                        }
-                    })
-
-                }
-            })
-            // } else {
-            //     console.log('err');
-            //     wx.showToast({
-            //         title: '请选择学员',
-            //         icon: 'error',
-            //         duration: 800
-            //     })
-            // }
     },
 
     // 获取设备信息
@@ -220,6 +144,7 @@ Page({
             url: app.globalData.url + 'WxCourse/GetDetail',
             data: {
                 id: options.id,
+                modelName: "ClubNews",
             },
             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             // header: {}, // 设置请求的 header

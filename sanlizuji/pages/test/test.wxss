@@ -71,3 +71,10 @@
 .isTipHide {
     display: none;
 }
+
+.desc {
+    line-height: 3rem;
+    position: relative;
+    display: flex;
+    color: #6177ff;
+}

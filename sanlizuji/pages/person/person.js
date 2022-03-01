@@ -119,9 +119,7 @@ Page({
 
         })
     },
-    UpLoadImage1: function(e) {
-        this.UpLoadImage();
-    },
+
     //点击头像上传图片
     UpLoadImage: function() {
         let that = this;

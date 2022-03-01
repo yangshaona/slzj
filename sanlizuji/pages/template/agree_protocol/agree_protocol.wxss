@@ -1,93 +1,92 @@
+/* pages/template/agree_protocol/agree_protocol.wxss */
 
-    /* pages/template/agree_protocol/agree_protocol.wxss */
-    
-    .tips {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 100;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-    }
-    
-    .tips_box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 70%;
-        height: 55%;
-        border-radius: 45rpx;
-        background: #fff;
-        overflow: hidden;
-        justify-content: space-between;
-    }
-    
-    .hint_view {
-        display: flex;
-        align-items: center;
-    }
-    
-    .text {
-        display: flex;
-        flex-direction: column;
-        margin: 12rpx 24rpx;
-    }
-    
-    .hint1 {
-        margin-top: 38rpx;
-        text-align: center;
-        font-size: 30rpx;
-        color: #1a1a1a;
-        /* line-height: 52rpx; */
-        top: 10%;
-        border-bottom: 1px solid;
-    }
-    
-    .hint2 {
-        margin-top: 14rpx;
-        text-align: justify;
-        text-indent: 52rpx;
-        font-size: 30rpx;
-        color: rgb(26, 25, 25);
-        line-height: 42rpx;
-    }
-    
-    .modal-btn-wrapper {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        line-height: 64rpx;
-        font-size: 32rpx;
-        letter-spacing: 6rpx;
-        border-top: 1rpx solid rgba(7, 17, 27, 0.1);
-    }
-    
-    .cancel-btn,
-    .confirm-btn {
-        flex: 1;
-        height: 100rpx;
-        line-height: 100rpx;
-        text-align: center;
-        font-size: 32rpx;
-        border: none;
-        border-radius: 0;
-    }
-    
-    .cancel-btn {
-        background-color: #fff;
-        color: rgba(99, 100, 102, 0.6);
-    }
-    
-    .isTipShow {
-        display: block;
-    }
-    
-    .isTipHide {
-        display: none;
-    }
+.tips {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.tips_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    height: 55%;
+    border-radius: 45rpx;
+    background: #fff;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+.hint_view {
+    display: flex;
+    align-items: center;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    margin: 12rpx 24rpx;
+}
+
+.hint1 {
+    margin-top: 38rpx;
+    text-align: center;
+    font-size: 30rpx;
+    color: #1a1a1a;
+    /* line-height: 52rpx; */
+    top: 10%;
+    border-bottom: 1px solid;
+}
+
+.hint2 {
+    margin-top: 14rpx;
+    text-align: justify;
+    text-indent: 52rpx;
+    font-size: 30rpx;
+    color: rgb(26, 25, 25);
+    line-height: 42rpx;
+}
+
+.modal-btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    line-height: 64rpx;
+    font-size: 32rpx;
+    letter-spacing: 6rpx;
+    border-top: 1rpx solid rgba(7, 17, 27, 0.1);
+}
+
+.cancel-btn,
+.confirm-btn {
+    flex: 1;
+    height: 100rpx;
+    line-height: 100rpx;
+    text-align: center;
+    font-size: 32rpx;
+    border: none;
+    border-radius: 0;
+}
+
+.cancel-btn {
+    background-color: #fff;
+    color: rgba(99, 100, 102, 0.6);
+}
+
+.isTipShow {
+    display: block;
+}
+
+.isTipHide {
+    display: none;
+}

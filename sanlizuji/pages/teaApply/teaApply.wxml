@@ -42,7 +42,7 @@
                     <view wx:elif="{{item.status==3&&item.endTime=='false'}}" class="status">报名成功</view>
                     <view wx:else class="status">已完成</view>
 
-                    <view class="price">￥{{item.price}}</view>
+                    <!-- <view class="price">￥{{item.price}}</view> -->
                 </view>
             </block>
         </block>

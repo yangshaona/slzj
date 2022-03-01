@@ -317,6 +317,13 @@
 					"id": -1,
 					"name": "pages/pay/pay",
 					"pathName": "pages/pay/pay",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myApply/comment",
+					"pathName": "pages/myApply/comment",
 					"scene": null
 				}
 			]

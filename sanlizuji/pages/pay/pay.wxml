@@ -1,23 +1,23 @@
 <!--pages/pay/pay.wxml-->
 <view style="height: 100%; overflow: hidden;">
-  <view class="deal-info-box">
-    <desc inner-text="下单时间: {{dealTime}}" icon="/icon/time2.png" class="deal-desc"></desc>
-    <desc inner-text="订单号: {{dealId}}" icon="/icon/deal2.png" class="deal-desc"></desc>
-  </view>
+    <view class="deal-info-box">
+        <desc inner-text="下单时间: {{order.registrationtime}}" icon="/icon/time2.png" class="deal-desc"></desc>
+        <desc inner-text="订单号: {{order.id}}" icon="/icon/deal2.png" class="deal-desc"></desc>
+    </view>
 
-  <view class="apply-info-box">
-    <view class="apply-ttl">{{dealTtl}}</view>
-    <view class="apply-second-ttl">- 报名信息 -</view>
-    <view class="apply-info">
-      <view class="apply-stu">报名学员: {{student}}</view>
-      <view class="date">活动时间: {{startD}} ~ {{endD}}</view>
-      <view class="remark">*备注: {{remark}}</view>
-      <view class="price">￥{{price}}</view>
+    <view class="apply-info-box">
+        <view class="apply-ttl">{{order.coursename}}</view>
+        <view class="apply-second-ttl">- 报名信息 -</view>
+        <view class="apply-info">
+            <view class="apply-stu">报名学员: {{order.username}}</view>
+            <view class="date">活动时间: {{order.starttime}} ~ {{order.endtime}}</view>
+            <view class="remark">*备注: {{remark}}</view>
+            <view class="price">￥{{price}}</view>
+        </view>
+        <view class="btn-box">
+            <view class="btn-useless"></view>
+            <button class="invalid" bindtap="Cancel">取消订单</button>
+            <button class="pay" bindtap="Submit">确认支付</button>
+        </view>
     </view>
-    <view class="btn-box">
-      <view class="btn-useless"></view>
-      <button class="invalid">取消订单</button>
-      <button class="pay">确认支付</button>
-    </view>
-  </view>
 </view>

@@ -13,4 +13,9 @@
 
 
 </view> -->
-<button bindtap="UpLoadImage" class="">上传图片</button>
+<view>
+    <input bindinput='InputIdNum' name="idNum" id="idNum" placeholder="身份证号" maxlength="18" value="{{idnum}}"></input>
+
+</view>
+<button bindtap='SaveIdNum'>保存</button>
+<!-- <button bindtap="UpLoadImage" class="">上传图片</button> -->
