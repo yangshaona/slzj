@@ -1,14 +1,18 @@
 <!--pages/pay/pay.wxml-->
 <view style="height: 100%; overflow: hidden;">
     <view class="deal-info-box">
-        <desc inner-text="下单时间: {{order.registrationtime}}" icon="/icon/time2.png" class="deal-desc"></desc>
-        <desc inner-text="订单号: {{order.id}}" icon="/icon/deal2.png" class="deal-desc"></desc>
-    </view>
-    <view class="tip {{remain_time<=0?'isShow':''}}">
-        <view class="dis">
-            <view class='dis_time left'>剩余时间：{{countDown}}</view>
+        <view class="deal-desc-box">
+            <desc inner-text="{{order.registrationtime}}" icon="/icon/time2.png"></desc>
+            <desc inner-text="订单号: {{order.id}}" icon="/icon/deal2.png"></desc>
         </view>
+        <view class="tip {{remain_time<=0?'isShow':''}}">
+            <view class="dis">
+                <view class='dis_time left'>剩余时间：{{countDown}}</view>
+            </view>
+        </view>
+        <time title="支付剩余" time="{{time}}" class="deal-desc"></time>
     </view>
+
     <view class="apply-info-box">
         <view class="apply-ttl">{{order.coursename}}</view>
         <view class="apply-second-ttl">- 报名信息 -</view>

@@ -2,7 +2,6 @@
 let app = getApp();
 let user = wx.getStorageSync('user');
 Page({
-
     /**
      * 页面的初始数据
      */
@@ -20,11 +19,15 @@ Page({
         endD: '2022-03-01',
         // 备注
         remark: '无',
-        // 价格
-        price: '999',
         // 活动课程
         order: '',
         price: '',
+
+        // 倒计时
+        startTime: '',
+        endTime: '',
+        time: '',
+
         // 订单信息
         listData: [],
         // 剩余时间
@@ -32,10 +35,102 @@ Page({
         countDown: 0,
     },
 
+    getTime: async function(e) {
+        const that = this;
+        // 页面跳转后立刻生成订单提交时间
+        function createTime() {
+            const startTime = +new Date();
+            // 十五分钟
+            const endTime = startTime + 900000;
+            // 向服务器提交订单提交时间和订单截止时间
+            wx.request({
+                url: 'url',
+                data: {
+                    startTime: startTime,
+                    endTime: endTime,
+                },
+                method: 'POST',
+            })
+
+
+            that.setData({
+                startTime: startTime,
+                endTime: endTime,
+            })
+            that.setTime();
+        }
+        // 向服务器请求数据，若已存在此订单的截止时间，则直接拿下来用
+        wx.request({
+            url: 'url',
+            data: {
+
+            },
+            success: res => {
+                console.log(res);
+                // 获得订单截止时间
+                that.setData({
+                    endTime: res.data.endTime,
+                })
+                that.setTime();
+            },
+            fail: err => {
+                console.log(err);
+                // 新生成截止时间, 并提交后台
+                createTime();
+            }
+        })
+
+    },
+
+    setTime: async function(e, callback) {
+        // 计时结束回调函数
+        if (typeof(callback) === 'function') {
+            // 异步跳转
+            setTimeout(function() {
+                wx.reLaunch({
+                    // 跳转到某个页面
+                    url: '../index/index',
+                })
+            }, 800)
+            wx.showToast({
+                    title: '订单过期！',
+                    icon: 'error',
+                    duration: 800,
+                })
+                // 后台销毁订单
+            wx.request({
+                url: 'url',
+                data: {},
+            })
+            return -1;
+        }
+
+
+        // 每过1000ms计算一次
+        const that = this;
+        let st = setInterval(async function() {
+            let now = +new Date();
+            let duration = (that.data.endTime - now) / 1000;
+            if (duration <= 0) {
+                // 倒计时结束，回调函数
+                clearInterval(st);
+                return await that.setTime(0, function() {
+                    console.log('Time out!');
+                })
+            }
+            let time = parseInt(duration / 60) + '分' + parseInt(duration % 60) + '秒';
+            that.setData({
+                time: time,
+            })
+        }, 1000)
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        // 获取订单时间
+        this.getTime();
         console.log("确认支付11");
         console.log(options);
         this.setData({

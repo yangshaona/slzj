@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "desc": "/components/desc/desc"
+    "desc": "/components/desc/desc",
+    "time": "/components/time/time"
   },
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "支付确认",

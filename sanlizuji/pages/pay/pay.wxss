@@ -8,10 +8,28 @@
     padding: 5%;
     background-image: linear-gradient(to right top, #f1f1f1, #f6f6f6);
     box-shadow: 0 0 10px #d3d3d3;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5%;
+}
+
+.deal-desc-box {
+    display: block;
+    width: 65%;
+    box-sizing: border-box;
+    margin: 0 2.5%;
+    padding: 5% 0;
 }
 
 .deal-desc {
     display: block;
+    display: block;
+    width: 27.5%;
+    box-sizing: border-box;
+    height: fit-content;
+    padding: 0;
+    margin: auto 0 auto 2.5%;
 }
 
 .apply-info-box {

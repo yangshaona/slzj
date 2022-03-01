@@ -1,0 +1,5 @@
+<!--components/time/time.wxml-->
+<view class="ttl">{{title}}</view>
+<view class="time">
+  {{time}}
+</view>
