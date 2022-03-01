@@ -1,6 +1,6 @@
 // pages/register/register_teacher.js
 const app = getApp();
-
+const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
 const areaList = require('../../utils/arealist.js');
 Page({
 
@@ -20,7 +20,7 @@ Page({
         // 生日picker
         birth_idx: null,
         // 地区picker
-        reg: [],
+        reg: ['北京', '北京', '东城'],
         reg_idx: null,
         // 姓名
         name: "",
@@ -47,27 +47,68 @@ Page({
         //地区
         multiArray: [],
         multiIndex: [0, 0, 0],
-        province: []
+        province: [],
+        //是否显示用户协议
+        isTipTrue: false,
+        isAgree: false,
     },
+    // 同意协议
+    tipAgree: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: true,
+        })
+    },
+    tipCancel: function() {
+        this.setData({
+                isTipTrue: false,
+                isAgree: false,
+            })
+            // setTimeout(function() {
+        wx.showToast({
+                title: "请先同意服务协议",
+                duration: 1000,
+            })
+            // }, 800)
+    },
+    // 跳转到用户协议
+    toProtocol: function() {
+        wx.navigateTo({
+            url: '../protocol/protocol',
 
+        })
+    }, // 跳转到用户隐私
+    toPrivacy: function() {
+        wx.navigateTo({
+            url: '../privacy_policy/privacy_policy',
+
+        })
+    },
     //获取用户昵称
     getNickName: function(e) {
-        wx.getUserProfile({
-            desc: '获取用户昵称',
-            success: (res) => {
-                console.log("获取用户微信昵称成功"),
-                    console.log(res)
-                this.setData({
-                    cangetUserInfo: true,
-                    nickName: res.userInfo.nickName,
-                    header: res.userInfo.avatarUrl,
-                })
-                wx.setStorageSync('avator', res.userInfo.avatarUrl)
-            },
-            fail: (res) => {
-                console.log(res.errMsg)
-            }
-        })
+        if (!this.data.isAgree) {
+            this.setData({
+                isTipTrue: true,
+            })
+        }
+        if (this.data.isAgree) {
+            wx.getUserProfile({
+                desc: '获取用户昵称',
+                success: (res) => {
+                    console.log("获取用户微信昵称成功"),
+                        console.log(res)
+                    this.setData({
+                        cangetUserInfo: true,
+                        nickName: res.userInfo.nickName,
+                        header: res.userInfo.avatarUrl,
+                    })
+                    wx.setStorageSync('avator', res.userInfo.avatarUrl)
+                },
+                fail: (res) => {
+                    console.log(res.errMsg)
+                }
+            })
+        }
     },
 
     // 类型选择器改变
@@ -98,9 +139,10 @@ Page({
         var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
 
         if (phNum.length != 11 || !reg.test(phNum)) {
-            wx.showModal({
-                content: '手机号输入有误',
-                showCancel: false,
+            wx.showToast({
+                title: '手机号有误',
+                icon: 'error',
+                duration: 800,
             })
             return false;
         } else {
@@ -110,28 +152,82 @@ Page({
     },
     // 身份证号输入验证
     checkID: function(id) {
-        var reg = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-        if (id.length < 18) {
-            console.log("身份证号输入位数不正确");
+        console.log("检查结果");
+        var data = check_idnum.checkIdCard(id);
+        console.log(data.idCardFlag);
+        if (!data.idCardFlag) {
             wx.showToast({
                 title: '身份证号有误',
                 icon: 'error',
                 duration: 800
-            })
-            return false;
-        } else if (!reg.test(id)) {
-            console.log("身份证格式错误");
-            wx.showToast({
-                title: '身份证号有误',
-                icon: 'error',
-                duration: 800
+
             })
             return false;
         } else {
-            console.log("身份证号验证通过")
+            // wx.showToast({
+            //     title: '通过了',
+            // })
+            this.setData({
+                birth: data.birth,
+                sex: data.sex,
+            })
+            console.log(data);
+            console.log(data.sex);
             return true;
         }
     },
+    // 检查身份证是否正确
+    InputIdNum: function(e) {
+        this.checkID(e.detail.value);
+    },
+    // 检查姓名是否正确
+    InputName: function(e) {
+        var that = this;
+        console.log(e);
+        var name = e.detail.value
+        var reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,6}$/;
+
+        if (name.match(reg)) {
+            console.log("111");
+            // that.setData({ allow_name: true });
+            wx.setStorageSync("name", name)
+        } else {
+            wx.showToast({
+                title: "姓名有误",
+                icon: 'error',
+                duration: 800
+            })
+        }
+        console.log(name)
+    },
+    // 检查手机号是否输入正确
+    InputPhone: function(e) {
+        this.checkPhone(e.detail.value);
+    },
+    // 身份证号输入验证
+    // checkID1: function(id) {
+    //     var reg = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+    //     if (id.length < 18) {
+    //         console.log("身份证号输入位数不正确");
+    //         wx.showToast({
+    //             title: '身份证号有误',
+    //             icon: 'error',
+    //             duration: 800
+    //         })
+    //         return false;
+    //     } else if (!reg.test(id)) {
+    //         console.log("身份证格式错误");
+    //         wx.showToast({
+    //             title: '身份证号有误',
+    //             icon: 'error',
+    //             duration: 800
+    //         })
+    //         return false;
+    //     } else {
+    //         console.log("身份证号验证通过")
+    //         return true;
+    //     }
+    // },
     // 选择文件
     chooseFiles: function(e) {
         console.log("上传文件");
@@ -246,6 +342,8 @@ Page({
                             console.log("教师数据")
                             console.log(data)
                             console.log("教师性别id:", that.data.sexid);
+                            console.log("头像");
+                            console.log(that.data.header);
                             wx.request({
                                 url: app.globalData.url + 'WxUser/Register&modelName=Teacher',
                                 data: {
@@ -315,6 +413,8 @@ Page({
             return;
         }
     },
+
+
     // 绑定已有数据
     login: function(e) {
         app.globalData.flag_identity = [0, 1, 0];

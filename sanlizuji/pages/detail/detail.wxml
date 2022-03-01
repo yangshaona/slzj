@@ -75,13 +75,14 @@
 
 <!-- 评论区 -->
 <view class="journeyTitle">— 活动评价 —</view>
-<view class="journey" wx:if="{{comment==''}}">该活动暂无评价</view>
+<view class="journey" wx:if="{{comment==''||comment.length==0}}">该活动暂无评价</view>
+
 <view class="infoBox" wx:else>
     <block wx:for="{{comment}}" wx:key="item">
         <view class="comment">
             <view class="accountInfo">
                 <view class="avatorBox" style="height: 90rpx;">
-                    <image src="{{avator}}" class="avator" mode="widthFix"></image>
+                    <image src="http://localhost/gitSanli/sanli/uploads/temp/{{item.photo}}" class="avator" mode="widthFix"></image>
                 </view>
                 <view class="nickName">{{item.username}}</view>
             </view>
@@ -98,7 +99,7 @@
         <view class="rating">
             <view class="ttl">服务：</view>
             <block wx:for="{{service_rate}}" wx:key="id">
-                <image src="{{item.icon}}" mode="widthFix" class="star" data-value="{{item.rate}}">
+                <image src="{{item.icon}}" mode="widthFix" class="comment-star" data-value="{{item.rate}}">
                     <view class="star_half_1" data-name="service" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
                     <view class="star_half_2" data-name="service" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
                 </image>
@@ -158,12 +159,13 @@
     </view>
 
     <view class="bottomHalf2">
-        <button class="button1" id="teacher" bindtap="teacherSignUp" disabled="{{isOutDate}}">教师报名</button>
+        <button class="button1" id="teacher" bindtap="teacherSignUp" disabled="{{isOutDate||id_flag=='student'||id_flag=='parent'}}">教师报名</button>
+        <!-- <picker></picker> -->
+        <picker wx:if="{{id_flag=='parent'}}" disabled="{{isOutDate||id_flag=='teacher'}}" class="button2" mode="selector" range="{{stu_arr}}" range-key="name" value="{{idx}}" bindchange="stuChange">
+            <button class="button3" disabled="{{isOutDate||id_flag=='teacher'}}" bindtap="studentSignUp">学生报名</button>
 
-        <picker wx:if=" {{id_flag=='parent' }} " disabled="{{isOutDate}}" class="button2 " mode="selector " range="{{stu_arr}} " range-key="name " value="{{idx}} " bindchange="stuChange ">
-            <button class="button3" disabled="{{isOutDate}}">学生报名</button>
         </picker>
-        <button wx:else class="button2 button3" id="student " bindtap="studentSignUp ">学生报名</button>
+        <button wx:else class="button2 button3" id="student" disabled="{{isOutDate||id_flag=='teacher'}}" bindtap="studentSignUp">学生报名</button>
 
     </view>
 </view>

@@ -41,44 +41,139 @@ Page({
         cmt_display: false,
         // 星级
         // 服务
-        service_rate: [
-            { 'id': 0, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 1, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 2, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 3, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 4, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+        service_rate: [{
+                'id': 0,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 1,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 2,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 3,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 4,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
         ],
         // 课程
-        course_rate: [
-            { 'id': 0, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 1, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 2, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 3, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 4, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+        course_rate: [{
+                'id': 0,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 1,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 2,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 3,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 4,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
         ],
         // 住宿
-        dorm_rate: [
-            { 'id': 0, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 1, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 2, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 3, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 4, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+        dorm_rate: [{
+                'id': 0,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 1,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 2,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 3,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 4,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
         ],
         // 餐饮
-        food_rate: [
-            { 'id': 0, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 1, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 2, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 3, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 4, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+        food_rate: [{
+                'id': 0,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 1,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 2,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 3,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 4,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
         ],
         // 导师
-        teacher_rate: [
-            { 'id': 0, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 1, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 2, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 3, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
-            { 'id': 4, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+        teacher_rate: [{
+                'id': 0,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 1,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 2,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 3,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
+            {
+                'id': 4,
+                'rate': 0,
+                'icon': '/icon/star_ept_blue.png'
+            },
         ],
         // 向服务端提交评论
         service_star: '',
@@ -115,6 +210,7 @@ Page({
         } else {
             type[id]['icon'] = '/icon/star_full_blue.png';
             type[id]['rate'] = 1;
+
         }
         // 总评级
         var rate = 0;
@@ -195,11 +291,14 @@ Page({
             user: user,
             id_flag: id_flag,
         })
-        if (id_flag == 'parent') { that.loadStu(); }
+        if (id_flag == 'parent') {
+            that.loadStu();
+        }
         wx.request({
             url: app.globalData.url + 'WxCourse/GetDetail',
             data: {
-                id: options.id
+                id: options.id,
+                modelName: 'ClubNews',
             },
             success(res) {
 
@@ -268,28 +367,37 @@ Page({
             url: app.globalData.url + 'WxCourse/Comment',
             data: {
                 courseid: courseid,
-                id: "",
-                coursename: "",
-                foods: "",
-                services: "",
-                courses: "",
-                stays: "",
-                foodm: "",
-                servicem: "",
-                coursem: "",
-                staym: "",
-                P_comment: "",
-                P_score: "",
-                photo: "",
+                // id: "",
+                // coursename: "",
+                // foods: "",
+                // services: "",
+                // courses: "",
+                // stays: "",
+                // foodm: "",
+                // servicem: "",
+                // coursem: "",
+                // staym: "",
+                // P_comment: "",
+                // P_score: "",
+                // photo: "",
 
 
             },
             success(res) {
                 console.log("评论数据");
                 console.log(res)
+                console.log(res.data.data);
                 that.setData({
                     comment: res.data.data
                 });
+                if (that.data.comment.length == 0) {
+                    console.log("没有评论")
+                    console.log(that.data.comment);
+
+                } else {
+                    console.log(that.data.comment)
+                }
+
             },
         })
     },
@@ -346,6 +454,7 @@ Page({
         let user = wx.getStorageSync('user');
         console.log(user)
         if (!user) {
+            wx.setStorageSync('isLoaded', 'false');
             that.isLoaded('../register/register_teacher')
 
         } else {
@@ -371,12 +480,12 @@ Page({
                                     console.log("报名成功")
                                     console.log(res);
                                     wx.navigateTo({
-                                        url: '../myApply/myApply',
+                                        url: '../teaApply/teaApply',
                                     })
                                     wx.showToast({
                                         title: "报名成功",
                                         icon: 'success',
-                                        duration: 1600,
+                                        duration: 500,
                                     })
                                 } else {
                                     wx.showModal({
@@ -406,7 +515,7 @@ Page({
             stu: stu_arr[e.detail.value].name,
             kid: stu_arr[e.detail.value],
         });
-        console.log("学生的数据");
+        console.log("学生的数据1111");
         console.log(this.data.stu);
         console.log(this.data.kid);
         if (this.data.stu != '') {
@@ -458,7 +567,7 @@ Page({
 
         wx.showModal({
             content: '还未登录，请先登录再报名！', //提示的内容,
-            showCancel: false, //是否显示取消按钮,
+
             success: function(res) {
                 if (res.confirm) {
                     console.log('确定')
@@ -476,10 +585,11 @@ Page({
     studentSignUp: function(options) {
         console.log("学生报名信息");
         console.log(options);
-        let user = wx.getStorageSync('user')
+        user = wx.getStorageSync('user')
         let that = this;
         console.log(user)
         if (!user) {
+            wx.setStorageSync('isLoaded', 'false');
             that.isLoaded('../register/register_stu');
         } else {
             if (id_flag == 'parent') {
@@ -494,6 +604,7 @@ Page({
                     })
                 }
             } else {
+                console.log('学生报名');
                 that.GenerateOrder(user.id, user.name);
             }
 
@@ -551,6 +662,10 @@ Page({
      */
     onShow: function() {
         let that = this;
+        id_flag = wx.getStorageSync('id_flag');
+        if (id_flag == 'parent') {
+            that.loadStu();
+        }
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag')
         that.setData({

@@ -1,8 +1,7 @@
 // pages/myApply/myApply.js
 const app = getApp();
-let user = wx.getStorageSync('user');
-let id_flag = wx.getStorageSync('id_flag');
-
+let user = wx.getStorageSync('user')
+let id_flag = wx.getStorageSync('id_flag')
 Page({
 
     /**
@@ -16,9 +15,10 @@ Page({
         // 选择框
         selectBox: [
             { 'id': 0, 'ctn': '全部', 'class': 'selected' },
-            { 'id': 1, 'ctn': '待付款', 'class': 'select' },
-            { 'id': 2, 'ctn': '报名成功', 'class': 'select' },
-            { 'id': 3, 'ctn': '已完成', 'class': 'select' },
+            { 'id': 1, 'ctn': '报名失败', 'class': 'select' },
+            { 'id': 2, 'ctn': '待审核', 'class': 'select' },
+            { 'id': 3, 'ctn': '报名成功', 'class': 'select' },
+            { 'id': 4, 'ctn': '已完成', 'class': 'select' },
         ],
         // 提交服务端的筛选条件
         select: "全部",
@@ -61,18 +61,53 @@ Page({
             url: '../detail/detail?id=' + id,
         })
     },
+    // 点击评价按钮
+    commentTap: function(e) {
+        // 点击的id
+        var id = e.currentTarget.dataset.id;
+        console.log("点击评价")
+        console.log(id)
+        wx.navigateTo({
+            url: '../myApply/comment?id=' + id,
+        })
+    },
+
+    // 点击继续报名按钮
+    applyTap2: function(e) {
+        var id = e.currentTarget.dataset.id;
+        console.log("点击报名")
+        console.log(id)
+        wx.navigateTo({
+            url: '../detail/detail?id=' + id,
+        })
+    },
+    //前往报名
+    goToApply: function() {
+        wx.switchTab({
+            url: '../course/course',
+        })
+    },
+    // 查看导师
+    teacherTap: function(e) {
+        var id = e.currentTarget.dataset.id;
+        console.log("点击导师按钮")
+        console.log(id)
+        wx.navigateTo({
+            url: '../detail/teacher?course_id=' + id,
+        })
+    },
+
     // 删除一条订单记录
     DeleteOneOrder: function(e) {
 
         console.log("删除订单")
         console.log(e)
         var orderid = e.currentTarget.dataset.id;
-        var modelName = "SignList";
+        var modelName = "teaSignList";
         let that=this;
       wx.showModal({
         content: "是否删除该记录",
         success(res) {
-            if(res.confirm){
             wx.request({
                 url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
                 data: {
@@ -110,61 +145,11 @@ Page({
                     // complete
                 }
             })
-            }
-            else{
-                console.log("取消删除");
-            }
 
         }
     })
-    },
-    // 点击评价按钮
-    commentTap: function(e) {
-        // 点击的id
-        var id = e.currentTarget.dataset.id;
-        console.log("点击评价")
-        console.log(id)
-        wx.navigateTo({
-            url: '../myApply/comment?id=' + id,
-        })
-    },
-    // 点击待付款按钮
-    applyTap1: function(e) {
-        var courseid = e.currentTarget.dataset.courseid;
-        var orderid = e.currentTarget.dataset.orderid;
-        var userid = e.currentTarget.dataset.userid;
-        var that = this;
-        console.log("提交订单")
-        console.log(courseid)
-        console.log(orderid)
-        wx.navigateTo({
-            url: '../pay/waiting_pay?id=' + courseid + '&orderid=' + orderid + '&userid=' + userid,
+    
 
-        })
-    },
-    // 点击继续报名按钮
-    applyTap2: function(e) {
-        var id = e.currentTarget.dataset.id;
-        console.log("点击报名")
-        console.log(id)
-        wx.navigateTo({
-            url: '../detail/detail?id=' + id,
-        })
-    },
-    //前往报名
-    goToApply: function() {
-        wx.switchTab({
-            url: '../course/course',
-        })
-    },
-    // 查看导师
-    teacherTap: function(e) {
-        var id = e.currentTarget.dataset.id;
-        console.log("点击导师按钮")
-        console.log(id)
-        wx.navigateTo({
-            url: '../detail/teacher?course_id=' + id,
-        })
     },
 
     // 筛选显示内容，这部分由服务端实现，这里只是测试一下样式
@@ -173,7 +158,6 @@ Page({
         var filter = [];
         console.log(select);
         let that = this;
-        var total = [];
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
         console.log("我的报名数据")
@@ -182,22 +166,10 @@ Page({
         that.setData({
             flag_identity: app.globalData.flag_identity
         })
-        var identity;
-        if (id_flag == 'student') {
-            identity = "student"
-            console.log("学生")
-        } else if (id_flag == 'teacher') {
-            identity = "teacher"
-            console.log("教师")
-        } else if (id_flag == 'parent') {
-            identity = "parent";
-            console.log("父母");
-            that.setTitle("孩子的报名")
-        }
 
-        console.log(identity)
+        // console.log(identity)
         wx.request({
-            url: app.globalData.url + 'WxOther/GetMyApply&identity=' + identity,
+            url: app.globalData.url + 'WxOther/GetMyApply&identity=' + 'teacher',
             data: {
                 id: user.id
             },
@@ -208,17 +180,9 @@ Page({
                 console.log("我的报名")
                 console.log(res)
                 var total = [];
-                if (id_flag == 'parent') {
-                    if (user.kids != '') {
-                        console.log(res.data.data.data[0])
-                        console.log(res.data.data.data[0].data1)
-                        console.log(res.data.data.data[0].data2)
-                        total = mergerArr(res.data.data.data[0].data1, res.data.data.data[0].data2);
-                        console.log(total)
-                    }
-                } else {
-                    total = mergerArr(res.data.data1, res.data.data2)
-                }
+
+                total = mergerArr(res.data.data1, res.data.data2)
+
                 var now = new Date;
 
                 var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
@@ -233,7 +197,7 @@ Page({
                     if (ctn['status'] == 1) {
                         status = "报名失败";
                     } else if (ctn['status'] == 2) {
-                        status = "待付款";
+                        status = "待审核";
                     } else if (ctn['status'] == 3 && endTime > now) {
 
                         status = "报名成功";
@@ -279,15 +243,7 @@ Page({
             url: '../register/register_stu',
         })
     },
-    // 监护人绑定孩子
-    _goBound: function() {
-        id_flag = wx.getStorageSync('id_flag');
 
-        wx.navigateTo({
-            url: '../person_info/parent_info',
-        })
-
-    },
     // 设置标题
     setTitle: function(tname) {
         wx.setNavigationBarTitle({ title: tname })

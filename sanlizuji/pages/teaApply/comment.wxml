@@ -1,0 +1,55 @@
+<!--pages/myApply/comment.wxml-->
+<view class="infoBox">
+<form bindsubmit="cmt_submit">
+  <view class="rating">
+    <view class="ttl">服务：</view>
+    <block wx:for="{{service_rate}}" wx:key="id">
+      <image src="{{item.icon}}" mode="widthFix" class="star"  data-value="{{item.rate}}">
+        <view class="star_half_1" data-name="service" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+        <view class="star_half_2" data-name="service" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+      </image>
+    </block>
+  </view>
+  <input type="text" name="service" placeholder="评价一下服务"/>
+  <view class="rating">
+    <view class="ttl">课程：</view>
+    <block wx:for="{{course_rate}}" wx:key="id">
+      <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+        <view class="star_half_1" data-name="course" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+        <view class="star_half_2" data-name="course" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view></image>
+    </block>
+  </view>
+  <input type="text" name="course" placeholder="评价一下课程"/>
+  <view class="rating">
+    <view class="ttl">住宿：</view>
+    <block wx:for="{{dorm_rate}}" wx:key="id">
+      <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+        <view class="star_half_1" data-name="dorm" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+        <view class="star_half_2" data-name="dorm" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+      </image>
+    </block>
+  </view>
+  <input type="text" name="dorm" placeholder="评价一下住宿"/>
+  <view class="rating">
+    <view class="ttl">餐饮：</view>
+    <block wx:for="{{food_rate}}" wx:key="id">
+      <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+        <view class="star_half_1" data-name="food" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+        <view class="star_half_2" data-name="food" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+      </image>
+    </block>
+  </view>
+  <input type="text" name="food" placeholder="评价一下餐饮"/>
+  <view class="rating">
+    <view class="ttl">导师：</view>
+    <block wx:for="{{teacher_rate}}" wx:key="id">
+      <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
+        <view class="star_half_1" data-name="teacher" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
+        <view class="star_half_2" data-name="teacher" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
+      </image>
+    </block>
+  </view>
+  <input type="text" name="teacher" placeholder="评价一下导师"/>
+  <button form-type="submit" class="button2">提交评价</button>
+</form>
+</view>

@@ -24,7 +24,6 @@
     border-radius: 1rem;
     margin: -5px 40% auto 40%;
     z-index: -1;
-
 }
 
 .total {

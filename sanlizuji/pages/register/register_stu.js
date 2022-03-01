@@ -1,6 +1,8 @@
 // pages/register/register_stu.js
 var app = getApp();
 const areaList = require('../../utils/arealist.js');
+const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+
 Page({
 
     /**
@@ -11,7 +13,7 @@ Page({
         // 能否获得用户微信昵称
         cangetUserInfo: false,
         //表单各个小标题
-        formTitle: { 'name': '姓名', 'idnum': '身份证号', 'birthday': '生日', 'sex': '性别', 'education': '在读学历', 'nikename': '昵称', 'phone': '手机号', 'schoolname': '学校名称', 'region': '地区', 'grade': '年级', 'class': '班级', 'parents': '监护人姓名', 'p_phone': '监护人手机', 'aller': '备注', 'avatar':'头像' },
+        formTitle: { 'name': '姓名', 'idnum': '身份证号', 'birthday': '生日', 'sex': '性别', 'education': '在读学历', 'nikename': '昵称', 'phone': '手机号', 'schoolname': '学校名称', 'region': '地区', 'grade': '年级', 'class': '班级', 'parents': '监护人姓名', 'p_phone': '监护人手机', 'aller': '备注', 'avatar': '头像' },
         // 学历picker
         edu: ['小学', '初中', '高中', '专科', '本科', '硕士', '博士'],
         edu_idx: null,
@@ -70,7 +72,8 @@ Page({
         multiIndex: [0, 0, 0],
         province: [],
         //是否显示用户协议
-        isTipTrue: true,
+        isTipTrue: false,
+        isAgree: false,
     },
     // 选择图像
     chooseImg: function(e) {
@@ -189,27 +192,65 @@ Page({
             reg: tmp,
         })
     },
+    // 同意协议
+    tipAgree: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: true,
+        })
+    },
+    tipCancel: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: false,
+        })
+        wx.showToast({
+            title: "请先同意服务协议",
+            duration: 1000,
+        })
+    },
+    // 跳转到用户协议
+    toProtocol: function() {
+        wx.navigateTo({
+            url: '../protocol/protocol',
 
+        })
+    }, // 跳转到用户隐私
+    toPrivacy: function() {
+        wx.navigateTo({
+            url: '../privacy_policy/privacy_policy',
+
+        })
+    },
     //获取用户昵称
     getNickName: function(e) {
-        wx.getUserProfile({
-            desc: '获取用户昵称',
-            success: (res) => {
-                console.log("获取用户微信昵称成功");
-                console.log(res)
-                this.setData({
-                    cangetUserInfo: true,
-                    nickName: res.userInfo.nickName,
-                    header: res.userInfo.avatarUrl
-                })
+        if (!this.data.isAgree) {
+            this.setData({
+                isTipTrue: true,
+            })
+        }
+        if (this.data.isAgree) {
+            wx.getUserProfile({
+                desc: '获取用户昵称',
+                success: (res) => {
+                    console.log("获取用户微信昵称成功");
+                    console.log(res)
+                    this.setData({
+                        cangetUserInfo: true,
+                        nickName: res.userInfo.nickName,
+                        // header: res.userInfo.avatarUrl
+                    })
 
-                // console.log(this.data.stu_info.nickName);
-                // console.log(header)
-            },
-            fail: (res) => {
-                console.log(res.errMsg)
-            }
-        })
+                    // console.log(this.data.stu_info.nickName);
+                    // console.log(header)
+                },
+                fail: (res) => {
+                    console.log(res.errMsg)
+                }
+            })
+        } // else if (!this.data.isAgree) {
+
+        // }
     },
 
     // 学历选择器改变
@@ -250,11 +291,11 @@ Page({
     },
 
     //手机号码输入检查
-    checkPhone: function(phNum, id) {
+    checkPhone: function(phNum) {
         var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
         if (phNum.length != 11 || !reg.test(phNum)) {
             wx.showModal({
-                content: id + '输入有误', //提示的内容,
+                content: '手机号输入有误', //提示的内容,
                 showCancel: false, //是否显示取消按钮,
             });
             return false;
@@ -265,27 +306,58 @@ Page({
     },
     // 身份证号输入验证
     checkID: function(id) {
-        var reg = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-        if (id.length < 18) {
-            console.log("身份证号输入位数不正确");
+        console.log("检查结果");
+        var data = check_idnum.checkIdCard(id);
+        console.log(data.idCardFlag);
+        if (!data.idCardFlag) {
             wx.showToast({
                 title: '身份证号有误',
                 icon: 'error',
                 duration: 800
-            })
-            return false;
-        } else if (!reg.test(id)) {
-            console.log("身份证格式错误");
-            wx.showToast({
-                title: '身份证号有误',
-                icon: 'error',
-                duration: 800
+
             })
             return false;
         } else {
-            console.log("身份证号验证通过")
+            // wx.showToast({
+            //     title: '通过了',
+            // })
+            var birthday = "stu_info.birthday";
+            this.setData({
+                [birthday]: data.birth,
+                sex: data.sex,
+            })
+            console.log(data);
+            console.log(data.sex);
             return true;
         }
+    },
+    // 检查身份证是否正确
+    InputIdNum: function(e) {
+        this.checkID(e.detail.value);
+    },
+    // 检查姓名是否正确
+    InputName: function(e) {
+        var that = this;
+        console.log(e);
+        var name = e.detail.value
+        var reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,6}$/;
+
+        if (name.match(reg)) {
+            console.log("111");
+            // that.setData({ allow_name: true });
+            wx.setStorageSync("name", name)
+        } else {
+            wx.showToast({
+                title: "姓名有误",
+                icon: 'error',
+                duration: 800
+            })
+        }
+        console.log(name)
+    },
+    // 检查手机号是否输入正确
+    InputPhone: function(e) {
+        this.checkPhone(e.detail.value);
     },
 
     // 注册表单提交
@@ -314,7 +386,7 @@ Page({
 
         // 全部已填写
         // 电话号码格式检查
-        if (that.checkPhone(data.phone, "手机号")) {
+        if (that.checkPhone(data.phone)) {
             // 身份证号格式检查
             if (that.checkID(data.idnum)) {
 
@@ -376,10 +448,10 @@ Page({
                                     Userinfo: {
                                         name: data.name,
                                         nikename: data.nickname,
-                                        header: that.data.avator,
+                                        // header: that.data.avator,
                                         openid: that.data.openid,
                                         idnum: data.idnum,
-                                        birthday: data.birthday,
+                                        birthday: data.birth,
                                         sex: data.sex,
                                         sexid: that.data.stu_info.sexid,
                                         education: that.data.edu[data.education],
@@ -412,7 +484,8 @@ Page({
                                             showCancel: false,
                                         })
                                         console.log("表单检查成功");
-                                        console.log(that.data.stu_info)
+                                        console.log(that.data.stu_info);
+                                        that.getUserInfo();
                                         setTimeout(function() {
                                             wx.navigateTo({
                                                 url: '../login/login?id=student'
@@ -445,6 +518,67 @@ Page({
             console.log("手机号填写错误");
             return;
         }
+    },
+    // 获取用户信息
+    getUserInfo: function(e) {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxUser/GetUserInfo2',
+            data: {
+                openid: app.globalData.openid,
+                id_flag: 'student',
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("获取成功");
+                console.log(res);
+                that.UpLoadImage(res.data.data);
+            }
+        })
+    },
+    //点击头像上传图片
+    UpLoadImage: function(data) {
+        let that = this;
+        console.log("图片路径");
+        console.log(that.data.avator);
+        // tempFilePath可以作为img标签的src属性显示图片
+        const tempFilePaths = that.data.avator;
+        console.log("图片路径");
+        console.log(tempFilePaths);
+        //上传图片
+        wx.uploadFile({
+            //请求后台的路径
+            url: app.globalData.url + 'WxUser/SaveImg',
+
+            //小程序本地的路径
+            filePath: tempFilePaths,
+
+            name: 'file',
+            formData: {
+                //图片命名：用户id-商品id-1~9
+                newName: data.openid,
+                id: data.id,
+                modelName: 'Userinfo',
+                // imgNum:i+1
+            },
+            success(res) {
+                console.log("成功保存图片");
+                console.log(res);
+                console.log(res.statusCode);
+            },
+            fail(res) {
+                flag = false;
+                wx.showModal({
+                    title: '提示',
+                    content: '上传失败',
+                    showCancel: false
+                })
+            }
+        })
+
+
     },
     // 切换教师/家长端
     changeToTeacher: function(e) {
@@ -540,12 +674,7 @@ Page({
         })
     },
 
-    // 阅读协议
-    tipAgree: function() {
-        this.setData({
-            isTipTrue: false
-        })
-    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -553,11 +682,10 @@ Page({
 
         var now = new Date;
         let that = this;
-        // that.getLocation();//获取省市区
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         that.setData({
             time: time,
-            isTipTrue: true,
+            isTipTrue: false,
 
         })
         var province = [],

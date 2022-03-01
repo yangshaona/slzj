@@ -117,7 +117,10 @@ Page({
 
     //查看更多
     viewMore: function(e) {
-        app.globalData.viewMore = e.currentTarget.dataset.id;
+        app.globalData.viewMore = this.data.navigat_name;
+        console.log("12222");
+        console.log(app.globalData.viewMore);
+
         wx.switchTab({
             url: '../course/course',
         })
@@ -125,31 +128,36 @@ Page({
     readData: function(e) {
         var that = this;
         //   console.log(app.globalData.url + "WxCourse/GetClubNews");
-        console.log("hhh", e)
-        this.setData({
-            navigat_name: e,
-        })
-        console.log(that.data.navigat_name)
-        app.globalData.navigate_name = this.data.navigat_name
-        wx.request({
-            url: app.globalData.url + "WxCourse/GetClubNews",
-            data: { id: e, },
-            header: {
-                'cookie': "UM_distinctid=17c7eea955811d-074deee6c4e0f3-c791e37-144000-17c7eea9559220; CNZZDATA155540=cnzz_eid%3D1159189188-1634211971-http%253A%252F%252Flocalhost%252F%26ntime%3D1636677369; PHPSESSID=k9euq11vro8ic2pcor2gukmt9h; _currentUrl_=%2Fsanli%2Findex.php%3Fr%3DClubNews%2Findex%26news_type%3D0"
-            },
-            success(res) {
-                that.setData({
-                    activity: res.data.data,
-                    history: res.data.history,
-                    imgUrl: res.data.ads
-                })
-                console.log("课程数据")
-                console.log(res)
+        if (e == '更多活动') {
+            wx.switchTab({
+                url: '../course/course',
+            })
+        } else {
+            this.setData({
+                navigat_name: e,
+            })
+            console.log(that.data.navigat_name)
+            app.globalData.navigate_name = this.data.navigat_name
+            wx.request({
+                url: app.globalData.url + "WxCourse/GetClubNews",
+                data: { id: e, },
+                header: {
+                    'cookie': "UM_distinctid=17c7eea955811d-074deee6c4e0f3-c791e37-144000-17c7eea9559220; CNZZDATA155540=cnzz_eid%3D1159189188-1634211971-http%253A%252F%252Flocalhost%252F%26ntime%3D1636677369; PHPSESSID=k9euq11vro8ic2pcor2gukmt9h; _currentUrl_=%2Fsanli%2Findex.php%3Fr%3DClubNews%2Findex%26news_type%3D0"
+                },
+                success(res) {
+                    that.setData({
+                        activity: res.data.data,
+                        history: res.data.history,
+                    })
+                    console.log("课程数据")
+                    console.log(res)
 
-            }
-        })
+                }
+            })
+        }
     },
     reReadData: function(e) {
+        console.log("111111")
         console.log(e.currentTarget.dataset.id);
         var text = e.currentTarget.dataset.id;
         // 样式改变
@@ -191,8 +199,6 @@ Page({
                     img.push(tmp)
                 }
                 console.log(img)
-
-
                 that.setData({
                     imgUrl: img
                 })

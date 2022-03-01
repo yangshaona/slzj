@@ -35,7 +35,7 @@ Page({
             { 'id': 0, 'icon': '/icon/course2.png', 'desc': '将要进行', 'url': '../willDo/willDo' },
             { 'id': 1, 'icon': '/icon/ScheduleOutlined.png', 'desc': '活动行程', 'url': '../journey/journey' },
             { 'id': 2, 'icon': '/icon/time2.png', 'desc': '正在活动', 'url': '../doing/doing_tc' },
-            { 'id': 3, 'icon': '/icon/ceng2.png', 'desc': '我的报名', 'url': '../myApply/myApply' },
+            { 'id': 3, 'icon': '/icon/ceng2.png', 'desc': '我的报名', 'url': '../teaApply/teaApply' },
             { 'id': 4, 'icon': '/icon/set2.png', 'desc': '个人信息', 'url': '../person_info/teacher_info' }
         ],
         // 父母小组件栏
@@ -62,6 +62,7 @@ Page({
         id_flag: id_flag,
         user: user,
         header: "",
+        modelName: '',
     },
     //已登录直接跳到个人信息
     toInfo: function(e) {
@@ -118,36 +119,85 @@ Page({
 
         })
     },
+
     //点击头像上传图片
-    upImage: function(e) {
-        wx.chooseMedia({
-            mediaType: ['image'],
+    UpLoadImage: function() {
+        let that = this;
+        //选取图片
+        wx.chooseImage({
             count: 1,
-            sourceType: ['album', 'camera'],
-            success: (res) => {
-                console.log("成功上传头像")
-                console.log(res)
-                wx.showToast({
-                    title: '保存成功!',
-                    icon: 'success',
-                    duration: 800
+            sizeType: ['original'], //原图
+            sourceType: ['album', 'camera'], //支持选取图片
+            success(res) {
+                // tempFilePath可以作为img标签的src属性显示图片
+                const tempFilePaths = res.tempFilePaths[0];
+                console.log("图片路径");
+                console.log(tempFilePaths);
+                //上传图片
+                wx.uploadFile({
+                    //请求后台的路径
+                    url: app.globalData.url + 'WxUser/SaveImg',
+
+                    //小程序本地的路径
+                    filePath: tempFilePaths,
+
+                    name: 'file',
+                    formData: {
+                        //图片命名：用户id-商品id-1~9
+                        newName: user.openid,
+                        id: user.id,
+                        modelName: that.data.modelName,
+                        // imgNum:i+1
+                    },
+                    success(res) {
+                        console.log("成功上传图片");
+                        console.log(res);
+                        console.log(res.statusCode);
+                        if (res.statusCode == 200) {
+                            wx.showToast({
+                                title: "上传成功",
+                                icon: 'success',
+                                duration: 800,
+                            });
+                            wx.request({
+                                url: app.globalData.url + 'WxUser/GetUserInfo2',
+                                data: {
+                                    openid: user.openid,
+                                    id_flag: id_flag,
+                                },
+                                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                                // header: {}, // 设置请求的 header
+                                success: function(res) {
+                                    wx.setStorageSync('user', res.data.data);
+                                    user = wx.getStorageSync('user');
+                                    that.setData({
+                                        user: user,
+                                    })
+                                    console.log(that.data.user)
+                                },
+                            })
+
+                        } else {
+                            wx.showToast({
+                                title: "上传失败",
+                                icon: 'success',
+                                duration: 800,
+                            });
+                        }
+
+                    },
+                    fail(res) {
+                        flag = false;
+                        wx.showModal({
+                            title: '提示',
+                            content: '上传失败',
+                            showCancel: false
+                        })
+                    }
                 })
-                console.log("头像保存成功")
-                this.setData({
-                    avator: res.tempFiles[0].tempFilePath,
-                })
-                wx.setStorageSync('avator', this.data.avator)
-                console.log(this.data.avator)
-            },
-            fail: (res) => {
-                wx.showToast({
-                    title: '选择错误',
-                    icon: 'success',
-                    duration: 800
-                })
-                console.log(res);
             }
         })
+
     },
     /**
      * 生命周期函数--监听页面加载
@@ -172,7 +222,8 @@ Page({
      */
     onShow: function() {
         this.judgeIdentity();
-
+        // if (this.data.user.header == undefined) console.log(this.data.user.header);
+        // if (this.data.user.header == null) console.log(this.data.user.header);
     },
     // 判断类型
     judgeIdentity: function() {
@@ -181,15 +232,18 @@ Page({
         avator = wx.getStorageSync("avator");
         if (id_flag == 'parent') {
             this.setData({
-                identity: '家长'
+                identity: '家长',
+                modelName: 'UserParent',
             })
         } else if (id_flag == 'teacher') {
             this.setData({
-                identity: '教师'
+                identity: '教师',
+                modelName: 'Teacher',
             })
         } else {
             this.setData({
-                identity: '学生'
+                identity: '学生',
+                modelName: "Userinfo",
             })
         }
         this.setData({

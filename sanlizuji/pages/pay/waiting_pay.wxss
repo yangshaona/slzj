@@ -1,11 +1,6 @@
 /* pages/pay/waiting_pay.wxss */
 
-
-/* pages/pay/waiting_pay.wxss */
-
-
-/* pages/pay/confirm.wxss */
-
+@import './confirm.wxss';
 .card {
     display: block;
     box-sizing: border-box;

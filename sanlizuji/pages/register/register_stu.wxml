@@ -1,8 +1,10 @@
 <!--pages/register/register_stu.wxml-->
 <!-- 照片上传还没搞 -->
+
 <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
     <include src="../template/agree_protocol/agree_protocol"></include>
 </view>
+
 <!-- 注册框 -->
 <block wx:if="{{!cangetUserInfo}}">
     <view class="primary">
@@ -19,29 +21,28 @@
                 <view class="desc">姓名
                     <image mode="widthFix" src="/icon/account.png"></image>
                 </view>
-                <input type="text" name="name" id="name" placeholder="姓名" />
+                <input type="text" name="name" id="name" placeholder="姓名" bindblur="InputName" />
             </view>
             <view>
                 <view class="desc">身份证号
                     <image mode="widthFix" src="/icon/id.png"></image>
                 </view>
-                <input type="idcard" name="idnum" id="idNum" placeholder="身份证号" maxlength="18" />
+                <input type="idcard" name="idnum" id="idNum" placeholder="身份证号" maxlength="18" bindblur="InputIdNum" />
             </view>
             <view>
                 <view class="desc">生日
                     <image mode="widthFix" src="/icon/birth.png"></image>
                 </view>
-                <picker name="birthday" id="birth" mode="date" start="1949-10-01" end="{{time}}" class="{{birth_idx == null ? 'default' : ''}}" bindchange="birthChange">
-                    {{birth_idx == null ? '请选择' : birth_idx}}
-                </picker>
+                <input type="text" name="birth" id="birth" placeholder="生日" value="{{stu_info.birthday}}" disabled="true" />
+
             </view>
             <view>
                 <view class="desc">性别
                     <image mode="widthFix" src="/icon/sex.png"></image>
                 </view>
                 <radio-group name="sex" id="sex" class="box" style="display: flex;">
-                    <label style="width: 50%;display: block;"><radio value="男">男</radio></label>
-                    <label style="width: 50%;display: block;"><radio value="女">女</radio></label>
+                    <label style="width: 50%;display: block;"><radio disabled='true' value="男"  checked="{{sex=='男'?true:false}}">男</radio></label>
+                    <label style="width: 50%;display: block;"><radio disabled='true'  value="女" checked="{{sex=='女'?true:false}}">女</radio></label>
                 </radio-group>
             </view>
             <view>
@@ -60,7 +61,7 @@
                 <view class="desc">手机号
                     <image mode="widthFix" src="/icon/phone.png"></image>
                 </view>
-                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" />
+                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
             </view>
             <view>
                 <view class="desc">学校名称
@@ -114,4 +115,4 @@
         </form>
     </view>
 </block>
-<view class=""> </view>
+<!-- <view class=""> </view> -->

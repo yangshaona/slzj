@@ -1,0 +1,11 @@
+<!--pages/privacy_policy/privacy_policy.wxml-->
+
+<view style='margin:.7em;'>
+    <rich-text nodes="{{privacy}}"></rich-text>
+</view>
+
+<view class="protocol">
+    <text style="margin-top:100rpx;">点击下面的复制链接 ，再打开浏览器粘贴地址即可下载：</text>
+    <view style=" margin:5%;color:rgb(15, 48, 235);" bindtap="DownloadPrivacy">{{url}}</view>
+
+</view>

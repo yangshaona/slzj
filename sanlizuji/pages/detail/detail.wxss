@@ -156,7 +156,7 @@
 
 .journey {
     width: 90%;
-    margin: 2% 0% 8% 6%;
+    margin: 2% 0% 20% 6%;
 }
 
 .journeyTop {
@@ -374,6 +374,7 @@ picker[disabled] {
     font-size: 1rem;
     border-radius: 0;
     width: 60%;
+    color: white !important;
     background-image: linear-gradient(to right, #6177ff, #8898ff);
 }
 
@@ -449,4 +450,11 @@ button::after {
     width: 70%;
     text-align: right;
     font-size: 0.75rem;
+}
+
+.comment-star {
+    position: relative;
+    width: 4%;
+    margin: auto 0.5%;
+    z-index: 1;
 }

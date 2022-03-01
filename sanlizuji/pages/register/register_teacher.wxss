@@ -3,6 +3,7 @@
 
 /* 未获取用户昵称时 */
 
+@import '../template/agree_protocol/agree_protocol.wxss';
 .primary {
     display: block;
     box-sizing: border-box;
@@ -84,4 +85,26 @@ input {
     border-radius: 0.5rem;
     color: white;
     background-color: #6177ff;
+}
+
+
+/* 修改禁用且checked的样式 */
+
+radio .wx-radio-input.wx-radio-input-checked.wx-radio-input-disabled {
+    background: rgb(33, 163, 50);
+    border-color: rgb(33, 163, 50);
+    color: #fff;
+}
+
+radio .wx-radio-input.wx-radio-input-checked::before {
+    border-radius: 50%;
+    /* 圆角 */
+    text-align: center;
+    font-size: 30rpx;
+    /* 对勾大小 30rpx */
+    color: #fff;
+    /* 对勾颜色 白色 */
+    background: rgb(33, 163, 50);
+    transform: translate(-50%, -50%) scale(1);
+    -webkit-transform: translate(-50%, -50%) scale(1);
 }

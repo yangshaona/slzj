@@ -1,4 +1,4 @@
-<view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
+<!-- <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
     <view catchtouchmove="catchtouchmove" class="tips">
         <view class="tips_box">
             <view class="hint_view">
@@ -12,4 +12,10 @@
     </view>
 
 
+</view> -->
+<view>
+    <input bindinput='InputIdNum' name="idNum" id="idNum" placeholder="身份证号" maxlength="18" value="{{idnum}}"></input>
+
 </view>
+<button bindtap='SaveIdNum'>保存</button>
+<!-- <button bindtap="UpLoadImage" class="">上传图片</button> -->

@@ -34,6 +34,39 @@ Page({
         multiIndex: [0, 0, 0],
         province: [],
         header: "",
+        //是否显示用户协议
+        isTipTrue: false,
+        isAgree: false,
+    },
+    // 同意协议
+    tipAgree: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: true,
+        })
+    },
+    tipCancel: function() {
+        this.setData({
+            isTipTrue: false,
+            isAgree: false,
+        })
+        wx.showToast({
+            title: "请先同意服务协议",
+            duration: 1000,
+        })
+    },
+    // 跳转到用户协议
+    toProtocol: function() {
+        wx.navigateTo({
+            url: '../protocol/protocol',
+
+        })
+    }, // 跳转到用户隐私
+    toPrivacy: function() {
+        wx.navigateTo({
+            url: '../privacy_policy/privacy_policy',
+
+        })
     },
     //获取地区
     bindMultiPickerChange: function(e) {
@@ -118,23 +151,30 @@ Page({
     },
     //获取用户昵称
     getNickName: function(e) {
-        wx.getUserProfile({
-            desc: '获取用户昵称',
-            success: (res) => {
-                console.log("获取用户微信昵称成功");
-                console.log(res);
-                this.setData({
-                    cangetUserInfo: true,
-                    nickName: res.userInfo.nickName,
-                    header: res.userInfo.avatarUrl,
-                })
+        if (!this.data.isAgree) {
+            this.setData({
+                isTipTrue: true,
+            })
+        }
+        if (this.data.isAgree) {
+            wx.getUserProfile({
+                desc: '获取用户昵称',
+                success: (res) => {
+                    console.log("获取用户微信昵称成功");
+                    console.log(res);
+                    this.setData({
+                        cangetUserInfo: true,
+                        nickName: res.userInfo.nickName,
+                        header: res.userInfo.avatarUrl,
+                    })
 
-                wx.setStorageSync('avator', res.userInfo.avatarUrl)
-            },
-            fail: (res) => {
-                console.log(res.errMsg)
-            }
-        })
+                    wx.setStorageSync('avator', res.userInfo.avatarUrl)
+                },
+                fail: (res) => {
+                    console.log(res.errMsg)
+                }
+            })
+        }
     },
 
     // 地区选择器改变
@@ -151,9 +191,10 @@ Page({
         var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
 
         if (phNum.length != 11 || !reg.test(phNum)) {
-            wx.showModal({
-                content: '手机号输入有误',
-                showCancel: false,
+            wx.showToast({
+                title: '手机号有误',
+                icon: 'error',
+                duration: 800,
             })
             return false;
         } else {
@@ -162,6 +203,31 @@ Page({
         }
     },
 
+
+    // 检查姓名是否正确
+    InputName: function(e) {
+        var that = this;
+        console.log(e);
+        var name = e.detail.value
+        var reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,6}$/;
+
+        if (name.match(reg)) {
+            console.log("111");
+            // that.setData({ allow_name: true });
+            wx.setStorageSync("name", name)
+        } else {
+            wx.showToast({
+                title: "姓名有误",
+                icon: 'error',
+                duration: 800
+            })
+        }
+        console.log(name)
+    },
+    // 检查手机号是否输入正确
+    InputPhone: function(e) {
+        this.checkPhone(e.detail.value);
+    },
     // 注册表单提交
     submit: function(e) {
         // 留空检查
@@ -256,7 +322,8 @@ Page({
                                             showCancel: false,
                                         })
                                         console.log("表单检查成功");
-                                        console.log(that.data.stu_info)
+                                        console.log(that.data.stu_info);
+
                                         setTimeout(function() {
                                             wx.navigateTo({
                                                 url: '../login/login?id=parent'
@@ -289,6 +356,7 @@ Page({
             return;
         }
     },
+
     // 绑定已有数据
     login: function(e) {
 

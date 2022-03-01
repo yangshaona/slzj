@@ -1,6 +1,9 @@
 <!--pages/register/register_parent.wxml-->
 <!-- 照片上传还没搞 -->
 <!-- 注册框 -->
+<view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
+    <include src="../template/agree_protocol/agree_protocol"></include>
+</view>
 <block wx:if="{{!cangetUserInfo}}">
     <view class="primary">
         <button class="submit" bindtap="getNickName">注册</button>
@@ -14,7 +17,7 @@
                 <view class="desc">姓名
                     <image mode="widthFix" src="/icon/account.png"></image>
                 </view>
-                <input type="text" name="name" id="name" placeholder="姓名" />
+                <input type="text" name="name" id="name" placeholder="姓名" bindblur="InputName" />
             </view>
             <view>
                 <view class="desc">性别
@@ -33,7 +36,7 @@
                 <view class="desc">手机号
                     <image mode="widthFix" src="/icon/phone.png"></image>
                 </view>
-                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" />
+                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
             </view>
             <view>
                 <view class="desc">地区
