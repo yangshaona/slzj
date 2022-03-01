@@ -33,6 +33,7 @@
     "pages/pay/pay",
     "pages/pay/waiting_pay",
     "pages/bind_kids/bind_kids",
+    "pages/dev/dev",
     "pages/template/agree_protocol/agree_protocol"
   ],
   "window": {

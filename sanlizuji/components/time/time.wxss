@@ -1,0 +1,24 @@
+/* components/time/time.wxss */
+.time {
+  display: flex;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  width: fit-content;
+  padding: 1% 5%;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+  color: #6177ff;
+}
+.ttl {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 1% 5%;
+  color: #666666;
+  text-align: center;
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  width: fit-content;
+}

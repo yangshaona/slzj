@@ -1,27 +1,10 @@
-// pages/pay/pay.js
+// pages/dev/dev.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    // 下单时间
-    dealTime: '2022-02-27 15:13',
-    // 订单号
-    dealId: '5AZ8Y13E4',
-    // 订单信息-活动主题
-    dealTtl: '华师一日游',
-    // 报名学员
-    student: '小飞侠',
-    // 起止时间
-    startD: '2022-02-28',
-    endD: '2022-03-01',
-    // 备注
-    remark: '无',
-    // 价格
-    price: '999',
-
-    // 倒计时
     startTime: '',
     endTime: '',
     time: '',
@@ -121,7 +104,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.getTime();
+    this.getTime(); 
   },
 
   /**

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "time":"/components/time/time"
+  },
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "测试倒计时"
+}

@@ -1,8 +1,11 @@
 <!--pages/pay/pay.wxml-->
 <view style="height: 100%; overflow: hidden;">
   <view class="deal-info-box">
-    <desc inner-text="下单时间: {{dealTime}}" icon="/icon/time2.png" class="deal-desc"></desc>
-    <desc inner-text="订单号: {{dealId}}" icon="/icon/deal2.png" class="deal-desc"></desc>
+    <view class="deal-desc-box">
+      <desc inner-text="{{dealTime}}" icon="/icon/time2.png"></desc>
+      <desc inner-text="订单号: {{dealId}}" icon="/icon/deal2.png"></desc>
+    </view>
+    <time title="支付剩余" time="{{time}}" class="deal-desc"></time>
   </view>
 
   <view class="apply-info-box">
