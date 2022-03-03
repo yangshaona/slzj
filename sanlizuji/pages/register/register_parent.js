@@ -44,6 +44,8 @@ Page({
             isTipTrue: false,
             isAgree: true,
         })
+        this.getNickName()
+
     },
     tipCancel: function() {
         this.setData({

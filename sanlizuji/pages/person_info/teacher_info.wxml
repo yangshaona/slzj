@@ -38,7 +38,7 @@
                 <text class=''>修改姓名</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='teaName' placeholder='请输入姓名'></input>
+                <input type='text' class="input" bindblur='teaName' placeholder='请输入姓名'></input>
             </view>
         </view>
 
@@ -49,7 +49,7 @@
                 <text class=''>修改身份证</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='teaIdNum' placeholder='请输入身份证'></input>
+                <input type='text' class="input" bindblur='teaIdNum' placeholder='请输入身份证'></input>
             </view>
         </view>
 
@@ -60,7 +60,7 @@
                 <text class=''>修改手机号</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='teaPhone' placeholder='请输入内容'></input>
+                <input type='text' class="input" bindblur='teaPhone' placeholder='请输入内容'></input>
             </view>
         </view>
 

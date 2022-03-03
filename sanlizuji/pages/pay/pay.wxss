@@ -1,171 +1,191 @@
-/* pages/pay/pay.wxss */
-
-.deal-info-box {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 5%;
-    background-image: linear-gradient(to right top, #f1f1f1, #f6f6f6);
-    box-shadow: 0 0 10px #d3d3d3;
-    display: flex;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 5%;
-}
-
-.deal-desc-box {
-    display: block;
-    width: 65%;
-    box-sizing: border-box;
-    margin: 0 2.5%;
-    padding: 5% 0;
-}
-
-.deal-desc {
-    display: block;
-    display: block;
-    width: 27.5%;
-    box-sizing: border-box;
-    height: fit-content;
-    padding: 0;
-    margin: auto 0 auto 2.5%;
-}
-
-.apply-info-box {
-    display: block;
-    width: 100%;
-    margin: 5% 0;
-    padding: 5%;
-    background: #fafafa;
-    box-shadow: 0 0 10px #d3d3d3;
-    box-sizing: border-box;
-}
-
-.apply-ttl {
-    display: block;
-    position: relative;
-    z-index: 10;
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-}
-
-.apply-ttl::after {
-    content: '';
-    display: block;
-    position: absolute;
-    z-index: -1;
-    background-image: linear-gradient(to right, #8595ff, #6177ff);
-    width: 10%;
-    height: 8px;
-    margin: 0;
-    border-radius: 2rem;
-}
-
-.apply-second-ttl {
-    display: block;
-    text-align: center;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 5% 0;
-    padding: 0;
-    font-size: 0.95rem;
-    color: #6177ff;
-}
-
-.apply-info {
-    width: 95%;
-    display: block;
-    box-sizing: border-box;
-    margin: 2.5%;
-    padding: 0;
-    line-height: 2rem;
-}
-
-.apply-stu {
-    font-size: 0.95rem;
-}
-
-.date {
-    font-size: 0.95rem;
-}
-
-.remark {
-    font-size: 0.75rem;
-    color: #666666;
-}
-
-.price {
-    color: #6177ff;
-    display: block;
-    width: 100%;
-    margin: 5% 0;
-    text-align: right;
-}
-
-.btn-box {
-    display: flex;
-    width: 100%;
-    margin: 2.5% 0;
-}
-
-.btn-useless {
-    display: block;
-    width: 35%;
-    height: 70rpx;
-    margin: 0 2.5%;
-    padding: 0.5% 0;
-    box-sizing: border-box;
-}
-
-.invalid {
-    display: block;
-    width: 22.5% !important;
-    margin: auto 2.5%;
-    height: 55rpx !important;
-    font-size: 0.85rem;
-    line-height: 55rpx;
-    padding: 0;
-    border-radius: 0.75rem;
-    color: rgb(155, 0, 0);
-    border: 1px rgb(155, 0, 0) solid;
-}
-
-.pay {
-    display: block;
-    width: 25% !important;
-    height: 70rpx !important;
-    font-size: 0.85rem;
-    line-height: 70rpx;
-    padding: 0;
-    border-radius: 0.75rem;
-    color: white;
-    margin: 0 2.5%;
-    background-image: linear-gradient(to right, #8595ff, #6177ff);
-}
-
-.tip {
-    position: relative;
-    background: #fff;
-    width: 100%;
-    height: 100rpx;
-    margin-bottom: 5rpx;
-    padding: 20rpx 0;
-    border-bottom: 1px solid gainsboro;
-}
-
-.isShow {
-    display: none;
-}
-
-.dis {
-    width: 100%;
-    font-size: 35rpx;
-    color: #009FE5;
-    box-sizing: border-box;
-}
-
-.dis_time {
-    width: 50%;
-}
+    /* pages/pay/pay.wxss */
+    
+    .deal-info-box {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 5%;
+        background-image: linear-gradient(to right top, #f1f1f1, #f6f6f6);
+        box-shadow: 0 0 10px #d3d3d3;
+        display: flex;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5%;
+    }
+    
+    .deal-desc-box {
+        display: block;
+        width: 65%;
+        box-sizing: border-box;
+        margin: 0 2.5%;
+        padding: 5% 0;
+    }
+    
+    .deal-desc {
+        display: block;
+        display: block;
+        width: 27.5%;
+        box-sizing: border-box;
+        height: fit-content;
+        padding: 0;
+        margin: auto 0 auto 2.5%;
+    }
+    
+    .apply-info-box {
+        display: block;
+        width: 100%;
+        margin: 5% 0;
+        padding: 5%;
+        background: #fafafa;
+        box-shadow: 0 0 10px #d3d3d3;
+        box-sizing: border-box;
+    }
+    
+    .apply-ttl {
+        display: block;
+        position: relative;
+        z-index: 10;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    
+    .apply-ttl::after {
+        content: '';
+        display: block;
+        position: absolute;
+        z-index: -1;
+        background-image: linear-gradient(to right, #8595ff, #6177ff);
+        width: 10%;
+        height: 8px;
+        margin: 0;
+        border-radius: 2rem;
+    }
+    
+    .apply-second-ttl {
+        display: block;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 5% 0;
+        padding: 0;
+        font-size: 0.95rem;
+        color: #6177ff;
+    }
+    
+    .apply-info {
+        width: 95%;
+        display: block;
+        box-sizing: border-box;
+        margin: 2.5%;
+        padding: 0;
+        line-height: 2rem;
+    }
+    
+    .apply-stu {
+        font-size: 0.95rem;
+    }
+    
+    .date {
+        font-size: 0.95rem;
+    }
+    
+    .remark {
+        font-size: 0.75rem;
+        color: #666666;
+    }
+    
+    .price {
+        color: #6177ff;
+        display: block;
+        width: 100%;
+        margin: 5% 0;
+        text-align: right;
+    }
+    
+    .btn-box {
+        display: flex;
+        width: 100%;
+        margin: 2.5% 0;
+    }
+    
+    .btn-useless {
+        display: block;
+        width: 35%;
+        height: 70rpx;
+        margin: 0 2.5%;
+        padding: 0.5% 0;
+        box-sizing: border-box;
+    }
+    
+    .invalid {
+        display: block;
+        width: 22.5% !important;
+        margin: auto 2.5%;
+        height: 55rpx !important;
+        font-size: 0.85rem;
+        line-height: 55rpx;
+        padding: 0;
+        border-radius: 0.75rem;
+        color: rgb(155, 0, 0);
+        border: 1px rgb(155, 0, 0) solid;
+    }
+    
+    .pay {
+        display: block;
+        width: 25% !important;
+        height: 70rpx !important;
+        font-size: 0.85rem;
+        line-height: 70rpx;
+        padding: 0;
+        border-radius: 0.75rem;
+        color: white;
+        margin: 0 2.5%;
+        background-image: linear-gradient(to right, #8595ff, #6177ff);
+    }
+    
+    .tip {
+        position: relative;
+        background: #fff;
+        width: 100%;
+        height: 100rpx;
+        margin-bottom: 5rpx;
+        margin-left: 5rpx;
+        padding: 10rpx 0;
+        border-bottom: 1px solid gainsboro;
+    }
+    
+    .isShow {
+        display: none;
+    }
+    
+    .dis {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        font-size: 35rpx;
+        color: red;
+        box-sizing: border-box;
+        position: relative;
+        /*父元素位置要设置为相对*/
+        margin: 3%;
+    }
+    
+    .dis_time {
+        flex: 1;
+        width: 50%;
+    }
+    
+    .deal {
+        flex: 1;
+        font-size: 35rpx;
+        font-weight: bold;
+        color: #000000;
+        justify-content: flex-end;
+        align-items: center;
+        position: absolute;
+        /*要约束所在位置的子元素的位置要设置成绝对*/
+        right: 8%;
+        /*调节靠右*/
+    }

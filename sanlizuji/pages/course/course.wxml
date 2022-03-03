@@ -34,12 +34,15 @@
 
         <view class="filterTtl">活动地区</view>
         <view class="filterBox">
-            <picker mode="multiSelector" name="region" id="region" value="{{reg_idx == null ? '' : region}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="filterCtn">
+            <picker mode="multiSelector" name="region" id="region" value="{{reg_idx == null ? '' : region}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="filterCtn region">
                 {{reg_idx == null ? "选择地区" : region}}
                 <!-- {{region.length ? region : '选择地区'}} -->
             </picker>
         </view>
-        <button class="confirm" catchtap="filterTap" data-id="confirm">确认</button>
+        <view class="button">
+            <button class="confirm" catchtap="reset" data-id="reset">重置</button>
+            <button class="confirm" catchtap="filterTap" data-id="confirm">确认</button>
+        </view>
     </view>
 </view>
 <view class="total" id="total">

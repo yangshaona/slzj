@@ -1,5 +1,7 @@
 {
-    "usingComponents": {},
+    "usingComponents": {
+        "select": "/components/select-dropdown/select-dropdown"
+    },
     "navigationStyle": "custom",
     "navigationBarTextStyle": "black",
     "backgroundTextStyle": "dark"

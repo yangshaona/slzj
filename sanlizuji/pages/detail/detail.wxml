@@ -82,7 +82,7 @@
         <view class="comment">
             <view class="accountInfo">
                 <view class="avatorBox" style="height: 90rpx;">
-                    <image src="http://localhost/gitSanli/sanli/uploads/temp/{{item.photo}}" class="avator" mode="widthFix"></image>
+                    <image src="{{item.photo}}" class="avator" mode="widthFix"></image>
                 </view>
                 <view class="nickName">{{item.username}}</view>
             </view>

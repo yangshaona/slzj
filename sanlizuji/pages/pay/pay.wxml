@@ -1,18 +1,29 @@
 <!--pages/pay/pay.wxml-->
 <view style="height: 100%; overflow: hidden;">
+    <!-- <view wx:if="{{remain_time<=0||order.status==1||order.status==3}}"> -->
+    <view class="tip">
+        <view class="dis">
+            <view class="dis_time left">
+                <view class="{{remain_time<=0||order.status==1||order.status==3?'isShow':''}}"> 支付剩余时间：{{countDown}}</view>
+            </view>
+            <view wx:if="{{order.status==1}}" class="deal">
+                交易失败
+            </view>
+            <view wx:elif="{{order.status==3}}" class="deal">
+                交易成功
+            </view>
+        </view>
+    </view>
+    <!-- </view> -->
     <view class="deal-info-box">
         <view class="deal-desc-box">
             <desc inner-text="{{order.registrationtime}}" icon="/icon/time2.png"></desc>
             <desc inner-text="订单号: {{order.id}}" icon="/icon/deal2.png"></desc>
         </view>
-        <view class="tip {{remain_time<=0?'isShow':''}}">
-            <view class="dis">
-                <view class='dis_time left'>剩余时间：{{countDown}}</view>
-            </view>
-        </view>
-        <time title="支付剩余" time="{{time}}" class="deal-desc"></time>
+
     </view>
 
+    <!-- <time title="支付剩余" time="{{time}}" class="deal-desc"></time> -->
     <view class="apply-info-box">
         <view class="apply-ttl">{{order.coursename}}</view>
         <view class="apply-second-ttl">- 报名信息 -</view>
@@ -23,17 +34,10 @@
             <view class="price">￥{{price}}</view>
         </view>
         <view class="btn-box">
-            <view wx:if="{{order.status==2}}">
-                <view class="btn-useless"></view>
-                <button class="invalid" bindtap="Cancel">取消订单</button>
-                <button class="pay" bindtap="Submit">确认支付</button>
-            </view>
-            <view wx:elif="{{order.status==1}}" style="color:#6177ff;float: right;margin-right:5%">
-                交易失败
-            </view>
-            <view wx:elif="{{order.status==3}}" style="color:#6177ff;float: right;margin-right:5%">
-                交易成功
-            </view>
+
+            <view class="btn-useless"></view>
+            <button class="invalid" data-orderid="{{order.id}}" wx:if="{{order.status==2}}" bindtap="Cancel">取消订单</button>
+            <button class="pay" wx:if="{{order.status==2}}" bindtap="Submit">确认支付</button>
         </view>
     </view>
 </view>

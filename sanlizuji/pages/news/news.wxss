@@ -1,12 +1,6 @@
 /* pages/news/news.wxss */
 
 
-/* pages/mycourse/mycourse_stu.wxss */
-
-
-/* pages/course/course.wxss */
-
-
 /* 顶部标题 */
 
 .top {
@@ -69,10 +63,26 @@
     box-sizing: border-box;
     width: 95%;
     font-size: 1.25rem !important;
-    margin: 0.5rem 0 2rem 5%;
+    margin: 0.5rem 0 1rem 5%;
     font-weight: bold !important;
     padding: 0 0 0 2%;
     border-left: 2px #6177ff solid;
+}
+
+.type {
+    display: flex;
+    flex-direction: row
+}
+
+.news-type {
+    font-size: 1.1rem;
+    font-weight: bold !important;
+}
+
+.select-wrap {
+    display: flex;
+    flex-direction: row;
+    margin-left: 5%;
 }
 
 

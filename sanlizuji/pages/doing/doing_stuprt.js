@@ -29,7 +29,7 @@ Page({
         icon: {
             'starttime': '/icon/date1.png',
             'groupnum': '/icon/group.png',
-            'room': '/icon/room.png',
+            'hotel': '/icon/room.png',
             'car': '/icon/car.png'
         },
         // 用户坐标
@@ -54,11 +54,11 @@ Page({
     getData: function() {
         var data = this.data.doing;
         var url = this.data.icon;
-        var trans = { 'groupnum': '小组', 'room': '酒店', 'car': '车牌', 'starttime': '日期' }
+        var trans = { 'groupnum': '小组', 'hotel': '酒店', 'car': '车牌', 'starttime': '日期' }
         var display = [];
         for (var idx in data) {
             if (idx == 'coursename') continue;
-            else if (idx == 'groupnum' || idx == 'room' || idx == 'car' || idx == 'starttime') {
+            else if (idx == 'groupnum' || idx == 'hotel' || idx == 'car' || idx == 'starttime') {
                 var key = trans[idx];
                 var value = data[idx];
                 var icon = url[idx];
@@ -66,6 +66,7 @@ Page({
                 display.push(dict);
             }
         }
+        console.log("22222222211")
         console.log(display);
         this.setData({
             display: display

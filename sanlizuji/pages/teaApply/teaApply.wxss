@@ -191,6 +191,10 @@
     color: white;
 }
 
+.comment {
+    width: 22% !important;
+}
+
 .status {
     display: block;
     position: absolute;

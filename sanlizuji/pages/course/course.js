@@ -128,7 +128,32 @@ Page({
         }
 
     },
-
+    // 重置筛选条件
+    reset: function() {
+        console.log("nihao")
+        this.setData({
+            theme: [],
+            duration: "",
+            status: [],
+            start: "",
+            end: "",
+            region: [],
+            reg_idx: null,
+            condition: [],
+            filterID: {
+                '亲子活动': '0',
+                '研学课程': '0',
+                '冬夏令营': '0',
+                '短途': '0',
+                '长途': '0',
+                '未开始报名': '0',
+                '已开始报名': '0',
+                '活动未开始': '0',
+                '活动进行中': '0',
+                '活动已结束': '0'
+            },
+        })
+    },
     // 地区选择器改变
     regionChange: function(e) {
         let data = e.detail.value;

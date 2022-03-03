@@ -1,10 +1,11 @@
-<!-- 如果是待付款状态则会显示倒计时 -->
-<view class="content">
-    <block wx:for="{{listData}}" wx:key="idx" wx:for-item="item" wx:for-index="{{idx}}">
-        <view class="tip {{item.time<=0?'isShow':''}}">
-            <view class="dis">
-                <view class='dis_time left'>剩余时间：{{item.countDown}}</view>
-            </view>
-        </view>
-    </block>
+<view class="select-box">
+    <view class="select-current" catchtap="openClose">
+        <text class="current-name">{{current.name}}</text>
+    </view>
+    <view class="option-list" wx:if="{{isShow}}" catchtap="optionTap">
+        <text class="option" data-id="{{defaultOption.id}}" data-name="{{defaultOption.name}}">{{defaultOption.name}}
+      </text>
+        <text class="option" wx:for="{{result}}" wx:key="{{item.id}}" data-id="{{item.id}}" data-name="{{item.name}}">{{item.name}}
+      </text>
+    </view>
 </view>

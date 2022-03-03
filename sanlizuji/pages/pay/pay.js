@@ -1,6 +1,9 @@
 // pages/pay/pay.js
 let app = getApp();
 let user = wx.getStorageSync('user');
+import {
+    UpdateOrder
+} from '../../utils/text.js'
 Page({
     /**
      * 页面的初始数据
@@ -139,8 +142,9 @@ Page({
         this.getCourse(options.orderid);
         user = wx.getStorageSync('user');
 
+
     },
-    // 获取课程接口
+    // 获取报名的课程接口
     getCourse: function(orderid) {
         let that = this;
         wx.request({
@@ -153,9 +157,8 @@ Page({
             // header: {}, // 设置请求的 header
             success: function(res) {
                 // success
-                console.log("订单详情11")
+                console.log("订单详情")
                 console.log(res)
-                console.log(res.data.data[0])
                 that.setData({
                     order: res.data.data[0],
                 });
@@ -164,10 +167,10 @@ Page({
                 that.setData({
                     listData: listData,
                 })
-                console.log("数据");
-                console.log(listData);
-                that.setCountDown();
-                that.setTimeCount();
+                if (that.data.order.payState != '支付成功') {
+                    that.setCountDown();
+                    that.setTimeCount();
+                }
             },
             fail: function() {
                 // fail
@@ -182,11 +185,13 @@ Page({
     Submit: function() {
         console.log("正在获取MD5和account");
         let that = this;
+        console.log(that.data.order)
+
         wx.request({
             url: app.globalData.url + "WxSign/tgPay",
             data: {
                 lowOrderId: that.data.order.id, //后台雪花算法生成的订单号
-                payMoney: 0.01, //支付金额
+                payMoney: that.data.price, //支付金额
                 body: that.data.order.coursename, //商品描述
                 notifyUrl: app.globalData.url + "WxSign/AccepttgPay", //回调地址
                 isMinipg: 1, //是否是小程序
@@ -218,11 +223,13 @@ Page({
                                 console.log("支付成功");                              
                                 console.log(res);                                
                                 wx.showToast({
-                                    title: '支付成功',
-                                    icon: 'success',
-                                    duration: 800,
-                                })                            
-                            }                                                
+                                        title: '支付成功',
+                                        icon: 'success',
+                                        duration: 800,
+                                    })                            
+                                    // UpdateOrder(that.data.order.id, '支付成功', 3);  
+
+                            }                                             
                         })
 
 
@@ -250,7 +257,19 @@ Page({
             }
         })
     },
-
+    // 取消订单
+    Cancel: function(e) {
+        let that = this;
+        console.log(e);
+        var orderid = e.currentTarget.dataset.orderid;
+        UpdateOrder(orderid, '支付失败', 1);
+        that.getCourse(orderid);
+        setTimeout(function() {
+            wx.redirectTo({
+                url: '../myApply/myApply',
+            })
+        }, 1000)
+    },
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -317,7 +336,6 @@ Page({
      * 倒计时
      */
     setCountDown: function() {
-        console.log("倒计时");
         let time = 1000,
             that = this;
         let listData = this.data.order;
@@ -326,59 +344,26 @@ Page({
         that.setData({
             now: date
         })
-        var registrationtime = new Date('2022-03-01 21:59:05');
-        console.log(listData.registrationtime);
-        var remain_time = registrationtime - now;
-        console.log(remain_time)
-        that.setData({
-            remain_time: remain_time,
-        })
-
-        // if (remain_time != 0) {
-        //     console.log("时间不为零");
-        //     console.log(remain_time)
-        // }
-
+        var payendTime = new Date(listData.payendTime);
+        var remain_time = payendTime - now;
         let formatTime = this.getFormat(remain_time);
         remain_time -= time;
-        var countDown = `${formatTime.hh}:${formatTime.mm}:${formatTime.ss}`;
-        // return v;
-
-        this.setData({
+        var countDown = `${formatTime.mm}:${formatTime.ss}`;
+        that.setData({
             listData: listData,
             countDown: countDown,
-        });
-        var i = 1;
-        if (remain_time > 0) {
-            // console.log("时间为零");
+            remain_time: remain_time,
+        })
+        if (remain_time > 0 && listData.status == 2 && listData.payState == '') {
             setTimeout(this.setCountDown, time);
-
-        } else if (remain_time <= 0) {
-            console.log("等于0");
-            // if (i == 1) {
-            wx.request({
-                    url: app.globalData.url + 'WxSign/UpdateOneOrder',
-                    data: {
-                        id: listData.id,
-                    },
-                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                    // header: {}, // 设置请求的 header
-                    success: function(res) {
-                        // success
-                        console.log("修改结果");
-                        console.log(res);
-                    },
-                    fail: function() {
-                        // fail
-                    },
-                    complete: function() {
-                        // complete
-                    }
-                })
-                //     i++;
-                // }
+        } else if (remain_time <= 0 && listData.status == 2 && listData.payState != '支付成功') {
+            UpdateOrder(listData.id, '支付失败', 1);
+            that.getCourse(listData.id);
+        } else if (remain_time > 0 && listData.payState == "支付成功") {
+            that.getCourse(listData.id);
         }
     },
+
     /**
      * 格式化时间
      */

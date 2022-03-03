@@ -2,6 +2,7 @@
 var app = getApp();
 const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+const checkPhone = require('../../utils/text.js'); //路径根据自己的文件目录来
 
 Page({
 
@@ -198,6 +199,7 @@ Page({
             isTipTrue: false,
             isAgree: true,
         })
+        this.getNickName()
     },
     tipCancel: function() {
         this.setData({
@@ -357,7 +359,8 @@ Page({
     },
     // 检查手机号是否输入正确
     InputPhone: function(e) {
-        this.checkPhone(e.detail.value);
+        // this.checkPhone(e.detail.value);
+        checkPhone(e.detail.value);
     },
 
     // 注册表单提交
@@ -386,7 +389,7 @@ Page({
 
         // 全部已填写
         // 电话号码格式检查
-        if (that.checkPhone(data.phone)) {
+        if (checkPhone(data.phone)) {
             // 身份证号格式检查
             if (that.checkID(data.idnum)) {
 

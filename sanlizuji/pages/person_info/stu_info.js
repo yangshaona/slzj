@@ -1,7 +1,10 @@
 // pages/person_info/stu_info.js
 import {
-    SaveInfo
+    SaveInfo,
+    checkPhone,
+    checkName
 } from '../../utils/text.js'
+const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
 let user = wx.getStorageSync('user');
 const app = getApp();
 Page({
@@ -140,19 +143,17 @@ Page({
     },
     // 身份证信息的修改
     stuIdNum: function(e) {
+
         this.setData({
             tmp: e.detail.value,
         })
-        console.log("身份证信息");
-        console.log(this.data.tmp);
+
     },
     // 手机号信息的修改
     stuPhone: function(e) {
         this.setData({
             tmp: e.detail.value,
         })
-        console.log("手机号信息");
-        console.log(this.data.tmp);
     },
     // 学校信息的修改
     stuSchool: function(e) {
@@ -194,9 +195,7 @@ Page({
             _user[trigger] = that.data.tmp;
 
             wx.setStorageSync('user', _user);
-            // that.SaveInfo();
-
-
+            user = wx.getStorageSync('user');
             var modelName = "Userinfo";
             var modelData = {
                 name: user.name,
@@ -222,8 +221,6 @@ Page({
             }
             SaveInfo(modelData, modelName);
 
-
-            console.log("2222222");
             console.log(user);
             that.setData({
                 showModal: false,
@@ -280,7 +277,22 @@ Page({
         }
         // 修改信息事件 
         else if (trigger == 'name' || trigger == 'idnum' || trigger == 'phone' || trigger == 'schoolname' || trigger == 'grade' || trigger == 'aller') {
-            that.checkInfo(trigger);
+            if (trigger == 'name') {
+                var flag = check_idnum.checkName(this.data.tmp);
+                if (flag) {
+                    that.checkInfo(trigger);
+                }
+            } else if (trigger == 'idnum') {
+                if (that.checkID()) {
+                    that.checkInfo(trigger);
+                }
+            } else if (trigger == 'phone') {
+                if (checkPhone(this.data.tmp)) {
+                    that.checkInfo(trigger);
+                }
+            } else {
+                that.checkInfo(trigger);
+            }
         }
 
 
@@ -288,6 +300,35 @@ Page({
             user: user
         })
     },
+    // 检查身份证号是否输入正确
+    checkID: function() {
+        var data = check_idnum.checkIdCard(this.data.tmp);
+        console.log(data.idCardFlag);
+        if (!data.idCardFlag) {
+            wx.showToast({
+                title: '身份证号有误',
+                icon: 'error',
+                duration: 800
+
+            })
+            return false;
+        } else {
+            var _user = wx.getStorageSync('user');
+            _user.birthday = data.birth;
+            _user.sex = data.sex;
+            if (data.sex == '男') {
+                _user.sexid = '1';
+            } else {
+                _user.sexid = '2';
+            }
+            wx.setStorageSync('user', _user);
+            user = wx.getStorageSync('user');
+            console.log("身份证信息");
+            console.log(this.data.tmp);
+            return true;
+        }
+    },
+
     //退出登录
     logout: function() {
         wx.setStorageSync('user', null);
@@ -399,30 +440,7 @@ Page({
             return true;
         }
     },
-    // 身份证号输入验证
-    checkID: function(id) {
-        var reg = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-        if (id.length < 18) {
-            console.log("身份证号输入位数不正确");
-            wx.showToast({
-                title: '身份证号有误',
-                icon: 'error',
-                duration: 800
-            })
-            return false;
-        } else if (!reg.test(id)) {
-            console.log("身份证格式错误");
-            wx.showToast({
-                title: '身份证号有误',
-                icon: 'error',
-                duration: 800
-            })
-            return false;
-        } else {
-            console.log("身份证号验证通过")
-            return true;
-        }
-    }
+
 
 
 })

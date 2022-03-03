@@ -123,81 +123,87 @@ Page({
     //点击头像上传图片
     UpLoadImage: function() {
         let that = this;
-        //选取图片
-        wx.chooseImage({
-            count: 1,
-            sizeType: ['original'], //原图
-            sourceType: ['album', 'camera'], //支持选取图片
-            success(res) {
-                // tempFilePath可以作为img标签的src属性显示图片
-                const tempFilePaths = res.tempFilePaths[0];
-                console.log("图片路径");
-                console.log(tempFilePaths);
-                //上传图片
-                wx.uploadFile({
-                    //请求后台的路径
-                    url: app.globalData.url + 'WxUser/SaveImg',
+        if (!user) {
+            wx.navigateTo({
+                url: '../register/register_stu',
 
-                    //小程序本地的路径
-                    filePath: tempFilePaths,
+            })
+        } else {
+            //选取图片
+            wx.chooseImage({
+                count: 1,
+                sizeType: ['original'], //原图
+                sourceType: ['album', 'camera'], //支持选取图片
+                success(res) {
+                    // tempFilePath可以作为img标签的src属性显示图片
+                    const tempFilePaths = res.tempFilePaths[0];
+                    console.log("图片路径");
+                    console.log(tempFilePaths);
+                    //上传图片
+                    wx.uploadFile({
+                        //请求后台的路径
+                        url: app.globalData.url + 'WxUser/SaveImg',
 
-                    name: 'file',
-                    formData: {
-                        //图片命名：用户id-商品id-1~9
-                        newName: user.openid,
-                        id: user.id,
-                        modelName: that.data.modelName,
-                        // imgNum:i+1
-                    },
-                    success(res) {
-                        console.log("成功上传图片");
-                        console.log(res);
-                        console.log(res.statusCode);
-                        if (res.statusCode == 200) {
-                            wx.showToast({
-                                title: "上传成功",
-                                icon: 'success',
-                                duration: 800,
-                            });
-                            wx.request({
-                                url: app.globalData.url + 'WxUser/GetUserInfo2',
-                                data: {
-                                    openid: user.openid,
-                                    id_flag: id_flag,
-                                },
-                                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                                // header: {}, // 设置请求的 header
-                                success: function(res) {
-                                    wx.setStorageSync('user', res.data.data);
-                                    user = wx.getStorageSync('user');
-                                    that.setData({
-                                        user: user,
-                                    })
-                                    console.log(that.data.user)
-                                },
+                        //小程序本地的路径
+                        filePath: tempFilePaths,
+
+                        name: 'file',
+                        formData: {
+                            //图片命名：用户id-商品id-1~9
+                            newName: user.openid,
+                            id: user.id,
+                            modelName: that.data.modelName,
+                            // imgNum:i+1
+                        },
+                        success(res) {
+                            console.log("成功上传图片");
+                            console.log(res);
+                            console.log(res.statusCode);
+                            if (res.statusCode == 200) {
+                                wx.showToast({
+                                    title: "上传成功",
+                                    icon: 'success',
+                                    duration: 800,
+                                });
+                                wx.request({
+                                    url: app.globalData.url + 'WxUser/GetUserInfo2',
+                                    data: {
+                                        openid: user.openid,
+                                        id_flag: id_flag,
+                                    },
+                                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                                    // header: {}, // 设置请求的 header
+                                    success: function(res) {
+                                        wx.setStorageSync('user', res.data.data);
+                                        user = wx.getStorageSync('user');
+                                        that.setData({
+                                            user: user,
+                                        })
+                                        console.log(that.data.user)
+                                    },
+                                })
+
+                            } else {
+                                wx.showToast({
+                                    title: "上传失败",
+                                    icon: 'success',
+                                    duration: 800,
+                                });
+                            }
+
+                        },
+                        fail(res) {
+                            flag = false;
+                            wx.showModal({
+                                title: '提示',
+                                content: '上传失败',
+                                showCancel: false
                             })
-
-                        } else {
-                            wx.showToast({
-                                title: "上传失败",
-                                icon: 'success',
-                                duration: 800,
-                            });
                         }
-
-                    },
-                    fail(res) {
-                        flag = false;
-                        wx.showModal({
-                            title: '提示',
-                            content: '上传失败',
-                            showCancel: false
-                        })
-                    }
-                })
-            }
-        })
-
+                    })
+                }
+            })
+        }
     },
     /**
      * 生命周期函数--监听页面加载
