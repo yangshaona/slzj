@@ -564,7 +564,7 @@ Page({
                 newName: data.openid,
                 id: data.id,
                 modelName: 'Userinfo',
-                // imgNum:i+1
+                file_type: '',
             },
             success(res) {
                 console.log("成功保存图片");

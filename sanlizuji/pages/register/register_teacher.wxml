@@ -73,7 +73,7 @@
             </view>
 
             <view>
-                <view class="desc">简历
+                <view class="desc">简历<text style="color:red">（请上传pdf文件）</text>
                     <image mode="widthFix" src="/icon/remark.png"></image>
                 </view>
                 <!-- 只支持上传聊天文件 -->

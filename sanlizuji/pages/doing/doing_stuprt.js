@@ -66,7 +66,6 @@ Page({
                 display.push(dict);
             }
         }
-        console.log("22222222211")
         console.log(display);
         this.setData({
             display: display
@@ -204,8 +203,6 @@ Page({
                 // complete
             }
         });
-        that.getLocation();
-
 
     },
     /**

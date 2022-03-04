@@ -191,7 +191,6 @@ App({
                 // success
                 console.log("导师获取正在活动数据")
                 console.log(res)
-                console.log(res.data.data[0])
                 if (res.data.data[0] != "无正在进行的课程") {
                     id = res.data.data[0].courseid;
                     that.GetLocation(id);

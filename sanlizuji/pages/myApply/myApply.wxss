@@ -150,16 +150,18 @@
 .ctnButton {
     display: flex;
     box-sizing: border-box;
-    width: 90%;
-    margin: 0 0 0 10%;
+    width: 100%;
+    margin: 0 0 0 0;
     flex-direction: row-reverse;
     /* float: right; */
+    /* align-items: right; */
 }
 
 .ctnButton button {
     display: block;
     box-sizing: border-box;
-    padding: 2.5%;
+    padding: 1.5%;
+    width: 22% !important;
     margin: 0 1.25%;
     font-weight: normal;
     font-size: 0.70rem;
@@ -176,9 +178,10 @@
     color: white;
 }
 
-.comment {
+
+/* .comment {
     width: 22% !important;
-}
+} */
 
 .status {
     display: block;

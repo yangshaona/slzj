@@ -153,7 +153,7 @@ Page({
                             newName: user.openid,
                             id: user.id,
                             modelName: that.data.modelName,
-                            // imgNum:i+1
+                            file_type: '',
                         },
                         success(res) {
                             console.log("成功上传图片");
