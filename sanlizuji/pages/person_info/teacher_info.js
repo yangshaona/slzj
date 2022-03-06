@@ -18,6 +18,7 @@ Page({
         //弹窗是否显示
         showModal: false,
         trigger: '',
+        reg: ['北京', '北京', '东城'],
     },
     //退出登录
     logout: function() {
@@ -117,8 +118,8 @@ Page({
 
     },
     // 检查身份证号是否输入正确
-    checkID: function() {
-        var data = check_idnum.checkIdCard(this.data.tmp);
+    checkID: function(idnum) {
+        var data = check_idnum.checkIdCard(idnum);
         console.log(data.idCardFlag);
         if (!data.idCardFlag) {
             wx.showToast({
@@ -143,6 +144,7 @@ Page({
             console.log(this.data.tmp);
             return true;
         }
+
     },
     // 手机号信息的修改
     teaPhone: function(e) {
@@ -227,7 +229,7 @@ Page({
 
             }
         } else if (trigger == 'idnum') {
-            if (that.checkID()) {
+            if (that.checkID(this.data.tmp)) {
                 that.checkInfo(trigger);
             }
         } else if (trigger == 'phone') {

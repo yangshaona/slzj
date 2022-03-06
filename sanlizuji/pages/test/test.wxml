@@ -1,4 +1,8 @@
-<button style="margin:10%;" bindtap="getLocation">定位</button>
-<!-- <block wx:if="{{location.length != 0}}"> -->
-<!-- <map style="height: 800rpx;" name="guide" id="guide" latitude="{{location[0]}}" longitude="{{location[1]}}" show-location="true" markers="{{mark}}"></map> -->
-<!-- </block> -->
+<view class="section">
+    <view class="section__title">省市区选择器</view>
+    <picker mode="region" bindchange="bindRegionChange" value="{{region}}" custom-item="{{customItem}}">
+        <view class="picker">
+            当前选择：{{region[0]}}，{{region[1]}}，{{region[2]}}
+        </view>
+    </picker>
+</view>

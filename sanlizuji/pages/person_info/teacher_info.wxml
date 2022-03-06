@@ -8,20 +8,20 @@
         <desc bindtap="Bind" data-trigger="idnum" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
         <desc bindtap="Bind" data-trigger="phone" inner-text="联系方式：{{user.phone==''?'无':tools.sub(user.phone, 3, 1)}}" icon="/icon/phone.png"></desc>
         <view bindtap="Bind" data-trigger="type">
-            <view wx:if="{{user.type==0}}">
+            <view wx:if="{{user.type==1}}">
                 <desc inner-text="类型：企业" icon="/icon/edu.png"></desc>
             </view>
-            <view wx:elif="{{user.type==1}}">
+            <view wx:elif="{{user.type==2}}">
                 <desc inner-text="类型：学校" icon="/icon/edu.png"></desc>
             </view>
-            <view wx:elif="{{user.type==1}}">
+            <view wx:elif="{{user.type==3}}">
                 <desc inner-text="类型：兼职" icon="/icon/edu.png"></desc>
             </view>
             <view wx:else>
                 <desc inner-text="类型：未知" icon="/icon/edu.png"></desc>
             </view>
         </view>
-        <desc inner-text="住址：{{user.province}}{{user.city}}" icon="/icon/address.png"></desc>
+        <desc inner-text="住址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
     </view>
     <button class="logout" bindtap="logout" type="button">退出登录</button>
 </view>

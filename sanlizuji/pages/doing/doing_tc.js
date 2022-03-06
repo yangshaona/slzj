@@ -436,7 +436,6 @@ Page({
     },
     toSetting() {
         let self = this
-        console.log('11111111')
         wx.openSetting({
             success(res) {
                 console.log(res)

@@ -38,7 +38,7 @@
                         <button class="blue comment" wx:if="{{item.status==2}}" catchtap="applyTap1" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}">待付款</button>
                         <button class="blue" catchtap="applyTap2" data-id="{{item.courseid}}" wx:else>继续报名</button>
                         <button class="border comment" wx:if="{{item.status==3&&item.isComment!=1}}" data-id="{{item.courseid}}" catchtap="commentTap">评价</button>
-                        <button class="border" data-id="{{item.courseid}}" catchtap="teacherTap">查看导师</button>
+                        <button class="border" wx:if="{{item.teacherid!=''}}" data-courseid="{{item.courseid}}" data-teacherid="{{item.teacherid}}" catchtap="teacherTap">查看导师</button>
                         <button class="border comment" wx:if="{{item.status!=3&&item.endTime!='false'}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">删除</button>
                         <button class="border comment" wx:if="{{item.status==3&&item.endTime=='false'}}" data-id="{{item.id}}" catchtap="Refund">退款</button>
 

@@ -26,15 +26,7 @@ Page({
             ],
         },
         // 学校往期活动照片 数组 多个url及其描述
-        schoolImg: [{
-                'img': 'https://s3.bmp.ovh/imgs/2022/01/6ab7032e3f6c3bde.jpg',
-                'desc': '快乐地期末考试'
-            },
-            {
-                'img': 'https://s3.bmp.ovh/imgs/2022/01/817aed11996fdc0b.jpg',
-                'desc': '浅看一下NBA'
-            }
-        ]
+        schoolImg: []
 
     },
 

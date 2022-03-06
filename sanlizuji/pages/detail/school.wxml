@@ -1,4 +1,6 @@
 <!--pages/detail/school.wxml-->
+
+<import src="../template/not_found/not_found.wxml" />
 <view class="top">
     <!-- <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
         <block wx:for="{{actImg}}" wx:key="item">
@@ -18,7 +20,7 @@
 </view>
 
 <!-- 小标题 -->
-<view class="infoTtl">学校简介</view>
+<view class="infoTtl">服务商简介</view>
 
 <!-- 学校介绍 -->
 <view class="infoBox">
@@ -31,7 +33,13 @@
 
 <!-- 小标题 -->
 <view class="infoTtl">活动回顾</view>
-<view class="infoBox" wx:if="{{schoolImg==''}}" style="margin: 3%;">暂无活动回顾</view>
+<view class="empty" wx:if="{{schoolImg==''}}">
+    <image src="/icon/not_found.png" mode="widthFix">
+    </image>
+    <view>
+        未找到相关活动
+    </view>
+</view>
 <view class="infoBox" wx:else>
     <block wx:for="{{schoolImg}}" wx:key="item">
         <view class="schoolImg" data-id="{{item.id}}" bindtap="toCourseDetail">

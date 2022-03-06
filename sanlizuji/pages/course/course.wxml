@@ -34,7 +34,7 @@
 
         <view class="filterTtl">活动地区</view>
         <view class="filterBox">
-            <picker mode="multiSelector" name="region" id="region" value="{{reg_idx == null ? '' : region}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="filterCtn region">
+            <picker mode="multiSelector" name="region" id="region" value="{{multiIndex}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="filterCtn region">
                 {{reg_idx == null ? "选择地区" : region}}
                 <!-- {{region.length ? region : '选择地区'}} -->
             </picker>

@@ -168,11 +168,11 @@ Page({
     },
     // 查看导师
     teacherTap: function(e) {
-        var id = e.currentTarget.dataset.id;
+        var courseid = e.currentTarget.dataset.courseid;
+        var teacherid = e.currentTarget.dataset.teacherid;
         console.log("点击导师按钮")
-        console.log(id)
         wx.navigateTo({
-            url: '../detail/teacher?course_id=' + id,
+            url: '../detail/teacher?course_id=' + courseid + "&teacherid=" + teacherid,
         })
     },
 

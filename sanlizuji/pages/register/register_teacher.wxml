@@ -54,7 +54,7 @@
             </view>
             <view>
                 <view class="desc">昵称(微信授权获取)</view>
-                <input type="text" disabled="true" value="{{nickName}}" />
+                <input name="nickName" id="nickName" type="text" disabled="true" value="{{nickName}}" />
             </view>
             <view>
                 <view class="desc">手机号
@@ -67,7 +67,7 @@
                 <view class="desc">地区
                     <image mode="widthFix" src="/icon/address.png"></image>
                 </view>
-                <picker mode="multiSelector" name="region" id="region" value="{{reg_idx == null ? '' : reg}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
+                <picker mode="multiSelector" name="region" id="region" value="{{multiIndex}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
                     {{reg_idx == null ? "请选择" : reg}}
                 </picker>
             </view>

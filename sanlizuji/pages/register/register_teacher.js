@@ -206,31 +206,7 @@ Page({
     InputPhone: function(e) {
         this.checkPhone(e.detail.value);
     },
-    // 身份证号输入验证
-    // checkID1: function(id) {
-    //     var reg = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-    //     if (id.length < 18) {
-    //         console.log("身份证号输入位数不正确");
-    //         wx.showToast({
-    //             title: '身份证号有误',
-    //             icon: 'error',
-    //             duration: 800
-    //         })
-    //         return false;
-    //     } else if (!reg.test(id)) {
-    //         console.log("身份证格式错误");
-    //         wx.showToast({
-    //             title: '身份证号有误',
-    //             icon: 'error',
-    //             duration: 800
-    //         })
-    //         return false;
-    //     } else {
-    //         console.log("身份证号验证通过")
-    //         return true;
-    //     }
-    // },
-    // 选择文件
+
     chooseFiles: function(e) {
         console.log("上传文件");
         wx.chooseMessageFile({
@@ -411,10 +387,11 @@ Page({
                             console.log(res)
                             that.setData({
                                 openid: res.data.openid
-                            })
+                            });
+                            console.log("22222222222")
+                            var type = parseInt(data.type) + 1;
+                            console.log(type)
                             app.globalData.openid = res.data.openid;
-                            console.log("33333");
-                            console.log(parseInt(data.type + 1));
                             wx.request({
                                 url: app.globalData.url + 'WxUser/Register&modelName=Teacher',
                                 data: {
@@ -427,11 +404,11 @@ Page({
                                         name: data.name,
                                         sex: data.sex,
                                         sexid: that.data.sexid,
-                                        type: parseInt(data.type + 1),
+                                        type: parseInt(data.type) + 1,
                                         phone: data.phone,
-                                        province: data.region[0],
-                                        city: data.region[1],
-                                        district: data.region[2],
+                                        province: that.data.reg[0],
+                                        city: that.data.reg[1],
+                                        district: that.data.reg[2],
                                     }
                                 },
                                 method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
@@ -574,6 +551,13 @@ Page({
             tmp[i] = data.multiArray[i][data.multiIndex[i]];
 
         }
+        if (tmp[1] == '北京市') {
+            tmp[1] = '北京';
+
+        } else if (tmp[1] == '天津市') {
+            tmp[1] = '天津';
+        }
+        console.log("选中的是：", tmp)
         this.setData({
             reg: tmp,
         })

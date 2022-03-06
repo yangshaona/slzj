@@ -487,6 +487,16 @@ Page({
                                         icon: 'success',
                                         duration: 500,
                                     })
+                                } else if (res.data.data.msg == "该导师已报名") {
+                                    wx.showModal({
+                                        content: '您已经报过名！',
+                                        showCancel: false
+                                    })
+                                    setTimeout(function() {
+                                        wx.navigateTo({
+                                            url: '../teaApply/teaApply',
+                                        })
+                                    }, 1000)
                                 } else {
                                     wx.showModal({
                                         content: '报名失败',

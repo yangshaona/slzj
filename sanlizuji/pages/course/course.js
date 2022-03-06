@@ -154,13 +154,7 @@ Page({
             },
         })
     },
-    // 地区选择器改变
-    regionChange: function(e) {
-        let data = e.detail.value;
-        this.setData({
-            region: data
-        })
-    },
+
     //获取筛选数据
     getFilter: function() {
         let that = this;
@@ -491,6 +485,13 @@ Page({
             tmp[i] = data.multiArray[i][data.multiIndex[i]];
 
         }
+        if (tmp[1] == '北京市') {
+            tmp[1] = '北京';
+
+        } else if (tmp[1] == '天津市') {
+            tmp[1] = '天津';
+        }
+        console.log("选中的是：", tmp)
         this.setData({
             region: tmp,
         })

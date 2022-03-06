@@ -104,51 +104,53 @@ Page({
         console.log(e)
         var orderid = e.currentTarget.dataset.id;
         var modelName = "teaSignList";
-        let that=this;
-      wx.showModal({
-        content: "是否删除该记录",
-        success(res) {
-            wx.request({
-                url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
-                data: {
-                    modelName: modelName,
-                    id: orderid,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("删除结果");
-                    console.log(res);
-                    if (res.data.data == '不存在该ID，删除失败') {
-                        wx.showToast({
-                            title: "删除失败",
-                            icon: 'cancel',
-                            duration: 800,
-                        })
-                        
+        let that = this;
+        wx.showModal({
+            content: "是否删除该记录",
+            success(res) {
+                if (res.confirm) {
+                    wx.request({
+                        url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
+                        data: {
+                            modelName: modelName,
+                            id: orderid,
+                        },
+                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                        // header: {}, // 设置请求的 header
+                        success: function(res) {
+                            // success
+                            console.log("删除结果");
+                            console.log(res);
+                            if (res.data.data == '不存在该ID，删除失败') {
+                                wx.showToast({
+                                    title: "取消失败",
+                                    icon: 'cancel',
+                                    duration: 800,
+                                })
 
-                    } else {
-                        wx.showToast({
-                            title: "删除成功",
-                            icon: 'success',
-                            duration: 800,
-                        });
-                        that.setFilter();
-                    }
 
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+                            } else {
+                                wx.showToast({
+                                    title: "取消成功",
+                                    icon: 'success',
+                                    duration: 800,
+                                });
+                                that.setFilter();
+                            }
+
+                        },
+                        fail: function() {
+                            // fail
+                        },
+                        complete: function() {
+                            // complete
+                        }
+                    })
+
                 }
-            })
+            }
+        })
 
-        }
-    })
-    
 
     },
 
