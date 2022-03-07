@@ -33,12 +33,21 @@ Page({
     },
     // 导师详情
     showTeacherDetail: function(e) {
-        var id = e.currentTarget.dataset.id;
-        wx.navigateTo({
-            url: '../detail/teacher?course_id=' + id,
-        })
+        console.log("点击导师")
+        var courseid = e.currentTarget.dataset.courseid;
+        var teacherid = e.currentTarget.dataset.teacherid;
+        if (courseid == '' || teacherid == '') {
+            wx.showModal({
+                title: '未分配导师',
+                showCancel: false,
+            })
+        } else {
+            wx.navigateTo({
+                url: '../detail/teacher?course_id=' + courseid + "&teacherid=" + teacherid,
+            })
+        }
     },
-    //
+    //父母获取孩子的活动
     GetKidsActivity: function(e) {
         let that = this;
         user = wx.getStorageSync('user');
@@ -91,7 +100,7 @@ Page({
     },
 
 
-    //获取学生我的活动
+    //学生获取我的活动
     GetStuActivity: function() {
         let that = this;
         user = wx.getStorageSync("user");
@@ -104,7 +113,6 @@ Page({
                 // success
                 console.log("我的活动")
                 console.log(res);
-                // var activity = Object.assign(res.data.data2, res.data.data1)
                 var activity = mergeArr(res.data.data1, res.data.data2)
                 that.setData({
                     activity: activity

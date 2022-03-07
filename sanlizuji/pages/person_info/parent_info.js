@@ -111,7 +111,6 @@ Page({
                             })
                         } else {
                             that.kidBindParent(res.data.data[0].id);
-
                         }
                     }
                 },
@@ -164,14 +163,30 @@ Page({
                 that.setData({
                     showModal: false
                 })
+                var modelName = "UserParent";
                 if (res.data.code == 200) {
-                    that.SaveInfo();
+                    var modelData = {
+                        name: user.name,
+                        nikename: user.nickname,
+                        openid: user.openid,
+                        sex: user.sex,
+                        sexid: user.sexid,
+                        phone: user.phone,
+                        province: user.province,
+                        city: user.city,
+                        district: user.district,
+                        kids: that.data.k_name,
+                        k_phone: that.data.k_phone,
+                    }
+                    SaveInfo(modelData, modelName);
 
                     wx.showToast({
                         title: "绑定成功",
                         icon: "success",
                         duration: 1000,
                     })
+                    that.GetKidsName();
+
                 } else {
                     wx.showToast({
                         title: "绑定失败",
@@ -209,6 +224,7 @@ Page({
                 if (res.data.data.msg == "获取成功") {
                     _user.kids = res.data.data.data.join(',');
                     wx.setStorageSync('user', _user)
+                    user = wx.getStorageSync('user');
 
                 } else {
                     user.kids = "未绑定孩子信息"
@@ -224,9 +240,6 @@ Page({
             complete: function() {
                 // complete
             }
-        })
-        this.setData({
-            user: user,
         })
     },
     //修改信息
@@ -274,7 +287,6 @@ Page({
     onLoad: function(options) {
         let that = this;
         user = wx.getStorageSync('user')
-            // that.GetKidsList();
         that.GetKidsName();
     },
 
@@ -293,7 +305,6 @@ Page({
             user: user
         })
         let that = this;
-        // that.GetKidsList();
         that.GetKidsName();
     },
 

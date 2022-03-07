@@ -101,10 +101,13 @@ Page({
         that.setData({
             user: user
         })
+
+
         wx.request({
             url: app.globalData.url + 'WxSign/GetTeacherDetail',
             data: {
                 courseid: options.course_id,
+                teacherid: options.teacherid
             },
             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             // header: {}, // 设置请求的 header
@@ -131,7 +134,6 @@ Page({
                 // complete
             }
         });
-
     },
 
     /**

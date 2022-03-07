@@ -11,28 +11,33 @@ Page({
         // 设备高度
         height: getApp().globalData.height,
         // 全部新闻
-        news: [{
-                'imgUrl': 'https://s3.bmp.ovh/imgs/2022/01/6ab7032e3f6c3bde.jpg',
-                'title': '小程序|Version 1.0.0building|更新快照',
-                'time': '2022-01-28',
-                'view': '827364'
-            },
-            {
-                'imgUrl': 'https://s3.bmp.ovh/imgs/2022/01/817aed11996fdc0b.jpg',
-                'title': '小程序开通啦',
-                'time': '2022-01-26',
-                'view': '999999999'
-            }
-        ],
+        news: [],
+        options: ["单位新闻", "单位介绍", "信息通知"],
     },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        this.getNews("");
+    },
+    //跳转到发布文章的详情
+    toNewsDetail: function(e) {
+        var goodsId = e.currentTarget.dataset.id;
+        console.log("单个发布数据")
+        console.log(e)
+        wx.navigateTo({
+            url: '../news_detail/news_detail?id=' + goodsId,
+        })
+    },
+    // 获取文章类型
+
+    getNews: function(type) {
         let that = this;
         wx.request({
             url: app.globalData.url + "WxOther/GetDiff",
-            data: {},
+            data: {
+                type: type
+            },
             success: function(res) {
                 // success
                 console.log("成功获取发布信息");
@@ -50,15 +55,6 @@ Page({
             }
         })
     },
-    //跳转到发布文章的详情
-    toNewsDetail: function(e) {
-        var goodsId = e.currentTarget.dataset.id;
-        console.log("单个发布数据")
-        console.log(e)
-        wx.navigateTo({
-            url: '../news_detail/news_detail?id=' + goodsId,
-        })
-    },
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -68,9 +64,36 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
+        this.setData({
+            options: [{ "id": "01", "isActive": false, "value": "请选择" },
+                { "id": "02", "isActive": false, "value": "单位新闻" },
+                { "id": "03", "isActive": false, "value": "信息通知" },
+                { "id": "04", "isActive": false, "value": "单位介绍" },
+            ],
+        })
     },
+    select: function(e) {
+        console.log("选中的值是");
+        console.log(e.detail.value);
+        var type = e.detail.value
+        if (e.detail.value == "请选择") {
+            type = "";
+        }
 
+        for (var i = 1; i < this.data.options.length; i++) {
+            var tmp = "options[" + i + "].isActive"
+            this.setData({
+                [tmp]: false,
+            })
+            if (e.detail.id == this.data.options[i].id) {
+                this.setData({
+                    [tmp]: true
+                })
+            }
+        }
+
+        this.getNews(type);
+    },
     /**
      * 生命周期函数--监听页面隐藏
      */

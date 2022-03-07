@@ -58,6 +58,8 @@ Page({
             isTipTrue: false,
             isAgree: true,
         })
+        this.getNickName()
+
     },
     tipCancel: function() {
         this.setData({
@@ -66,7 +68,7 @@ Page({
             })
             // setTimeout(function() {
         wx.showToast({
-                title: "请先同意服务协议",
+                title: "请先同意协议",
                 duration: 1000,
             })
             // }, 800)
@@ -204,31 +206,7 @@ Page({
     InputPhone: function(e) {
         this.checkPhone(e.detail.value);
     },
-    // 身份证号输入验证
-    // checkID1: function(id) {
-    //     var reg = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-    //     if (id.length < 18) {
-    //         console.log("身份证号输入位数不正确");
-    //         wx.showToast({
-    //             title: '身份证号有误',
-    //             icon: 'error',
-    //             duration: 800
-    //         })
-    //         return false;
-    //     } else if (!reg.test(id)) {
-    //         console.log("身份证格式错误");
-    //         wx.showToast({
-    //             title: '身份证号有误',
-    //             icon: 'error',
-    //             duration: 800
-    //         })
-    //         return false;
-    //     } else {
-    //         console.log("身份证号验证通过")
-    //         return true;
-    //     }
-    // },
-    // 选择文件
+
     chooseFiles: function(e) {
         console.log("上传文件");
         wx.chooseMessageFile({
@@ -246,6 +224,8 @@ Page({
                 this.setData({
                     filepath: files,
                 })
+                console.log(files[0].path);
+                wx.setStorageSync('exp', files[0].path);
                 var exp = [];
                 for (var idx in files) {
                     exp.push(files[idx].path);
@@ -254,6 +234,7 @@ Page({
                 this.setData({
                     exp: exp
                 })
+
             },
             fail: (res) => {
                 console.log(res);
@@ -265,6 +246,77 @@ Page({
             }
         })
     },
+
+    upLoadFiles(data) {
+        let that = this;
+        console.log
+        var exp = wx.getStorageSync('exp');
+        console.log("简历路径");
+        console.log(exp);
+        wx.uploadFile({
+            //请求后台的路径
+            url: app.globalData.url + 'WxUser/SaveImg',
+            //小程序本地的路径
+            filePath: exp,
+
+            name: 'file',
+            formData: {
+                //图片命名：用户id-商品id-1~9
+                newName: data.openid + "of resume",
+                id: data.id,
+                modelName: 'Teacher',
+                file_type: 'pdf',
+            },
+            success(res) {
+                console.log(res);
+                console.log(res.statusCode);
+                if (res.statusCode == 200) {
+                    console.log("成功上传简历");
+
+                    wx.showToast({
+                        title: "文件保存成功",
+                        icon: 'success',
+                        duration: 800,
+                    });
+
+                } else {
+                    wx.showToast({
+                        title: "文件保存失败",
+                        icon: 'success',
+                        duration: 800,
+                    });
+                }
+
+            },
+            fail(res) {
+                wx.showModal({
+                    title: '提示',
+                    content: '上传失败',
+                    showCancel: false
+                })
+            }
+        })
+    },
+    // 获取用户信息
+    getUserInfo: function(e) {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxUser/GetUserInfo2',
+            data: {
+                openid: app.globalData.openid,
+                id_flag: 'teacher',
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("获取成功");
+                console.log(res);
+                that.upLoadFiles(res.data.data);
+            }
+        })
+    },
+
     // 注册表单提交
     submit: function(e) {
         // 留空检查
@@ -335,15 +387,11 @@ Page({
                             console.log(res)
                             that.setData({
                                 openid: res.data.openid
-                            })
-                            app.globalData.openid = res.data.openid
-                            console.log("app openid")
-                            console.log(app.globalData.openid)
-                            console.log("教师数据")
-                            console.log(data)
-                            console.log("教师性别id:", that.data.sexid);
-                            console.log("头像");
-                            console.log(that.data.header);
+                            });
+                            console.log("22222222222")
+                            var type = parseInt(data.type) + 1;
+                            console.log(type)
+                            app.globalData.openid = res.data.openid;
                             wx.request({
                                 url: app.globalData.url + 'WxUser/Register&modelName=Teacher',
                                 data: {
@@ -356,11 +404,11 @@ Page({
                                         name: data.name,
                                         sex: data.sex,
                                         sexid: that.data.sexid,
-                                        type: data.type,
+                                        type: parseInt(data.type) + 1,
                                         phone: data.phone,
-                                        province: data.region[0],
-                                        city: data.region[1],
-                                        district: data.region[2],
+                                        province: that.data.reg[0],
+                                        city: that.data.reg[1],
+                                        district: that.data.reg[2],
                                     }
                                 },
                                 method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
@@ -368,7 +416,7 @@ Page({
                                 success: function(res) {
                                     // success
                                     console.log("表单检查成功");
-
+                                    that.getUserInfo();
                                     console.log(res)
                                     if (res.data.data.msg == "该手机号已注册") {
                                         wx.showModal({
@@ -503,6 +551,13 @@ Page({
             tmp[i] = data.multiArray[i][data.multiIndex[i]];
 
         }
+        if (tmp[1] == '北京市') {
+            tmp[1] = '北京';
+
+        } else if (tmp[1] == '天津市') {
+            tmp[1] = '天津';
+        }
+        console.log("选中的是：", tmp)
         this.setData({
             reg: tmp,
         })

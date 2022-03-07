@@ -11,7 +11,7 @@
         <desc bindtap="Bind" data-trigger="schoolname" inner-text="学校：{{user.schoolname}}" icon="/icon/school.png"></desc>
         <desc bindtap="Bind" data-trigger="education" inner-text="学历：{{user.education}}" icon="/icon/edu.png"></desc>
         <desc bindtap="Bind" data-trigger="grade" inner-text="年级：{{user.grade}}年级" icon="/icon/grade.png"></desc>
-        <desc bindtap="Bind" data-trigger="address" inner-text="地址：{{user.province}} {{user.city}}" icon="/icon/address.png"></desc>
+        <desc bindtap="Bind" data-trigger="address" inner-text="地址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
         <desc inner-text="监护人姓名：{{user.parents==''?'未绑定':user.parents}}" icon="/icon/guardian.png"></desc>
         <desc inner-text="监护人手机：{{user.p_phone==''?'未绑定':user.p_phone}}" icon="/icon/phone.png"></desc>
         <desc bindtap="Bind" data-trigger="aller" inner-text="备注信息：{{user.aller}}" icon="/icon/remark.png"></desc>

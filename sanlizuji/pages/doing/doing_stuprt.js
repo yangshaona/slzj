@@ -15,11 +15,11 @@ Page({
         // 正在活动
         course: "",
         doing: {
-            'coursename': '滴茶', //活动名称
-            'starttime': '2022-01-31', //活动日期
-            'groupnum': '307', //小组号
-            'latituderoom': 'B201', //房间号
-            'car': '粤D 66666', //车牌号
+            'coursename': '', //活动名称
+            'starttime': '', //活动日期
+            'groupnum': '', //小组号
+            'latituderoom': '', //房间号
+            'car': '', //车牌号
         },
         // 导师信息
         teacher: {},
@@ -29,7 +29,7 @@ Page({
         icon: {
             'starttime': '/icon/date1.png',
             'groupnum': '/icon/group.png',
-            'room': '/icon/room.png',
+            'hotel': '/icon/room.png',
             'car': '/icon/car.png'
         },
         // 用户坐标
@@ -52,15 +52,18 @@ Page({
 
     // 信息框赋值
     getData: function() {
+        console.log("nihao");
         var data = this.data.doing;
         var url = this.data.icon;
-        var trans = { 'groupnum': '小组', 'room': '酒店', 'car': '车牌', 'starttime': '日期' }
+        var trans = { 'groupnum': '小组', 'hotel': '酒店', 'car': '车牌', 'starttime': '日期' }
         var display = [];
         for (var idx in data) {
             if (idx == 'coursename') continue;
-            else if (idx == 'groupnum' || idx == 'room' || idx == 'car' || idx == 'starttime') {
+            else if (idx == 'groupnum' || idx == 'hotel' || idx == 'car' || idx == 'starttime') {
                 var key = trans[idx];
-                var value = data[idx];
+                var value = '';
+                if (idx == 'hotel') value = data[idx] + data['room'];
+                else value = data[idx];
                 var icon = url[idx];
                 var dict = { 'key': key, 'value': value, 'icon': icon };
                 display.push(dict);
@@ -100,6 +103,28 @@ Page({
                 console.log("获取用户位置成功");
                 console.log(this.data.location);
                 console.log(this.data.mark);
+                wx.request({
+                    url: app.globalData.url + 'WxOther/UpGps',
+                    data: {
+                        userid: user.id,
+                        courseid: that.data.course.courseid,
+                        longitude: res.longitude,
+                        latitude: res.latitude,
+                    },
+                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                    // header: {}, // 设置请求的 header
+                    success: function(res) {
+                        // success
+                        console.log("成功上传学生位置");
+                        console.log(res)
+                    },
+                    fail: function() {
+                        // fail
+                    },
+                    complete: function() {
+                        // complete
+                    }
+                })
 
             },
             fail: (res) => {
@@ -178,12 +203,15 @@ Page({
             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT            // header: {}, // 设置请求的 header
             success: function(res) {
                 // success
-                console.log("正在活动")
+                console.log("是否有正在活动信息")
                 console.log(res)
                 if (res.data.data[0] == "无正在进行的课程") {
                     that.setData({
                         doing: res.data.data[0],
-                        course: res.data.data[0]
+                    })
+                } else if (res.data.data[0] == "该活动暂未分配老师") {
+                    that.setData({
+                        doing: res.data.data[0],
                     })
                 } else {
                     that.setData({
@@ -193,8 +221,9 @@ Page({
                     });
                     //获取导师位置
                     that.getTeacherLocation();
+                    that.getData();
+
                 }
-                that.getData();
             },
             fail: function() {
                 // fail
@@ -203,8 +232,6 @@ Page({
                 // complete
             }
         });
-        that.getLocation();
-
 
     },
     /**
@@ -225,19 +252,21 @@ Page({
             id_flag: id_flag,
             user: user
         })
-        this.data.realTime = setInterval(function() {
+        if (that.data.course != "") {
+            this.data.realTime = setInterval(function() {
 
-                // 请求服务器数据
-                console.log('请求接口：刷新数据')
-                that.getTeacherLocation();
+                    // 请求服务器数据
+                    console.log('请求接口：刷新数据')
+                    that.getTeacherLocation();
 
-            }, 30000) //间隔时间
+                }, 30000) //间隔时间
 
-        // 更新数据
-        this.setData({
-            realTime: this.data.realTime, //实时数据对象(用于关闭实时刷新方法)
+            // 更新数据
+            this.setData({
+                realTime: this.data.realTime, //实时数据对象(用于关闭实时刷新方法)
 
-        })
+            })
+        }
     },
 
     /**

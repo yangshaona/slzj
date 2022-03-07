@@ -42,7 +42,7 @@
     "minifyWXML": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.14.1",
+  "libVersion": "2.22.1",
   "appid": "wx4fdb5515fe59ddab",
   "projectname": "%E4%B8%89%E7%AB%8B%E8%B6%B3%E8%BF%B9",
   "debugOptions": {
@@ -127,8 +127,8 @@
         },
         {
           "id": 8,
-          "name": "pages/myApply2/myApply",
-          "pathName": "pages/myApply2/myApply",
+          "name": "pages/myApply/myApply",
+          "pathName": "pages/myApply/myApply",
           "query": "",
           "scene": null
         },
@@ -325,6 +325,14 @@
           "id": -1,
           "name": "pages/myApply/comment",
           "pathName": "pages/myApply/comment",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "pages/dev/dev",
+          "pathName": "pages/dev/dev",
+          "query": "",
           "scene": null
         }
       ]

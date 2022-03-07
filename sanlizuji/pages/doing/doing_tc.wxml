@@ -41,7 +41,7 @@
                     </view>
                     <view class="info">
                         <image src="/icon/hotel.png" mode="widthFix" class="icon"></image>
-                        <view class="desc">酒店：<text style="color: #6177ff;">{{item.car==''?'待定':item.car}}</text></view>
+                        <view class="desc">酒店：<text style="color: #6177ff;">{{item.hotel==''?'待定':item.hotel}}</text></view>
                     </view>
                 </view>
                 <view class="locate">

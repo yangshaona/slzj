@@ -8,7 +8,14 @@
 
     <!-- 全部活动 -->
     <view class="actTop">
-        <view class="title">News</view>
+        <view class="type">
+            <view class="title">News</view>
+        </view>
+        <view class="select-wrap">
+            <view class="news-type">文章类型：</view>
+            <select id="select" prop-array="{{options}}" bind:select="select"></select>
+
+        </view>
         <!-- 活动卡片 -->
         <block wx:for="{{news}}" wx:key="item">
             <view class="actBox" bindtap="toNewsDetail" data-id='{{item.id}}'>

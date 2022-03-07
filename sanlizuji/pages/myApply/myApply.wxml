@@ -25,21 +25,28 @@
 
         <!-- 有内容 -->
         <block wx:if="{{filter.length != 0}}">
+            <view wx:if="{{id_flag=='parent'}}" class="select-wrap">
+                <view class="news-type">选择孩子：</view>
+                <select id="select" prop-array="{{kids_name}}" bind:select="select"></select>
+            </view>
             <block wx:for="{{filter}}" wx:key="id">
-                <view class="ctnBox" style="height: 50%;" data-courseid="{{item.courseid}}" bindtap="goToDetail">
+                <view class="ctnBox" style="height: 50%;" data-courseid="{{item.id}}" data-price="{{item.price}}" bindtap="goToOrderDetail">
                     <view class="title">{{item.coursename}}</view>
                     <image src="{{item.imagesurl}}" mode="widthFix" class="ctnImg"></image>
                     <view class="ctnLine"></view>
                     <view class="ctnButton">
-                        <button class="blue" wx:if="{{item.status==2}}" catchtap="applyTap1" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}">待付款</button>
+                        <button class="blue comment" wx:if="{{item.status==2}}" catchtap="applyTap1" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}">待付款</button>
                         <button class="blue" catchtap="applyTap2" data-id="{{item.courseid}}" wx:else>继续报名</button>
-                        <button class="border" wx:if="{{item.status==3}}" data-id="{{item.courseid}}" catchtap="commentTap">评价</button>
-                        <button class="border" data-id="{{item.courseid}}" catchtap="teacherTap">查看导师</button>
-                        <button class="border" wx:if="{{item.status!=3&&item.endTime!='false'}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">删除</button>
+                        <button class="border comment" wx:if="{{item.status==3&&item.isComment!=1}}" data-id="{{item.courseid}}" catchtap="commentTap">评价</button>
+                        <button class="border" wx:if="{{item.teacherid!=''}}" data-courseid="{{item.courseid}}" data-teacherid="{{item.teacherid}}" catchtap="teacherTap">查看导师</button>
+                        <button class="border comment" wx:if="{{item.status!=3&&item.endTime!='false'}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">删除</button>
+                        <button class="border comment" wx:if="{{item.status==3&&item.endTime=='false'}}" data-id="{{item.id}}" catchtap="Refund">退款</button>
 
                     </view>
                     <view wx:if="{{item.status==1}}" class="status">报名失败</view>
                     <view wx:elif="{{item.status==2}}" class="status">待付款</view>
+                    <view wx:elif="{{item.status==5}}" class="status">退款成功</view>
+                    <view wx:elif="{{item.status==4}}" class="status">待退款</view>
                     <view wx:elif="{{item.status==3&&item.endTime=='false'}}" class="status">报名成功</view>
                     <view wx:else class="status">已完成</view>
 

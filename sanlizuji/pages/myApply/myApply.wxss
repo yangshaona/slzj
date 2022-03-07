@@ -150,37 +150,24 @@
 .ctnButton {
     display: flex;
     box-sizing: border-box;
-    width: 80%;
-    margin: 0 0 0 20%;
+    width: 100%;
+    margin: 0 0 0 0;
     flex-direction: row-reverse;
     /* float: right; */
+    /* align-items: right; */
 }
 
 .ctnButton button {
     display: block;
     box-sizing: border-box;
-    width: 30% !important;
-    padding: 2.5%;
+    padding: 1.5%;
+    width: 22% !important;
     margin: 0 1.25%;
     font-weight: normal;
-    font-size: 0.75rem;
+    font-size: 0.70rem;
     border-radius: 1rem;
     float: right;
 }
-
-
-/* .ctnButton button:nth-child(1) {
-    border: 1px #888888 solid;
-}
-
-.ctnButton button:nth-child(2) {
-    border: 1px #888888 solid;
-}
-
-.ctnButton button:nth-child(3) {
-    background-image: linear-gradient(to right, #91a0ff, #6177ff);
-    color: white;
-} */
 
 .border {
     border: 1px #888888 solid;
@@ -190,6 +177,11 @@
     background-image: linear-gradient(to right, #91a0ff, #6177ff);
     color: white;
 }
+
+
+/* .comment {
+    width: 22% !important;
+} */
 
 .status {
     display: block;
@@ -206,4 +198,22 @@
     top: 30%;
     right: 7.5%;
     font-size: 1rem;
+}
+
+.type {
+    display: flex;
+    flex-direction: row
+}
+
+.news-type {
+    font-size: 1.1rem;
+    font-weight: bold !important;
+}
+
+.select-wrap {
+    display: flex;
+    flex-direction: row;
+    margin-top: 3%;
+    margin-left: 5%;
+    right: 5%;
 }

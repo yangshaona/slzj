@@ -1,2 +1,1 @@
-<view class="day">
-       {{result}}</view>
+<text>{{time}}</text>

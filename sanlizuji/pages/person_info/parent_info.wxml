@@ -4,7 +4,7 @@
     <view class="info_desc">
         <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
         <desc bindtap="Bind" data-trigger="name" inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
-        <desc bindtap="Bind" data-trigger="address" inner-text="地址：{{user.province}}{{user.city}}" icon="/icon/address.png"></desc>
+        <desc bindtap="Bind" data-trigger="address" inner-text="地址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
         <desc inner-text="孩子：{{user.kids==''?'未绑定孩子':user.kids}}" icon="/icon/parent_kid.png"></desc>
     </view>
     <view>

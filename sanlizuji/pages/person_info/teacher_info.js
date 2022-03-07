@@ -1,8 +1,11 @@
 // pages/person_info/teacher_info.js
 import {
-    SaveInfo
+    SaveInfo,
+    checkPhone,
 } from '../../utils/text.js'
-let user = wx.getStorageSync('user')
+const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+
+let user = wx.getStorageSync('user');
 const app = getApp();
 Page({
 
@@ -15,6 +18,7 @@ Page({
         //弹窗是否显示
         showModal: false,
         trigger: '',
+        reg: ['北京', '北京', '东城'],
     },
     //退出登录
     logout: function() {
@@ -101,6 +105,7 @@ Page({
         })
         console.log("修改姓名");
         console.log(this.data.tmp);
+
     },
     // 身份证信息的修改
     teaIdNum: function(e) {
@@ -109,6 +114,37 @@ Page({
         })
         console.log("身份证信息");
         console.log(this.data.tmp);
+
+
+    },
+    // 检查身份证号是否输入正确
+    checkID: function(idnum) {
+        var data = check_idnum.checkIdCard(idnum);
+        console.log(data.idCardFlag);
+        if (!data.idCardFlag) {
+            wx.showToast({
+                title: '身份证号有误',
+                icon: 'error',
+                duration: 800
+
+            })
+            return false;
+        } else {
+            var _user = wx.getStorageSync('user');
+            _user.birthday = data.birth;
+            _user.sex = data.sex;
+            if (data.sex == '男') {
+                _user.sexid = '1';
+            } else {
+                _user.sexid = '2';
+            }
+            wx.setStorageSync('user', _user);
+            user = wx.getStorageSync('user');
+            console.log("身份证信息");
+            console.log(this.data.tmp);
+            return true;
+        }
+
     },
     // 手机号信息的修改
     teaPhone: function(e) {
@@ -117,6 +153,7 @@ Page({
         })
         console.log("手机号信息");
         console.log(this.data.tmp);
+
     },
     /**
      * 控制显示
@@ -184,9 +221,23 @@ Page({
         var trigger = that.data.trigger;
         console.log("trigger", trigger);
         // 修改信息事件 
-        if (trigger == 'name' || trigger == 'idnum' || trigger == 'phone') {
-            that.checkInfo(trigger);
+
+        if (trigger == 'name') {
+            var flag = check_idnum.checkName(this.data.tmp);
+            if (flag) {
+                that.checkInfo(trigger);
+
+            }
+        } else if (trigger == 'idnum') {
+            if (that.checkID(this.data.tmp)) {
+                that.checkInfo(trigger);
+            }
+        } else if (trigger == 'phone') {
+            if (checkPhone(this.data.tmp)) {
+                that.checkInfo(trigger);
+            }
         }
+
         that.setData({
             user: user
         })

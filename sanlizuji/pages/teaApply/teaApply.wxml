@@ -35,7 +35,7 @@
                         <button class="blue" catchtap="applyTap2" wx:if="{{item.status==3&&!item.endTime}}" data-id="{{item.courseid}}">继续报名</button>
                         <button class="border" wx:if="{{item.status==3}}" data-id="{{item.courseid}}" catchtap="commentTap">评价</button>
                         <button class="border" data-id="{{item.courseid}}" catchtap="teacherTap">查看导师</button>
-                        <button class="border" wx:if="{{item.status!=3}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">删除</button>
+                        <button class="border" wx:if="{{item.status!=3}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">取消报名</button>
                     </view>
                     <view wx:if="{{item.status==1}}" class="status">报名失败</view>
                     <view wx:elif="{{item.status==2}}" class="status">待审核</view>

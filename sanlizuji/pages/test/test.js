@@ -1,102 +1,44 @@
-const app = getApp();
-const util = require('../../utils/text.js'); //路径根据自己的文件目录来
+// picker.js
 Page({
-
-    /**
-     * 页面的初始数据
-     */
     data: {
-        isTipTrue: true,
-        idnum: "",
+        //每个对象就是一个选择器，有自己的索引值index，标题title，选项option（又是一个数组）
+        objArray: [{
+                index: 0,
+                title: '选项一',
+                option: ['1', '2', '3', '4', '5'],
+            },
+            {
+                index: 0,
+                title: '选项二',
+                option: ['一', '二', '三', '四', '五'],
+            },
+            {
+                index: 0,
+                title: '选项三',
+                option: ['①', '②', '③', '④', '⑤']
+            },
+        ],
+        region: [],
     },
-
-    onLoad: function(e) {
-        var that = this;
-        // time = e.formatTime(new Date());
-        // console.log("打开小程序的时间是：")
-        // that.setData({
-        //     isTipTrue: true
-        // })
-    },
-    tipAgree: function() {
+    // 绑定事件，因为不能用this.setData直接设置每个对象的索引值index。
+    // 所以用自定义属性current来标记每个数组对象的下标
+    bindChange_select: function(ev) {
+        // 定义一个变量curindex 储存触发事件的数组对象的下标
+        const curindex = ev.target.dataset.current
+            // 根据下标 改变该数组对象中的index值
+        this.data.objArray[curindex].index = ev.detail.value
+            // 把改变某个数组对象index值之后的全新objArray重新 赋值给objArray
         this.setData({
-            isTipTrue: false
+            objArray: this.data.objArray
         })
     },
-    InputIdNum: function(e) {
+    //.js
+    //点击确定按钮
+    bindRegionChange: function(e) {
+        console.log(e)
+        console.log('picker发送选择改变，携带值为', e.detail.value)
         this.setData({
-            idnum: e.detail.value
+            region: e.detail.value
         })
-        console.log("输入的值是：", e);
-        console.log(this.data.idnum)
-    },
-    SaveIdNum: function() {
-        if (!util.checkIdCard(this.data.idnum)) {
-            wx.showToast({
-                title: '请输入正确的身份证号',
-                icon: 'none'
-            })
-        } else {
-            wx.showToast({
-                title: '通过了',
-            })
-        }
-
-
-    },
-    name: function(e) {
-        var ts = this;
-        var name = e.detail.value
-        var reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,6}$/;
-
-        if (name.match(reg)) { console.log("111");
-            ts.setData({ allow_name: true });
-            wx.setStorageSync("name", name) }
-        console.log(name)
-    },
-    // // 图片上传
-    // UpLoadImage: function() {
-    //     //选取图片
-    //     wx.chooseImage({
-    //         count: 1,
-    //         sizeType: ['original'], //原图
-    //         sourceType: ['album', 'camera'], //支持选取图片
-    //         success(res) {
-    //             // tempFilePath可以作为img标签的src属性显示图片
-    //             const tempFilePaths = res.tempFilePaths[0];
-    //             //上传图片
-
-
-    //             // for(var i=0;i<that.data.uploaderList.length;i++){
-    //             wx.uploadFile({
-    //                     //请求后台的路径
-    //                     url: app.globalData.url + 'WxUser/SaveImg',
-
-    //                     //小程序本地的路径
-    //                     filePath: tempFilePaths,
-
-    //                     name: 'file',
-    //                     formData: {
-    //                         //图片命名：用户id-商品id-1~9
-    //                         newName: "img",
-    //                         id: 1340,
-    //                         // imgNum:i+1
-    //                     },
-    //                     success(res) {
-    //                         console.log("成功上传图片");
-    //                         console.log(res);
-    //                     },
-    //                     fail(res) {
-    //                         flag = false;
-    //                         wx.showModal({
-    //                             title: '提示',
-    //                             content: '上传失败',
-    //                             showCancel: false
-    //                         })
-    //                     }
-    //                 })
-    //                 //   };
-    //         }
-    //     })
-    // }
+    }
 })

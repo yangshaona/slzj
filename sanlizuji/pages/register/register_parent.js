@@ -44,6 +44,8 @@ Page({
             isTipTrue: false,
             isAgree: true,
         })
+        this.getNickName()
+
     },
     tipCancel: function() {
         this.setData({
@@ -145,6 +147,13 @@ Page({
             tmp[i] = data.multiArray[i][data.multiIndex[i]];
 
         }
+        if (tmp[1] == '北京市') {
+            tmp[1] = '北京';
+
+        } else if (tmp[1] == '天津市') {
+            tmp[1] = '天津';
+        }
+        console.log("选中的是：", tmp)
         this.setData({
             reg: tmp,
         })
@@ -296,15 +305,15 @@ Page({
 
 
                                         name: data.name,
-                                        nikename: data.nickname,
+                                        nikename: data.nickName,
                                         openid: that.data.openid,
                                         header: that.data.header,
                                         sex: data.sex,
                                         sexid: that.data.sexid,
                                         phone: data.phone,
-                                        province: data.region[0],
-                                        city: data.region[1],
-                                        district: data.region[2],
+                                        province: that.data.reg[0],
+                                        city: that.data.reg[1],
+                                        district: that.data.reg[2],
                                     }
                                 },
                                 success(res) {

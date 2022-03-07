@@ -14,6 +14,15 @@
         </view>
     </block> -->
     <template is="not_found" wx:if="{{doing=='无正在进行的课程'}}" />
+
+    <view class="empty" wx:elif="{{doing=='该活动暂未分配老师'}}">
+        <image src="/icon/not_found.png" mode="widthFix">
+        </image>
+        <view>
+            该活动暂未分配老师
+        </view>
+    </view>
+
     <view class="total" wx:else>
         <!-- 正在活动的标题 -->
         <view class="actTitle">{{doing.coursename}}</view>

@@ -2,12 +2,15 @@
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
-
+import {
+    UpdateOrder
+} from '../../utils/text.js'
 Page({
 
     /**
      * 页面的初始数据
      */
+
     data: {
         // 状态栏高度
         statusHeight: app.globalData.statusHeight,
@@ -16,9 +19,10 @@ Page({
         // 选择框
         selectBox: [
             { 'id': 0, 'ctn': '全部', 'class': 'selected' },
-            { 'id': 1, 'ctn': '待付款', 'class': 'select' },
-            { 'id': 2, 'ctn': '报名成功', 'class': 'select' },
-            { 'id': 3, 'ctn': '已完成', 'class': 'select' },
+            { 'id': 1, 'ctn': '报名失败', 'class': 'select' },
+            { 'id': 2, 'ctn': '待付款', 'class': 'select' },
+            { 'id': 3, 'ctn': '报名成功', 'class': 'select' },
+            { 'id': 4, 'ctn': '已完成', 'class': 'select' },
         ],
         // 提交服务端的筛选条件
         select: "全部",
@@ -32,6 +36,7 @@ Page({
         id_flag: id_flag,
         user: user,
         now: "",
+        kids_name: "",
     },
 
     // 筛选栏点击事件
@@ -54,11 +59,16 @@ Page({
         this.setFilter();
     },
     // 点击查看详情
-    goToDetail: function(e) {
+    goToOrderDetail: function(e) {
         // 点击的id
         var id = e.currentTarget.dataset.courseid;
+        var price = e.currentTarget.dataset.price;
+        // wx.navigateTo({
+        //     url: '../pay/pay?orderid=' + id+,
+        // })
         wx.navigateTo({
-            url: '../detail/detail?id=' + id,
+            url: '../pay/pay?orderid=' + id + '&price=' + price,
+
         })
     },
     // 删除一条订单记录
@@ -68,55 +78,54 @@ Page({
         console.log(e)
         var orderid = e.currentTarget.dataset.id;
         var modelName = "SignList";
-        let that=this;
-      wx.showModal({
-        content: "是否删除该记录",
-        success(res) {
-            if(res.confirm){
-            wx.request({
-                url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
-                data: {
-                    modelName: modelName,
-                    id: orderid,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("删除结果");
-                    console.log(res);
-                    if (res.data.data == '不存在该ID，删除失败') {
-                        wx.showToast({
-                            title: "删除失败",
-                            icon: 'cancel',
-                            duration: 800,
-                        })
-                        
+        let that = this;
+        wx.showModal({
+            content: "是否删除该记录",
+            success(res) {
+                if (res.confirm) {
+                    wx.request({
+                        url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
+                        data: {
+                            modelName: modelName,
+                            id: orderid,
+                        },
+                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                        // header: {}, // 设置请求的 header
+                        success: function(res) {
+                            // success
+                            console.log("删除结果");
+                            console.log(res);
+                            if (res.data.data == '不存在该ID，删除失败') {
+                                wx.showToast({
+                                    title: "删除失败",
+                                    icon: 'cancel',
+                                    duration: 800,
+                                })
 
-                    } else {
-                        wx.showToast({
-                            title: "删除成功",
-                            icon: 'success',
-                            duration: 800,
-                        });
-                        that.setFilter();
-                    }
 
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+                            } else {
+                                wx.showToast({
+                                    title: "删除成功",
+                                    icon: 'success',
+                                    duration: 800,
+                                });
+                                that.setFilter();
+                            }
+
+                        },
+                        fail: function() {
+                            // fail
+                        },
+                        complete: function() {
+                            // complete
+                        }
+                    })
+                } else {
+                    console.log("取消删除");
                 }
-            })
-            }
-            else{
-                console.log("取消删除");
-            }
 
-        }
-    })
+            }
+        })
     },
     // 点击评价按钮
     commentTap: function(e) {
@@ -159,21 +168,18 @@ Page({
     },
     // 查看导师
     teacherTap: function(e) {
-        var id = e.currentTarget.dataset.id;
+        var courseid = e.currentTarget.dataset.courseid;
+        var teacherid = e.currentTarget.dataset.teacherid;
         console.log("点击导师按钮")
-        console.log(id)
         wx.navigateTo({
-            url: '../detail/teacher?course_id=' + id,
+            url: '../detail/teacher?course_id=' + courseid + "&teacherid=" + teacherid,
         })
     },
 
     // 筛选显示内容，这部分由服务端实现，这里只是测试一下样式
     setFilter: function() {
-        var select = this.data.select;
-        var filter = [];
-        console.log(select);
+
         let that = this;
-        var total = [];
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
         console.log("我的报名数据")
@@ -195,11 +201,18 @@ Page({
             that.setTitle("孩子的报名")
         }
 
-        console.log(identity)
+        console.log(identity);
+        that.getApply(user.id, identity, id_flag);
+    },
+    // 获取报名数据
+    getApply: function(id, identity, idflag) {
+        let that = this;
+        var select = this.data.select;
+        var filter = [];
         wx.request({
             url: app.globalData.url + 'WxOther/GetMyApply&identity=' + identity,
             data: {
-                id: user.id
+                id: id
             },
             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             // header: {}, // 设置请求的 header
@@ -208,13 +221,10 @@ Page({
                 console.log("我的报名")
                 console.log(res)
                 var total = [];
-                if (id_flag == 'parent') {
+                if (idflag == 'parent') {
                     if (user.kids != '') {
-                        console.log(res.data.data.data[0])
-                        console.log(res.data.data.data[0].data1)
-                        console.log(res.data.data.data[0].data2)
                         total = mergerArr(res.data.data.data[0].data1, res.data.data.data[0].data2);
-                        console.log(total)
+
                     }
                 } else {
                     total = mergerArr(res.data.data1, res.data.data2)
@@ -248,6 +258,13 @@ Page({
                 that.setData({
                     filter: filter
                 })
+                for (var i = 0; i < that.data.filter.length; i++) {
+
+                    console.log(that.data.filter[i]);
+                    if (that.data.filter[i].status != 3 && new Date(that.data.filter[i].payendTime) < now) {
+                        UpdateOrder(that.data.filter[i].id, '支付失败', 1);
+                    }
+                }
                 console.log("所有报名数据")
                 console.log(that.data.filter)
 
@@ -269,8 +286,6 @@ Page({
                 // complete
             }
         })
-
-
 
     },
     //登录查看更多
@@ -305,13 +320,108 @@ Page({
             id_flag: id_flag
         })
 
+    },
+    // 获取孩子信息
+    getKidsList: function() {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxUser/GetKidsList',
+            data: {
+                id: user.id
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("孩子信息");
+                console.log(res);
+                if (res.data.data.length > 0) {
+                    var kids = [];
+                    kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
+                    for (var i = 0; i < res.data.data.length; i++) {
+                        var kid = { "id": "0" + (i + 2), "isActive": false, "value": res.data.data[i].name, "kid_id": res.data.data[i].id };
+                        kids.push(kid);
+                    }
+                    that.setData({
+                        kids_name: kids
+                    })
+                    console.log(that.data.kids_name);
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+    },
+    // 选中孩子
+    select: function(e) {
+        console.log("选中的值是");
+        console.log(e.detail);
+        var type = e.detail.value
+        if (e.detail.value == "请选择") {
+            type = "";
+        }
 
-        if (user != null && user != '') {
-            that.setFilter();
+        for (var i = 1; i < this.data.kids_name.length; i++) {
+            var tmp = "kids_name[" + i + "].isActive"
+            this.setData({
+                [tmp]: false,
+            })
+            if (e.detail.id == this.data.kids_name[i].id) {
+                this.setData({
+                    [tmp]: true
+                })
+            }
+        }
+        if (e.detail.kid_id == 0) {
+            this.getApply(user.id, 'parent', 'parent');
+
+        } else {
+            this.getApply(e.detail.kid_id, 'student', 'student');
 
         }
     },
-
+    // 退款
+    Refund: function(e) {
+        console.log(e);
+        console.log("你哈");
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxSign/tgReverse',
+            data: {
+                lowOrderId: e.currentTarget.dataset.id,
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("申请退款");
+                console.log(res)
+                if (res.data.data.msg == "退款申请成功") {
+                    wx.showToast({
+                        title: "退款申请成功",
+                        icon: "success",
+                        duration: 1000,
+                    })
+                } else {
+                    wx.showToast({
+                        title: "退款申请失败",
+                        icon: "success",
+                        duration: 1000,
+                    })
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+    },
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -323,13 +433,21 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
+        let that = this;
         user = wx.getStorageSync('user')
         id_flag = wx.getStorageSync('id_flag')
         this.setData({
             user: user,
             id_flag: id_flag
         })
+        if (user != null && user != '') {
+            that.setFilter();
+
+
+            if (id_flag == 'parent') { this.getKidsList() }
+
+        }
+
     },
 
     /**

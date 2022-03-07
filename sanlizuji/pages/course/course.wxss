@@ -134,6 +134,11 @@
     transition: all 0.25s;
 }
 
+.region {
+    width: 60%;
+    height: 50%;
+}
+
 .filterCtn[data-id='1'] {
     display: block;
     box-sizing: border-box;
@@ -149,6 +154,7 @@
 
 .confirm {
     font-weight: 400;
+    width: 30%;
     background-image: linear-gradient(to right, #a2afff, #6177ff);
     color: white;
 }
@@ -407,4 +413,9 @@
 
 .bottom-content image {
     width: 30rpx;
+}
+
+.button {
+    display: flex;
+    flex-direction: row;
 }

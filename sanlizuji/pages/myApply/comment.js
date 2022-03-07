@@ -162,6 +162,20 @@ Page({
                     // success
                     console.log("评价内容");
                     console.log(res)
+                    if (res.data.data.msg == '更新评价成功') {
+                        wx.showToast({
+                            title: '提交成功',
+                            icon: 'success',
+                            duration: 800
+                        })
+
+                    } else {
+                        wx.showToast({
+                            title: '提交失败',
+                            icon: 'success',
+                            duration: 800
+                        })
+                    }
                 },
                 fail: function() {
                     // fail
@@ -170,11 +184,7 @@ Page({
                     // complete
                 }
             })
-            wx.showToast({
-                title: '提交成功',
-                icon: 'success',
-                duration: 800
-            })
+
             setTimeout(function() {
                 wx.navigateBack({
                     delta: 0,

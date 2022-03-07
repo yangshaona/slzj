@@ -1,7 +1,11 @@
 // pages/register/register_stu.js
+import {
+    checkPhone
+} from '../../utils/text.js'
 var app = getApp();
 const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+// const checkPhone = require('../../utils/text.js'); //路径根据自己的文件目录来
 
 Page({
 
@@ -185,9 +189,16 @@ Page({
             this.setData(data);
         var tmp = [];
         for (var i = 0; i < 3; i++) {
-            tmp[i] = data.multiArray[i][data.multiIndex[i]];
 
+            tmp[i] = data.multiArray[i][data.multiIndex[i]];
         }
+        if (tmp[1] == '北京市') {
+            tmp[1] = '北京';
+
+        } else if (tmp[1] == '天津市') {
+            tmp[1] = '天津';
+        }
+        console.log("选中的是：", tmp)
         this.setData({
             reg: tmp,
         })
@@ -198,6 +209,7 @@ Page({
             isTipTrue: false,
             isAgree: true,
         })
+        this.getNickName()
     },
     tipCancel: function() {
         this.setData({
@@ -357,7 +369,8 @@ Page({
     },
     // 检查手机号是否输入正确
     InputPhone: function(e) {
-        this.checkPhone(e.detail.value);
+        // this.checkPhone(e.detail.value);
+        checkPhone(e.detail.value);
     },
 
     // 注册表单提交
@@ -386,7 +399,7 @@ Page({
 
         // 全部已填写
         // 电话号码格式检查
-        if (that.checkPhone(data.phone)) {
+        if (checkPhone(data.phone)) {
             // 身份证号格式检查
             if (that.checkID(data.idnum)) {
 
@@ -448,7 +461,6 @@ Page({
                                     Userinfo: {
                                         name: data.name,
                                         nikename: data.nickname,
-                                        // header: that.data.avator,
                                         openid: that.data.openid,
                                         idnum: data.idnum,
                                         birthday: data.birth,
@@ -459,11 +471,9 @@ Page({
                                         schoolname: data.schoolname,
                                         grade: data.grade,
                                         class: data.class,
-                                        province: data.region[0],
-                                        city: data.region[1],
-                                        district: data.region[2],
-                                        // parents: data.parents,
-                                        // p_phone: data.p_phone,
+                                        province: that.data.reg[0],
+                                        city: that.data.reg[1],
+                                        district: that.data.reg[2],
                                         aller: data.remark,
                                         regsterdate: data.regsterdate,
                                     }
@@ -561,7 +571,7 @@ Page({
                 newName: data.openid,
                 id: data.id,
                 modelName: 'Userinfo',
-                // imgNum:i+1
+                file_type: '',
             },
             success(res) {
                 console.log("成功保存图片");
@@ -679,7 +689,7 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-
+        // this.getLocation();
         var now = new Date;
         let that = this;
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
@@ -712,7 +722,7 @@ Page({
         this.setData({
             multiArray: [provinceList, cityList, quyuList],
             province
-        })
+        });
     },
 
     /**

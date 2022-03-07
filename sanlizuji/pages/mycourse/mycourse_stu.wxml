@@ -26,9 +26,9 @@
                             <image src="{{item.imagesurl}}" mode="widthFix" class="actImg"></image>
                             <view class="actCtn">
                                 <text class="actTtl">{{item.coursename}}</text>
-                                <view class="actTeacher" data-id="{{item.courseid}}" bindtap="showTeacherDetail">
+                                <view class="actTeacher" data-courseid="{{item.courseid}}" data-teacherid="{{item.teacherid}}" catchtap="showTeacherDetail">
                                     <image src="/icon/account.png" mode="widthFix"></image>
-                                    <view>{{item.teacher}}</view>
+                                    <view>导师：{{item.teacher==''?'未分配':item.teacher}}</view>
                                 </view>
                                 <view class="actDate">
                                     <view class="actDesc">开始日期: <text style="color: #6177ff;">{{item.startTime}}</text></view>
@@ -44,9 +44,9 @@
                                 <image src="{{item.imagesurl}}" mode="widthFix" class="actImg"></image>
                                 <view class="actCtn">
                                     <text class="actTtl">{{item.coursename}}</text>
-                                    <view class="actTeacher" data-id="{{item.courseid}}" bindtap="showTeacherDetail">
+                                    <view class="actTeacher" data-id="{{item.courseid}}" catchtap="showTeacherDetail">
                                         <image src="/icon/account.png" mode="widthFix"></image>
-                                        <view>{{item.teacher}}</view>
+                                        <view>导师：{{item.teacher==''?'未分配':item.teacher}}</view>
                                     </view>
                                     <view class="actDate">
                                         <view class="actDesc">开始日期: <text style="color: #6177ff;">{{item.startTime}}</text></view>
