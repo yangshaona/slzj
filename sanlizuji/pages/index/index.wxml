@@ -28,12 +28,6 @@
             </view>
         </block>
     </view>
-
-    <!-- 搜索框 -->
-    <!-- <view class="{{searchClass}}">
-        <image src="/icon/search2.png" mode="widthFix" class="srcImg" bindtap="searchTap"></image>
-        <input type="text" name="search" id="search" placeholder="找点东西" class="{{inputClass}}" bindinput="writeData" />
-    </view> -->
     <!-- 热门活动 -->
     <view class="actTop" wx:if="{{activity!=''}}">
         <view class="title">

@@ -58,6 +58,7 @@
 
 /* 标题栏 */
 
+@import '../template/not_found/not_found.wxss';
 .title {
     display: block;
     box-sizing: border-box;
@@ -154,7 +155,7 @@
 
 .ddl {
     display: block;
-    width: 40%;
+    width: 70%;
     text-align: left;
     font-weight: 100 !important;
     color: #888888;
@@ -176,6 +177,6 @@
 
 .numBox view {
     text-align: right;
-    margin: auto 10rpx;
+    margin: auto 2rpx;
     color: #6177ff;
 }

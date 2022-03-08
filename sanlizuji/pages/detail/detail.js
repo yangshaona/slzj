@@ -317,15 +317,20 @@ Page({
                 });
                 var now = new Date;
                 var sign_date_end = new Date(res.data.data[0].sign_date_end);
+                var sign_date_start = new Date(res.data.data[0].sign_date_start);
+                console.log("当前时间");
+                console.log(now);
+                console.log(sign_date_end);
+                console.log(sign_date_start);
 
-                if (sign_date_end < now) {
+                if (sign_date_end < now || sign_date_start > now) {
                     that.setData({
                         isOutDate: true,
                     })
                 }
                 console.log("报名时间是否小于当前时间");
-                console.log(that.data.isOutDate)
-                that.getSchedule(res.data.data[0].id)
+                console.log(that.data.isOutDate);
+                that.getSchedule(res.data.data[0].id);
                 that.getComments(res.data.data[0].id);
                 that.getClub(res.data.data[0].club_id)
             }

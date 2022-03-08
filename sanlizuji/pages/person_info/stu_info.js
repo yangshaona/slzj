@@ -276,7 +276,8 @@ Page({
             })
         }
         // 修改信息事件 
-        else if (trigger == 'name' || trigger == 'idnum' || trigger == 'phone' || trigger == 'schoolname' || trigger == 'grade' || trigger == 'aller') {
+        // else if (trigger == 'name' || trigger == 'idnum' || trigger == 'phone' || trigger == 'schoolname' || trigger == 'grade' || trigger == 'aller') {
+        else if (trigger == 'name' || trigger == 'idnum' || trigger == 'phone' || trigger == 'aller') {
             if (trigger == 'name') {
                 var flag = check_idnum.checkName(this.data.tmp);
                 if (flag) {

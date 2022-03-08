@@ -45,14 +45,14 @@
                     <label style="width: 50%;display: block;"><radio disabled='true'  value="女" checked="{{sex=='女'?true:false}}">女</radio></label>
                 </radio-group>
             </view>
-            <view>
+            <!-- <view>
                 <view class="desc">在读学历
                     <image mode="widthFix" src="/icon/edu.png"></image>
                 </view>
                 <picker name="education" id="edu" mode="selector" bindchange="eduChange" range="{{edu}}" value="{{edu_idx}}" class="{{edu_idx == null ? 'default' : ''}}">
                     {{edu_idx == null ? "请选择" : edu[edu_idx]}}
                 </picker>
-            </view>
+            </view> -->
             <view>
                 <view class="desc">昵称(微信授权获取)</view>
                 <input type="text" id="nickname" name="nickname" disabled="true" value="{{nickName}}" />
@@ -63,30 +63,24 @@
                 </view>
                 <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
             </view>
-            <view>
+            <!-- <view>
                 <view class="desc">学校名称
                     <image mode="widthFix" src="/icon/school.png"></image>
                 </view>
                 <input type="text" name="schoolname" id="schoolname" placeholder="输入学校全称" />
-            </view>
-            <view>
+            </view> -->
+            <!-- <view>
                 <view class="desc">年级
                     <image mode="widthFix" src="/icon/grade.png"></image>
                 </view>
-                <!-- <picker mode="selector" name="grade" id="grade" value="{{grd_idx == null ? '' : grd_idx}}" bindchange="gradeChange" range="{{grd}}" class="{{grd_idx == null ? 'default' : ''}}">
-                    {{grd_idx == null ? "请选择" : grd[grd_idx]}}
-                </picker> -->
                 <input name="grade" id="class" type="number" maxlength="5" placeholder="输入班级" />
             </view>
             <view>
                 <view class="desc">班级
                     <image mode="widthFix" src="/icon/class.png"></image>
                 </view>
-                <!-- <picker mode="selector" name="class" id="class" value="{{cls_idx == null ? '' : cls_idx}}" bindchange="classChange" range="{{cls}}" class="{{cls_idx == null ? 'default' : ''}}">
-                    {{cls_idx == null ? "请选择" : cls[cls_idx]}}
-                </picker> -->
                 <input name="class" id="class" type="number" maxlength="5" placeholder="输入班级" />
-            </view>
+            </view> -->
 
             <view>
                 <view class="desc">地区

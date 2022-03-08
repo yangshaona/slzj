@@ -201,7 +201,6 @@ Page({
                     } else if (ctn['status'] == 2) {
                         status = "待审核";
                     } else if (ctn['status'] == 3 && endTime > now) {
-
                         status = "报名成功";
                         ctn['endTime'] = 'false';
                     } else {

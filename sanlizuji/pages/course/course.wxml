@@ -3,7 +3,6 @@
 <import src="../template/not_found/not_found.wxml" />
 <!-- 筛选框 -->
 <view class="{{filterHide?'':'zhezhao'}}" bindtap="filterTap">
-
     <view class="{{filterClass}}">
         <block wx:for="{{filter}}" wx:key="item">
             <view class="filter">
@@ -15,7 +14,6 @@
                 </view>
             </view>
         </block>
-
         <!-- 时间选择器 -->
         <view class="filterTtl">活动时间</view>
         <view class="filterBox">
@@ -26,17 +24,10 @@
                 {{end == "" ? "结束时间" : end}}
             </picker>
         </view>
-        <!-- 地区选择器 -->
-
-        <!-- <picker mode="multiSelector" name="region" id="region" value="{{reg_idx == null ? '' : reg}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
-                {{reg_idx == null ? "请选择" : reg}}
-            </picker> -->
-
         <view class="filterTtl">活动地区</view>
         <view class="filterBox">
             <picker mode="multiSelector" name="region" id="region" value="{{multiIndex}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="filterCtn region">
                 {{reg_idx == null ? "选择地区" : region}}
-                <!-- {{region.length ? region : '选择地区'}} -->
             </picker>
         </view>
         <view class="button">

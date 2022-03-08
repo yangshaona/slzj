@@ -1,7 +1,7 @@
 /* components/single-dropdown-select/index.wxss */
 
 .ms-content-box {
-    width: 120px;
+    width: 150px;
 }
 
 .ms-content {
@@ -29,7 +29,7 @@
     border-top: none;
     box-sizing: border-box;
     z-index: 3;
-    max-height: 130px;
+    max-height: 150px;
     overflow: auto;
 }
 

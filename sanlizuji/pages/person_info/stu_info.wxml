@@ -8,9 +8,9 @@
         <desc bindtap="Bind" data-trigger="birthday" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
         <desc bindtap="Bind" data-trigger="idnum" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
         <desc bindtap="Bind" data-trigger="phone" inner-text="手机号：{{tools.sub(user.phone,3,1)}}" icon="/icon/phone.png"></desc>
-        <desc bindtap="Bind" data-trigger="schoolname" inner-text="学校：{{user.schoolname}}" icon="/icon/school.png"></desc>
-        <desc bindtap="Bind" data-trigger="education" inner-text="学历：{{user.education}}" icon="/icon/edu.png"></desc>
-        <desc bindtap="Bind" data-trigger="grade" inner-text="年级：{{user.grade}}年级" icon="/icon/grade.png"></desc>
+        <!-- <desc bindtap="Bind" data-trigger="schoolname" inner-text="学校：{{user.schoolname}}" icon="/icon/school.png"></desc> -->
+        <!-- <desc bindtap="Bind" data-trigger="education" inner-text="学历：{{user.education}}" icon="/icon/edu.png"></desc> -->
+        <!-- <desc bindtap="Bind" data-trigger="grade" inner-text="年级：{{user.grade}}年级" icon="/icon/grade.png"></desc> -->
         <desc bindtap="Bind" data-trigger="address" inner-text="地址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
         <desc inner-text="监护人姓名：{{user.parents==''?'未绑定':user.parents}}" icon="/icon/guardian.png"></desc>
         <desc inner-text="监护人手机：{{user.p_phone==''?'未绑定':user.p_phone}}" icon="/icon/phone.png"></desc>

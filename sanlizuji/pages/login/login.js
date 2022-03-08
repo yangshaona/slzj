@@ -103,16 +103,6 @@ Page({
                     wx.setStorageSync('avator', res.userInfo.avatarUrl)
                     var avator = wx.getStorageSync('avator');
                     console.log(avator);
-                    // var _user = wx.getStorageSync('user');
-                    // _user.header = avator;
-                    // wx.setStorageSync('user', _user);
-                    // var isLoaded=wx.getStorageSync('isLoaded');
-                    // if(isLoaded==false){
-                    //     wx.navigateBack({
-                    //         delta: 2, // 回退前 delta(默认为1) 页面
-
-                    //     })
-                    // }else{
                     setTimeout(function() {
                         wx.switchTab({
                             url: '../index/index'

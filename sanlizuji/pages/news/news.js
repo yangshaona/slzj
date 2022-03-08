@@ -29,8 +29,7 @@ Page({
             url: '../news_detail/news_detail?id=' + goodsId,
         })
     },
-    // 获取文章类型
-
+    // 根据类型获取文章数据
     getNews: function(type) {
         let that = this;
         wx.request({
@@ -41,11 +40,17 @@ Page({
             success: function(res) {
                 // success
                 console.log("成功获取发布信息");
-                console.log(res)
-                that.setData({
-                    news: res.data.data
-                })
-                console.log(res.data.data[0].imagesurl)
+                console.log(res);
+                if (res.data.data.length != 0) {
+                    that.setData({
+                        news: res.data.data
+                    })
+                } else {
+                    that.setData({
+                        news: "",
+                    })
+                }
+
             },
             fail: function() {
                 // fail
@@ -69,6 +74,7 @@ Page({
                 { "id": "02", "isActive": false, "value": "单位新闻" },
                 { "id": "03", "isActive": false, "value": "信息通知" },
                 { "id": "04", "isActive": false, "value": "单位介绍" },
+                { "id": "05", "isActive": false, "value": "时政信息" },
             ],
         })
     },

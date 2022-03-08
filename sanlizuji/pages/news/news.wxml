@@ -1,4 +1,6 @@
 <!--pages/news/news.wxml-->
+<import src="../template/not_found/not_found.wxml" />
+
 <!-- 总页面 -->
 <view class="total" id="total">
     <!-- 顶部标题-->
@@ -17,27 +19,31 @@
 
         </view>
         <!-- 活动卡片 -->
-        <block wx:for="{{news}}" wx:key="item">
-            <view class="actBox" bindtap="toNewsDetail" data-id='{{item.id}}'>
-                <!-- 缩略图 -->
-                <view class="actImg">
-                    <image src="{{item.imagesurl}}" mode="aspectFill"></image>
-                </view>
-                <view class="ctnBox">
-                    <!-- 主题 -->
-                    <text class="actTitle">{{item.name}}</text>
-                    <view class="descBox">
-                        <!-- 时间 -->
-                        <view class="ddl">发布时间: <text style="color: #6177ff;">{{item.startTime}}</text></view>
-                        <!-- 报名人数 -->
-                        <view class="numBox">
-                            <view>{{item.news_club_name}}</view>
-                            <image src="/icon/account.png" mode="widthFix"></image>
+
+        <template is="not_found" wx:if="{{news==''}}" />
+        <view wx:else>
+            <block wx:for="{{news}}" wx:key="item">
+                <view class="actBox" bindtap="toNewsDetail" data-id='{{item.id}}'>
+                    <!-- 缩略图 -->
+                    <view class="actImg">
+                        <image src="{{item.imagesurl}}" mode="aspectFill"></image>
+                    </view>
+                    <view class="ctnBox">
+                        <!-- 主题 -->
+                        <text class="actTitle">{{item.name}}</text>
+                        <view class="descBox">
+                            <!-- 时间 -->
+                            <view class="ddl">发布时间: <text style="color: #6177ff;">{{item.uDate}}</text></view>
+                            <!-- 发布单位 -->
+                            <view class="numBox">
+                                <view>{{item.news_club_name}}</view>
+                                <image src="/icon/account.png" mode="widthFix"></image>
+                            </view>
                         </view>
                     </view>
                 </view>
-            </view>
-        </block>
+            </block>
+        </view>
     </view>
 
 </view>
