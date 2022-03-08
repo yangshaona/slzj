@@ -2,6 +2,21 @@
 import {
     checkPhone
 } from '../../utils/text.js'
+
+import WeCropper from '../dev/we-cropper.js';
+import GlobalConfig from '../dev/config.js';
+
+// const app = getApp();
+const config = new GlobalConfig();
+
+config.init();
+
+const device = wx.getSystemInfoSync()
+const width = device.windowWidth
+// const height = device.windowHeight - 50
+const height = device.windowHeight - 50;
+const windowHeight = device.windowHeight - 50;
+
 var app = getApp();
 const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
@@ -14,6 +29,27 @@ Page({
      */
 
     data: {
+        windowHeight: windowHeight,
+        cropperOpt: {
+        id: 'cropper',
+        targetId: 'targetCropper',
+        pixelRatio: device.pixelRatio,
+        width,
+        height,
+        scale: 2.5,
+        zoom: 8,
+        cut: {
+            x: (width - 300) / 2,
+            y: (height - 300) / 2,
+            width: 300,
+            height: 300
+        },
+        boundStyle: {
+            color: config.getThemeColor(),
+            mask: 'rgba(0,0,0,0.8)',
+            lineWidth: 1
+        }
+        },
         // 能否获得用户微信昵称
         cangetUserInfo: false,
         //表单各个小标题
@@ -78,40 +114,143 @@ Page({
         //是否显示用户协议
         isTipTrue: false,
         isAgree: false,
+
+        // 是否显示头像剪裁框
+        showCut: false,
     },
+    newCut(src) {
+        const { cropperOpt } = this.data
+
+        cropperOpt.boundStyle.color = config.getThemeColor()
+
+        this.setData({ cropperOpt })
+
+        if (src) {
+        cropperOpt.src = src
+        this.cropper = new WeCropper(cropperOpt)
+            .on('ready', (ctx) => {
+            console.log(`wecropper is ready for work!`)
+            })
+            .on('beforeImageLoad', (ctx) => {
+            console.log(`before picture loaded, i can do something`)
+            console.log(`current canvas context:`, ctx)
+            wx.showToast({
+                title: '上传中',
+                icon: 'loading',
+                duration: 20000
+            })
+            })
+            .on('imageLoad', (ctx) => {
+            console.log(`picture loaded`)
+            console.log(`current canvas context:`, ctx)
+            wx.hideToast()
+            })
+            .on('beforeDraw', (ctx, instance) => {
+            console.log(`before canvas draw,i can do something`)
+            console.log(`current canvas context:`, ctx)
+            })
+        }
+    },
+
+    touchStart (e) {
+        this.cropper.touchStart(e)
+    },
+    touchMove (e) {
+        this.cropper.touchMove(e)
+    },
+    touchEnd (e) {
+        this.cropper.touchEnd(e)
+    },
+    // 用户点击确认剪裁
+    getCropperImage () {
+        const that = this;
+        this.cropper.getCropperImage(function (path, err) {
+        if (err) {
+        wx.showModal({
+            title: '温馨提示',
+            content: err.message
+        })
+        } else {
+        // wx.previewImage({
+        //   current: '', // 当前显示图片的 http 链接
+        //   urls: [path] // 需要预览的图片 http 链接列表
+        // })
+        console.log(path);
+        that.setData({
+            avator: path,
+            showCut: false,
+        })
+        /*
+            path中包含临时图像文件的url，用其上传后台
+            此路径仅在用户下一次点击此按钮时有效
+        */
+       console.log(that.data.avator);
+        }
+        })
+        
+    },
+    uploadTap () {
+    const self = this
+
+    wx.chooseImage({
+        count: 1, // 默认9
+        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success (res) {
+        const src = res.tempFilePaths[0]
+        //  获取裁剪图片资源后，给data添加src属性及其值
+
+        self.cropper.pushOrign(src)
+        }
+    })
+    },
+
     // 选择图像
     chooseImg: function(e) {
         console.log("上传实名头像");
         console.log(e);
-        wx.chooseMedia({
-            mediaType: ['image'],
-            count: 1,
-            sourceType: ['album', 'camera'],
-            success: (res) => {
-                console.log("成功上传头像")
-                console.log(res)
-                wx.showToast({
-                    title: '保存成功!',
-                    icon: 'success',
-                    duration: 800
-                })
-                console.log("头像保存成功")
-                console.log(res);
-                console.log(res.tempFiles);
-                console.log(res.tempFiles[0]);
-                this.setData({
-                    avator: res.tempFiles[0].tempFilePath,
-                })
-                console.log(res.tempFiles[0].tempFilePath);
-                console.log(this.data.avator)
-            },
-            fail: (res) => {
-                wx.showToast({
-                    title: '选择错误',
-                    icon: 'success',
-                    duration: 800
-                })
-                console.log(res);
+        // wx.chooseMedia({
+        //     mediaType: ['image'],
+        //     count: 1,
+        //     sourceType: ['album', 'camera'],
+        //     success: (res) => {
+        //         console.log("成功上传头像")
+        //         console.log(res)
+        //         wx.showToast({
+        //             title: '保存成功!',
+        //             icon: 'success',
+        //             duration: 800
+        //         })
+        //         console.log("头像保存成功")
+        //         console.log(res);
+        //         console.log(res.tempFiles);
+        //         console.log(res.tempFiles[0]);
+        //         this.setData({
+        //             avator: res.tempFiles[0].tempFilePath,
+        //         })
+        //         console.log(res.tempFiles[0].tempFilePath);
+        //         console.log(this.data.avator)
+        //     },
+        //     fail: (res) => {
+        //         wx.showToast({
+        //             title: '选择错误',
+        //             icon: 'success',
+        //             duration: 800
+        //         })
+        //         console.log(res);
+        //     }
+        // })
+        const that = this;
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success (res) {
+            const src = res.tempFilePaths[0];
+            that.setData({
+                showCut: true,
+            })
+            that.newCut(src);
             }
         })
     },
@@ -689,7 +828,6 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        // this.getLocation();
         var now = new Date;
         let that = this;
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
