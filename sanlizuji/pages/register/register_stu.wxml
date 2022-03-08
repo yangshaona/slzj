@@ -1,6 +1,26 @@
 <!--pages/register/register_stu.wxml-->
-<!-- 照片上传还没搞 -->
 
+<block wx:if="{{showCut}}">
+    <import src="../dev/we-cropper.wxml"/>
+
+    <view class="cropper-wrapper">
+    <template is="we-cropper" data="{{...cropperOpt}}"/>
+    <!-- <view class="cropper-buttons" style="color: {{cropperOpt.boundStyle.color}}">
+        <view class="upload btn" bindtap="uploadTap">
+        上传图片
+        </view>
+        <view class="getCropperImage btn" style="background-color: {{cropperOpt.boundStyle.color}};" bindtap="getCropperImage">
+        生成图片
+        </view>
+    </view> -->
+    <view class="button-box" style="top: {{windowHeight}}px;">
+        <button bindtap="uploadTap" class="btn-left">重新选择</button>
+        <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
+    </view>
+    </view>
+</block>
+
+<block wx:else>
 <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
     <include src="../template/agree_protocol/agree_protocol"></include>
 </view>
@@ -98,9 +118,14 @@
             </view>
 
             <!-- 获取用户头像 -->
-            <view>
+            <view style="height: auto;">
                 <view class="desc">实名头像</view>
-                <button class="chooseImg" bindtap="chooseImg">选择文件</button>
+                <block wx:if="{{avator}}">
+                    <image style="display: block; position: relative; width: 30%; height: auto;" mode="widthFix" src="{{avator}}" bindtap="chooseImg"></image>
+                </block>
+                <block wx:else>
+                    <button class="chooseImg" bindtap="chooseImg">选择文件</button>
+                </block>
                 <input type="text" name="avator" id="avator" value="{{avator}}" disabled="true" style="display:none;" />
             </view>
             <!-- <image mode="widthFix" src="{{avator}}"></image> -->
@@ -110,3 +135,4 @@
     </view>
 </block>
 <!-- <view class=""> </view> -->
+</block>

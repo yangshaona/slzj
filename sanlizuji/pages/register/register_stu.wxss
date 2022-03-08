@@ -4,6 +4,11 @@
 /* 未获取用户昵称时 */
 
 @import '../template/agree_protocol/agree_protocol.wxss';
+@import '../dev/cut.wxss';
+view {
+    position: relative;
+}
+
 .primary {
     display: block;
     box-sizing: border-box;
