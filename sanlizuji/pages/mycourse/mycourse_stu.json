@@ -1,4 +1,4 @@
 {
-    "usingComponents": {},
+    "usingComponents": { "select": "/components/select-dropdown/select-dropdown" },
     "navigationBarTitleText": "我的活动"
 }

@@ -13,7 +13,7 @@ config.init();
 
 const device = wx.getSystemInfoSync()
 const width = device.windowWidth
-// const height = device.windowHeight - 50
+    // const height = device.windowHeight - 50
 const height = device.windowHeight - 50;
 const windowHeight = device.windowHeight - 50;
 
@@ -31,24 +31,24 @@ Page({
     data: {
         windowHeight: windowHeight,
         cropperOpt: {
-        id: 'cropper',
-        targetId: 'targetCropper',
-        pixelRatio: device.pixelRatio,
-        width,
-        height,
-        scale: 2.5,
-        zoom: 8,
-        cut: {
-            x: (width - 300) / 2,
-            y: (height - 300) / 2,
-            width: 300,
-            height: 300
-        },
-        boundStyle: {
-            color: config.getThemeColor(),
-            mask: 'rgba(0,0,0,0.8)',
-            lineWidth: 1
-        }
+            id: 'cropper',
+            targetId: 'targetCropper',
+            pixelRatio: device.pixelRatio,
+            width,
+            height,
+            scale: 2.5,
+            zoom: 8,
+            cut: {
+                x: (width - 300) / 2,
+                y: (height - 300) / 2,
+                width: 300,
+                height: 300
+            },
+            boundStyle: {
+                color: config.getThemeColor(),
+                mask: 'rgba(0,0,0,0.8)',
+                lineWidth: 1
+            }
         },
         // 能否获得用户微信昵称
         cangetUserInfo: false,
@@ -117,6 +117,12 @@ Page({
 
         // 是否显示头像剪裁框
         showCut: false,
+        // 身份切换
+        title: "身份切换密码校验",
+        showModal: false,
+        pwd: '',
+        register_role: '',
+        user_group: '',
     },
     newCut(src) {
         const { cropperOpt } = this.data
@@ -126,83 +132,83 @@ Page({
         this.setData({ cropperOpt })
 
         if (src) {
-        cropperOpt.src = src
-        this.cropper = new WeCropper(cropperOpt)
-            .on('ready', (ctx) => {
-            console.log(`wecropper is ready for work!`)
-            })
-            .on('beforeImageLoad', (ctx) => {
-            console.log(`before picture loaded, i can do something`)
-            console.log(`current canvas context:`, ctx)
-            wx.showToast({
-                title: '上传中',
-                icon: 'loading',
-                duration: 20000
-            })
-            })
-            .on('imageLoad', (ctx) => {
-            console.log(`picture loaded`)
-            console.log(`current canvas context:`, ctx)
-            wx.hideToast()
-            })
-            .on('beforeDraw', (ctx, instance) => {
-            console.log(`before canvas draw,i can do something`)
-            console.log(`current canvas context:`, ctx)
-            })
+            cropperOpt.src = src
+            this.cropper = new WeCropper(cropperOpt)
+                .on('ready', (ctx) => {
+                    console.log(`wecropper is ready for work!`)
+                })
+                .on('beforeImageLoad', (ctx) => {
+                    console.log(`before picture loaded, i can do something`)
+                    console.log(`current canvas context:`, ctx)
+                    wx.showToast({
+                        title: '上传中',
+                        icon: 'loading',
+                        duration: 20000
+                    })
+                })
+                .on('imageLoad', (ctx) => {
+                    console.log(`picture loaded`)
+                    console.log(`current canvas context:`, ctx)
+                    wx.hideToast()
+                })
+                .on('beforeDraw', (ctx, instance) => {
+                    console.log(`before canvas draw,i can do something`)
+                    console.log(`current canvas context:`, ctx)
+                })
         }
     },
 
-    touchStart (e) {
+    touchStart(e) {
         this.cropper.touchStart(e)
     },
-    touchMove (e) {
+    touchMove(e) {
         this.cropper.touchMove(e)
     },
-    touchEnd (e) {
+    touchEnd(e) {
         this.cropper.touchEnd(e)
     },
     // 用户点击确认剪裁
-    getCropperImage () {
+    getCropperImage() {
         const that = this;
-        this.cropper.getCropperImage(function (path, err) {
-        if (err) {
-        wx.showModal({
-            title: '温馨提示',
-            content: err.message
+        this.cropper.getCropperImage(function(path, err) {
+            if (err) {
+                wx.showModal({
+                    title: '温馨提示',
+                    content: err.message
+                })
+            } else {
+                // wx.previewImage({
+                //   current: '', // 当前显示图片的 http 链接
+                //   urls: [path] // 需要预览的图片 http 链接列表
+                // })
+                console.log(path);
+                that.setData({
+                        avator: path,
+                        showCut: false,
+                    })
+                    /*
+                        path中包含临时图像文件的url，用其上传后台
+                        此路径仅在用户下一次点击此按钮时有效
+                    */
+                console.log(that.data.avator);
+            }
         })
-        } else {
-        // wx.previewImage({
-        //   current: '', // 当前显示图片的 http 链接
-        //   urls: [path] // 需要预览的图片 http 链接列表
-        // })
-        console.log(path);
-        that.setData({
-            avator: path,
-            showCut: false,
-        })
-        /*
-            path中包含临时图像文件的url，用其上传后台
-            此路径仅在用户下一次点击此按钮时有效
-        */
-       console.log(that.data.avator);
-        }
-        })
-        
+
     },
-    uploadTap () {
-    const self = this
+    uploadTap() {
+        const self = this
 
-    wx.chooseImage({
-        count: 1, // 默认9
-        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-        success (res) {
-        const src = res.tempFilePaths[0]
-        //  获取裁剪图片资源后，给data添加src属性及其值
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success(res) {
+                const src = res.tempFilePaths[0]
+                    //  获取裁剪图片资源后，给data添加src属性及其值
 
-        self.cropper.pushOrign(src)
-        }
-    })
+                self.cropper.pushOrign(src)
+            }
+        })
     },
 
     // 选择图像
@@ -245,12 +251,12 @@ Page({
             count: 1, // 默认9
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-            success (res) {
-            const src = res.tempFilePaths[0];
-            that.setData({
-                showCut: true,
-            })
-            that.newCut(src);
+            success(res) {
+                const src = res.tempFilePaths[0];
+                that.setData({
+                    showCut: true,
+                })
+                that.newCut(src);
             }
         })
     },
@@ -731,14 +737,87 @@ Page({
     },
     // 切换教师/家长端
     changeToTeacher: function(e) {
-        wx.navigateTo({
-            url: './register_teacher',
+        console.log("切换教师端");
+        console.log(e.currentTarget.id);
+        this.setData({
+            showModal: true,
+            user_group: 2,
+            register_role: e.currentTarget.id,
         })
+
     },
     changeToParent: function(e) {
+        console.log("切换家长端");
+        console.log(e.currentTarget.id);
+        this.setData({
+            showModal: true,
+            user_group: 3,
+            register_role: e.currentTarget.id,
+        })
+    },
+    // 身份切换密码校验
+    checkRole: function(user_group, register_role) {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxSign/CheckRole',
+            data: {
+                user_group: user_group,
+                password: that.data.pwd,
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("身份切换密码校验结果");
+                console.log(res);
+                if (res.data.data == '验证成功') {
+                    that.setData({
+                        showModal: false,
+                    })
+                    wx.navigateTo({
+                        url: './register_' + register_role,
+                    })
+                } else {
+                    wx.showToast({
+                        title: '密码有误', //提示的内容,
+                        duration: 800,
+                    })
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+    },
+    // 课程密码校验
+    // 点击确定按钮
+    ok: function() {
+        let that = this;
+        if (that.data.pwd != '') {
+            that.checkRole(that.data.user_group, that.data.register_role);
+        } else {
+            wx.showToast({
+                title: '请输入密码',
+                duration: 500,
+            })
+        }
+        that.setData({
+            pwd: "",
+        })
+    },
+    back: function() {
+        this.setData({
+            showModal: false,
+        })
 
-        wx.navigateTo({
-            url: './register_parent',
+    },
+    InputPwd: function(e) {
+        console.log(e)
+        this.setData({
+            pwd: e.detail.value,
         })
     },
     // 绑定已有数据

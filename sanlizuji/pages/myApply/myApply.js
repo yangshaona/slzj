@@ -37,6 +37,12 @@ Page({
         user: user,
         now: "",
         kids_name: "",
+        lowOrderId: '',
+        actionSheetHidden: true,
+        actionSheetItems: [
+            '活动开始前1天收取退款订单总额的70%', '活动开始前2天收取退款订单总额的50%',
+            '活动开始前3天收取退款订单总额的0%'
+        ],
     },
 
     // 筛选栏点击事件
@@ -130,11 +136,11 @@ Page({
     // 点击评价按钮
     commentTap: function(e) {
         // 点击的id
-        var id = e.currentTarget.dataset.id;
+        var orderid = e.currentTarget.dataset.orderid;
         console.log("点击评价")
-        console.log(id)
+        console.log(orderid)
         wx.navigateTo({
-            url: '../myApply/comment?id=' + id,
+            url: '../myApply/comment?orderid=' + orderid,
         })
     },
     // 点击待付款按钮
@@ -182,9 +188,7 @@ Page({
         let that = this;
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
-        console.log("我的报名数据")
-        console.log(user);
-        console.log(id_flag)
+
         that.setData({
             flag_identity: app.globalData.flag_identity
         })
@@ -200,8 +204,6 @@ Page({
             console.log("父母");
             that.setTitle("孩子的报名")
         }
-
-        console.log(identity);
         that.getApply(user.id, identity, id_flag);
     },
     // 获取报名数据
@@ -220,11 +222,22 @@ Page({
                 // success
                 console.log("我的报名")
                 console.log(res)
-                var total = [];
+                var total = [],
+                    kid_apply = [],
+                    apply = [];
                 if (idflag == 'parent') {
                     if (user.kids != '') {
-                        total = mergerArr(res.data.data.data[0].data1, res.data.data.data[0].data2);
+                        for (var i = 0; i < res.data.data.data.length; i++) {
+                            kid_apply = mergerArr(res.data.data.data[i].data1, res.data.data.data[i].data2);
+                            apply.push(kid_apply);
+                        }
 
+                        for (var i = 0; i < apply.length; i++) {
+                            for (var j = 0; j < apply[i].length; j++) {
+                                console.log(apply[i][j]);
+                                total.push(apply[i][j])
+                            }
+                        }
                     }
                 } else {
                     total = mergerArr(res.data.data1, res.data.data2)
@@ -259,9 +272,10 @@ Page({
                     filter: filter
                 })
                 for (var i = 0; i < that.data.filter.length; i++) {
+                    var end_pay_time = new Date(that.data.filter[i].payendTime);
 
                     console.log(that.data.filter[i]);
-                    if (that.data.filter[i].status != 3 && new Date(that.data.filter[i].payendTime) < now) {
+                    if (that.data.filter[i].status == 2 && (end_pay_time < now || that.data.filter[i].endTime < now)) {
                         UpdateOrder(that.data.filter[i].id, '支付失败', 1);
                     }
                 }
@@ -319,6 +333,9 @@ Page({
             user: user,
             id_flag: id_flag
         })
+        if (user != null && user != '') {
+            that.setFilter();
+        }
 
     },
     // 获取孩子信息
@@ -333,7 +350,7 @@ Page({
             // header: {}, // 设置请求的 header
             success: function(res) {
                 // success
-                console.log("孩子信息");
+                console.log("孩子信息111");
                 console.log(res);
                 if (res.data.data.length > 0) {
                     var kids = [];
@@ -389,38 +406,11 @@ Page({
         console.log(e);
         console.log("你哈");
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxSign/tgReverse',
-            data: {
-                lowOrderId: e.currentTarget.dataset.id,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("申请退款");
-                console.log(res)
-                if (res.data.data.msg == "退款申请成功") {
-                    wx.showToast({
-                        title: "退款申请成功",
-                        icon: "success",
-                        duration: 1000,
-                    })
-                } else {
-                    wx.showToast({
-                        title: "退款申请失败",
-                        icon: "success",
-                        duration: 1000,
-                    })
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+        that.actionSheetTap();
+        that.setData({
+            lowOrderId: e.currentTarget.dataset.id,
         })
+
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -442,9 +432,11 @@ Page({
         })
         if (user != null && user != '') {
             that.setFilter();
-
-
-            if (id_flag == 'parent') { this.getKidsList() }
+            if (id_flag == 'parent') {
+                console.log("家长身份");
+                console.log(that.data.id_flag);
+                this.getKidsList()
+            }
 
         }
 
@@ -483,5 +475,52 @@ Page({
      */
     onShareAppMessage: function() {
 
-    }
+    },
+    onShareAppMessage: function() {
+
+    },
+    actionSheetTap: function() {
+        this.setData({
+            actionSheetHidden: !this.data.actionSheetHidden
+        })
+    },
+    Confirm: function() {
+        let that = this;
+        this.setData({
+            actionSheetHidden: !this.data.actionSheetHidden
+        });
+        wx.request({
+            url: app.globalData.url + 'WxSign/tgReverse',
+            data: {
+                lowOrderId: that.data.lowOrderId,
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("申请退款");
+                console.log(res)
+                if (res.data.data.msg == "退款申请成功") {
+                    wx.showToast({
+                        title: "退款申请成功",
+                        icon: "success",
+                        duration: 1000,
+                    });
+                    that.setFilter();
+                } else {
+                    wx.showToast({
+                        title: "退款申请失败",
+                        icon: "success",
+                        duration: 1000,
+                    })
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+    },
 })

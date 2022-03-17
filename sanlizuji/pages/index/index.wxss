@@ -1,5 +1,6 @@
 /* pages/index/index.wxss */
 
+@import '../template/course_check/course_check.wxss';
 .top {
     display: block;
     box-sizing: border-box;
@@ -236,7 +237,7 @@
     display: block;
     box-sizing: border-box;
     width: 90%;
-    height: 20rem;
+    height: 17rem;
     background: whitesmoke;
     margin: 5%;
     padding: 0;

@@ -72,6 +72,7 @@ Page({
 
         })
     },
+
     // 学生小组件点击事件
     studentWidgetsTap: function(e) {
         user = wx.getStorageSync('user')
@@ -118,6 +119,46 @@ Page({
             url: '../register/register_stu',
 
         })
+    },
+    // 跳转到用户协议
+    toProtocol: function() {
+        wx.navigateTo({
+            url: '../protocol/protocol',
+
+        })
+    }, // 跳转到用户隐私
+    toPrivacy: function() {
+        wx.navigateTo({
+            url: '../privacy_policy/privacy_policy',
+
+        })
+    },
+    //退出登录
+    logout: function() {
+        let that = this;
+        wx.showModal({
+            content: '是否退出登录',
+            success(res) {
+                if (res.cancel) {
+
+                } else if (res.confirm) {
+                    wx.setStorageSync('user', null);
+                    wx.setStorageSync('id_flag', null);
+                    wx.setStorageSync('avator', null);
+                    app.globalData.flag_identity = [1, 0, 0];
+                    that.setData({
+                        user: '',
+                    });
+                    that.onShow();
+                    wx.redirectTo({
+                        url: '../person/person',
+                    })
+                }
+            }
+        })
+
+
+
     },
 
     //点击头像上传图片
@@ -228,8 +269,7 @@ Page({
      */
     onShow: function() {
         this.judgeIdentity();
-        // if (this.data.user.header == undefined) console.log(this.data.user.header);
-        // if (this.data.user.header == null) console.log(this.data.user.header);
+
     },
     // 判断类型
     judgeIdentity: function() {

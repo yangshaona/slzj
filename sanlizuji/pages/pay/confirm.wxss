@@ -113,3 +113,39 @@
     border: none;
     line-height: 35px;
 }
+
+.coupons-text {
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+.coupons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 45px;
+}
+
+.coupons-input {
+    width: 75%;
+    border-radius: 20rpx;
+    padding-left: 15rpx;
+    padding-top: 5rpx;
+    padding-bottom: 5rpx;
+    margin: 5px;
+    background-color: #e7e6e6;
+    flex-direction: row;
+    height: 27px;
+    margin-left: 1rem;
+}
+
+.coupons button {
+    font-size: 27rpx;
+    width: 15%;
+    margin: 10rpx;
+    height: 60rpx;
+    border-radius: 20rpx;
+    background-color: #6177ff;
+    color: white;
+    margin-right: 1rem;
+}

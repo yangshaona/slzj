@@ -1,5 +1,5 @@
 <!--pages/pay/confirm.wxml-->
-
+<wxs module="filters" src="../../utils/filter.wxs"></wxs>
 <!-- 订单信息 -->
 <view class="card">
     <!-- 课程标题 -->
@@ -16,14 +16,24 @@
     <view class="stu_box">
         <view class="stu_desc">学员</view>
         <view class="stu">{{stuinfo.name}}</view>
-        <!-- <view wx:else>
-            <picker class="stu" mode="selector" range="{{stu_arr}}" range-key="name" value="{{idx}}" bindchange="stuChange">
-                <view style="color: #888888">{{idx == -1 ? '选择学员>' :stu }}</view>
-            </picker>
-        </view> -->
+    </view>
+    <view class="stu_box">
+        <view class="stu_desc">学校</view>
+        <view class="stu">{{userinfo.schoolname}}</view>
+    </view>
+    <view class="stu_box">
+        <view class="stu_desc">年级班级</view>
+        <view class="stu">{{userinfo.grade}}年级{{userinfo.class}}班</view>
     </view>
 </view>
-
+<!-- 优惠券 -->
+<view>
+    <view class="coupons-text">优惠券</view>
+    <view class="coupons">
+        <input type="text" name="coupons" id="coupons" placeholder="请输入优惠券码" class="coupons-input" bindinput="searchCoupons" />
+        <button class="coupons-button" bindtap="getCoupons">确定</button>
+    </view>
+</view>
 <!-- 温馨提示 -->
 <view class="tips">
     *请您仔细阅读<text style="color: #6177ff;" bindtap="toBuyInfo" data-id="{{order.id}}">购买须知</text>，点击提交订单即代表您已阅读并同意条款内容。
@@ -32,7 +42,7 @@
 <!-- 底部确认栏 -->
 <view class="bottom" style="bottom: 0px;">
     <view class="bottom_desc">
-        应付：<text style="color: #6177ff;">￥{{order.price}}</text>
+        应付：<text style="color: #6177ff;">￥{{filters.toFix(order.price-price)}}</text>
     </view>
     <button class="submit" data-id="{{order.id}}" bindtap="checkSubmit">待付款</button>
 </view>

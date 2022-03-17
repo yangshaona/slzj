@@ -1,4 +1,5 @@
 <!--pages/pay/pay.wxml-->
+<wxs module="filters" src="../../utils/filter.wxs"></wxs>
 <view style="height: 100%; overflow: hidden;">
     <!-- <view wx:if="{{remain_time<=0||order.status==1||order.status==3}}"> -->
     <view class="tip">
@@ -31,7 +32,7 @@
             <view class="apply-stu">报名学员: {{order.username}}</view>
             <view class="date">活动时间: {{order.starttime}} ~ {{order.endtime}}</view>
             <view class="remark">*备注: {{remark}}</view>
-            <view class="price">￥{{price}}</view>
+            <view class="price">￥{{filters.toFix(price-coupons)}}</view>
         </view>
         <view class="btn-box">
 

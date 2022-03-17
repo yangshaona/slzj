@@ -12,17 +12,19 @@
             <image wx:if="{{!user}}" src="/icon/not_load.png" mode="widthFix"></image>
             <image wx:else src="{{user.header}}" mode="widthFix"></image>
         </view>
-        <view style="display: block; width: 55%;">
+        <view style="display: block; width: 55%;" wx:if="{{user!=null&&user!=''}}">
             <view class="infoCtn">
                 <view>{{user.name}}</view>
                 <image src="{{user.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
                 <view style="margin-left:10rpx;" class="identity">{{identity}}</view>
 
             </view>
-            <view wx:if="{{user.phone!=''}}">
+            <view wx:if="{{user.phone!=null}}">
                 <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone1.png"></desc>
             </view>
         </view>
+        <view wx:else style="display: block;margin-top: 6%;" bindtap="toLogin">立即登录</view>
+
     </view>
 
     <!-- 小组件 -->
@@ -42,7 +44,7 @@
         <view class="avator" style="height: {{imgHeight}}px;" bindtap="UpLoadImage">
             <image src="{{user.header}}" mode="widthFix"></image>
         </view>
-        <view style="display: block; width: 55%;">
+        <view style="display: block; width: 55%;" wx:if="{{user!=null&&user!=''}}">
             <view class="infoCtn">
                 <view>{{user.name}}</view>
                 <image src="{{user.sex == '男' ? '/icon/man.png' : '/icon/woman.png'}}" mode="widthFix" class="sex"></image>
@@ -53,6 +55,8 @@
                 <desc inner-text="{{tools.sub(user.phone, 3,2)}}" icon="/icon/phone1.png"></desc>
             </view>
         </view>
+        <view wx:else style="display: block;margin-top: 6%;" bindtap="toLogin">立即登录</view>
+
     </view>
 
     <!-- 小组件 -->
@@ -96,5 +100,21 @@
                 <view>{{item.desc}}</view>
             </view>
         </block>
+    </view>
+</view>
+<view class="bottom-box">
+    <view class="info-bar" bindtap="toProtocol">
+        <image class="img-icon" src="/icon/xieyi.png" mode="widthFix"></image>
+        <view class="text-bar">用户服务协议</view>
+    </view>
+    <view class="line"></view>
+    <view class="info-bar" bindtap="toPrivacy">
+        <image class="img-icon" src="/icon/yinsi.png" mode="widthFix"></image>
+        <view class="text-bar">隐私政策</view>
+    </view>
+    <view class="line"></view>
+    <view class="info-bar" bindtap="logout">
+        <image class="img-icon" src="/icon/logout.png" mode="widthFix"></image>
+        <view class="text-bar">退出登录</view>
     </view>
 </view>

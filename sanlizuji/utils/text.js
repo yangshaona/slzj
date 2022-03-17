@@ -27,9 +27,13 @@ function formatRichText(html) {
 }
 // 保存更改信息
 function SaveInfo(modelData, modelName) {
+    console.log("保存信息");
+    user = wx.getStorageSync('user');
+    console.log(user);
     wx.request({
         url: app.globalData.url + 'WxUser/UpdateUserInfo',
         // data: data,
+
         data: {
             id: user.id,
             modelName: modelName,

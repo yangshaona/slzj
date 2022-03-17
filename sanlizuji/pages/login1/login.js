@@ -1,4 +1,7 @@
 // pages/login/login.js
+import {
+    SaveInfo
+} from '../../utils/text.js'
 const app = getApp();
 Page({
 
@@ -15,7 +18,8 @@ Page({
         // 手机号
         phone: '',
         flag_identity: app.globalData.flag_identity,
-        id_flag: ""
+        id_flag: "",
+        openid: "",
     },
 
     //手机号码输入检查
@@ -134,6 +138,121 @@ Page({
                         wx.setStorageSync('user', res.data.data)
                         wx.setStorageSync('id_flag', that.data.id_flag)
                         let user = wx.getStorageSync('user')
+                        let id_flag = wx.getStorageSync('id_flag')
+                        wx.login({
+                            success: function(res) {
+                                // success
+                                console.log("获取openid")
+                                console.log(res)
+                                wx.request({
+                                    url: app.globalData.url + "WxUser/getOpenId",
+                                    data: {
+                                        code: res.code
+                                    },
+                                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                                    // header: {}, // 设置请求的 header
+                                    success: function(res) {
+                                        // success
+                                        console.log(res)
+                                        that.setData({
+                                            openid: res.data.openid
+                                        })
+                                        app.globalData.openid = res.data.openid
+                                        console.log("app openid")
+                                        console.log(app.globalData.openid);
+                                        console.log(that.data.openid);
+                                        console.log("用户数据")
+                                        console.log(data)
+                                        console.log(id_flag);
+                                        var modelName = '';
+                                        var modelData = {};
+                                        if (id_flag == 'student') {
+                                            modelName = "Userinfo";
+                                            modelData = {
+                                                name: user.name,
+                                                nikename: user.nickname,
+                                                header: user.header,
+                                                openid: res.data.openid,
+                                                idnum: user.idnum,
+                                                birthday: user.birthday,
+                                                sex: user.sex,
+                                                sexid: user.sexid,
+                                                education: user.education,
+                                                phone: user.phone,
+                                                schoolname: user.schoolname,
+                                                grade: user.grade,
+                                                class: user.class,
+                                                province: user.province,
+                                                city: user.city,
+                                                district: user.district,
+                                                parents: that.data.parent_name,
+                                                p_phone: that.data.parent_phone,
+                                                aller: user.aller,
+                                                regsterdate: user.regsterdate,
+                                            }
+                                        } else if (id_flag == 'teacher') {
+                                            modelName = "Teacher";
+                                            modelData = {
+                                                name: user.name,
+                                                header: user.header,
+                                                openid: res.data.openid,
+                                                idnum: user.idnum,
+                                                birthday: user.birthday,
+                                                sex: user.sex,
+                                                sexid: user.sexid,
+                                                phone: user.phone,
+                                                province: user.province,
+                                                city: user.city,
+                                                district: user.district,
+                                                type: user.type,
+                                                resume: user.exp,
+                                            }
+                                        } else if (id_flag == 'parent') {
+                                            modelName = 'UserParent';
+                                            modelData = {
+                                                name: user.name,
+                                                nikename: user.nickname,
+                                                openid: res.data.openid,
+                                                sex: user.sex,
+                                                sexid: user.sexid,
+                                                phone: user.phone,
+                                                province: user.province,
+                                                city: user.city,
+                                                district: user.district,
+                                                kids: user.kids,
+                                                k_phone: user.k_phone,
+                                            }
+
+                                        }
+                                        console.log("获取到的openid")
+                                        console.log(that.data.openid);
+
+                                        SaveInfo(modelData, modelName);
+                                        var _user = user;
+                                        _user.openid = that.data.openid;
+                                        wx.setStorageSync('user', _user);
+                                        user = wx.getStorageSync('user');
+                                        console.log("用户：", user);
+                                    },
+                                    fail: function() {
+                                        // fail
+                                    },
+                                    complete: function() {
+                                        // complete
+                                    }
+                                })
+                            },
+                            fail: function() {
+                                // fail
+                            },
+                            complete: function() {
+                                // complete
+                            }
+                        })
+
+
+
+
                         console.log("用户信息", user)
                         setTimeout(function() {
                             wx.switchTab({

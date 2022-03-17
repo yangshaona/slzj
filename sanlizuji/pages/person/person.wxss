@@ -228,3 +228,34 @@
     margin: 5%;
     line-height: 2rem;
 }
+
+.bottom-box {
+    /* display: flex; */
+    width: 90%;
+    box-sizing: border-box;
+    /* padding: 5%; */
+    border-radius: 0.8rem;
+    margin: 5%;
+    border: 1px solid #FFF;
+    background-image: linear-gradient(to right, #fafafa, #fafafa);
+}
+
+.info-bar {
+    display: flex;
+    flex-direction: row;
+}
+
+.img-icon {
+    width: 6%;
+    margin: 6% 5% 5% 5%;
+    text-align: center;
+}
+
+.text-bar {
+    margin: 5% 0;
+    text-align: center;
+}
+
+.line {
+    border: 1rpx solid rgb(238, 235, 235);
+}

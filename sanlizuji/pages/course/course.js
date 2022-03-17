@@ -30,7 +30,7 @@ Page({
             },
             {
                 'title': '活动状态',
-                'ctn': ['未开始报名', '已开始报名', '活动未开始', '活动进行中', '活动已结束']
+                'ctn': ['未开始报名', '活动报名中', '活动未开始', '活动进行中', '活动已结束']
             }
         ],
         // 用于判定选中的样式data-id
@@ -69,6 +69,12 @@ Page({
         seacher_word: "",
         filterHide: true,
         reg_idx: null,
+        // 课程是否设置绑定得学校才可以访问
+        showModal: false,
+        pwd: "",
+        courseid: "",
+        isOnly: 0,
+        title: "课程密码校验", //弹窗标题
     },
     // checkTap
     checkTap: function(e) {
@@ -244,10 +250,83 @@ Page({
 
     //跳转到课程详情
     toCourseDetail: function(e) {
+        console.log("课程详情数据");
         console.log(e)
-        var fid = e.currentTarget.dataset.fid
-        wx.navigateTo({
-            url: '../detail/detail?id=' + fid,
+        var fid = e.currentTarget.dataset.fid;
+        var isOnly = e.currentTarget.dataset.isonly;
+        if (isOnly) {
+            this.setData({
+                isOnly: isOnly,
+                courseid: fid,
+                showModal: true,
+            })
+        } else {
+            wx.navigateTo({
+                url: '../detail/detail?id=' + fid,
+            });
+        }
+
+    },
+    // 课程密码校验
+    // 点击确定按钮
+    ok: function() {
+        let that = this;
+        if (that.data.pwd != '') {
+            wx.request({
+                url: app.globalData.url + 'WxCourse/CourseCheck',
+                data: {
+                    courseid: that.data.courseid,
+                    password: that.data.pwd,
+                },
+                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                // header: {}, // 设置请求的 header
+                success: function(res) {
+                    // success
+                    console.log("课程密码校验结果");
+                    console.log(res);
+                    if (res.data.data.msg == '密码正确') {
+                        that.setData({
+                            showModal: false,
+                        })
+                        wx.navigateTo({
+                            url: '../detail/detail?id=' + that.data.courseid,
+                        });
+
+                    } else {
+                        wx.showToast({
+                            title: '课程密码有误', //提示的内容,
+                            duration: 800,
+                        })
+                    }
+                },
+                fail: function() {
+                    // fail
+                },
+                complete: function() {
+                    // complete
+                }
+            })
+
+        } else {
+            wx.showToast({
+                title: '请输入密码',
+                duration: 500,
+            })
+        }
+        that.setData({
+            pwd: "",
+        })
+    },
+    back: function() {
+        this.setData({
+            showModal: false,
+        })
+
+    },
+    InputPwd: function(e) {
+        console.log(e)
+        this.setData({
+            pwd: e.detail.value,
         })
     },
     // 搜索

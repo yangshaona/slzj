@@ -2,19 +2,13 @@
 
 <import src="../template/not_found/not_found.wxml" />
 <view class="top">
-    <!-- <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
-        <block wx:for="{{actImg}}" wx:key="item">
-            <swiper-item class="swiper-item"> -->
-    <image class="actImg" src="{{service_club.pic}}" mode="widthFix"></image>
-    <!-- </swiper-item>
-        </block>
-    </swiper> -->
+    <image class="actImg" src="{{service_club.pic=='https://sanli-tracks.com/sanlia/uploads/temp/'?'/icon/no_pic2.png':service_club.pic}}" mode="widthFix"></image>
 </view>
 
 <!-- 学校名称logo -->
 <view class="infoBox">
     <view class="flexBox">
-        <image class="logo" mode="widthFix" src="{{service_club.pic}}"></image>
+        <image class="logo" src="{{service_club.pic=='https://sanli-tracks.com/sanlia/uploads/temp/'?'/icon/no_pic.png':service_club.pic}}" mode="widthFix"></image>
         <view>{{service_club.club_name}}</view>
     </view>
 </view>

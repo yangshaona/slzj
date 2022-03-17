@@ -1,6 +1,8 @@
 <!--pages/course/course.wxml-->
 <!-- 总页面 -->
 <import src="../template/not_found/not_found.wxml" />
+<import src="../template/course_check/course_check.wxml" />
+
 <!-- 筛选框 -->
 <view class="{{filterHide?'':'zhezhao'}}" bindtap="filterTap">
     <view class="{{filterClass}}">
@@ -62,7 +64,7 @@
 
         <!-- 活动卡片 -->
         <block wx:for="{{activity}}" wx:key="item">
-            <view class="actBox" style="height: {{height*0.35+'px'}};" bindtap="toCourseDetail" data-fid="{{item.id}}">
+            <view class="actBox" style="height: {{height*0.35+'px'}};" bindtap="toCourseDetail" data-fid="{{item.id}}" data-isOnly="{{item.isOnly}}">
                 <!-- 活动缩略图 -->
                 <view class="actImg">
                     <image src="{{item.pic}}" mode="aspectFill"></image>
@@ -85,3 +87,4 @@
     </view>
 
 </view>
+<template is="course_check" data="{{showModal,title}}" wx:if="{{isOnly}}" />

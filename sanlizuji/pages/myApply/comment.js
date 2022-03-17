@@ -47,7 +47,7 @@ Page({
             { 'id': 3, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
             { 'id': 4, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
         ],
-        // 向服务端提交评论
+        // 向服务端提交分数评论
         service_star: '',
         course_star: '',
         food_star: '',
@@ -59,18 +59,27 @@ Page({
         cmt_dorm: '',
         cmt_food: '',
         cmt_teacher: '',
+        orderid: '',
+        // 分数评价
+        rate_data: [],
+        base_club: [],
+        base_club_comment: { 'baseclubid': '', 'baseclub': '', 'score': "", 'comment': "" },
+        comment: [],
     },
 
     // 评价星级
     rateTap: function(e) {
+        console.log(e);
         var that = this;
+
         var name = e.currentTarget.dataset.name;
-        var _name = name + '_rate';
+
         var id = e.currentTarget.dataset.id;
         id = parseInt(id);
         var half = e.currentTarget.dataset.half;
         // 获取当前控制的评价栏目
-        var type = this.data[_name];
+        var type = this.data.rate_data[name];
+        console.log("type:", type)
         console.log(type);
         if (half == 1) {
             type[id]['icon'] = '/icon/star_half_blue.png';
@@ -96,12 +105,26 @@ Page({
             }
         }
         console.log(rate);
+        if (e.currentTarget.dataset.clubid != undefined) {
+            for (let i = 0; i < that.data.comment.length; i++) {
+                if (e.currentTarget.dataset.clubid == that.data.comment[i]['baseclubid']) {
+
+                    that.setData({
+                        ["comment[" + i + "].score"]: rate,
+                    })
+                }
+            }
+        }
+        console.log(that.data.comment)
         var type_name = name + '_star';
         console.log(type_name);
+        var rate_data = `rate_data.${name}`;
+
         that.setData({
-            [_name]: type,
+            [rate_data]: type,
             [type_name]: rate
         })
+        console.log(rate_data)
         console.log(that.data[type_name])
     },
 
@@ -116,6 +139,7 @@ Page({
 
     // 评价检查
     cmt_submit: function(e) {
+        console.log(e);
         let that = this;
         var service = this.data.service_star;
         var course = this.data.course_star;
@@ -127,9 +151,17 @@ Page({
         var cmt_dorm = e.detail.value.dorm;
         var cmt_food = e.detail.value.food;
         var cmt_course = e.detail.value.course;
-        console.log(service);
+
+        for (let i = 0; i < that.data.comment.length; i++) {
+            let base_comment = e.detail.value[that.data.comment[i]['baseclub']];
+            if (base_comment != "") {
+                that.setData({
+                    ["comment[" + i + "].comment"]: base_comment,
+                })
+            }
+        }
         if (service && course && dorm && food && teacher && cmt_service && cmt_course && cmt_dorm && cmt_food && cmt_teacher) {
-            console.log("success");
+
             this.setData({
                 cmt_service: cmt_service,
                 cmt_course: cmt_course,
@@ -137,32 +169,67 @@ Page({
                 cmt_dorm: cmt_dorm,
                 cmt_teacher: cmt_teacher,
                 cmt_display: false
-            })
+            });
             let user = wx.getStorageSync('user');
             wx.request({
-                url: app.globalData.url + 'WxCourse/UpdateStuComment',
-                data: {
-                    courseid: that.data.courseid, //that.data.courseid,
-                    stuid: user.id,
-                    foods: food,
-                    foodm: cmt_food,
-                    services: service,
-                    servicem: cmt_service,
-                    stays: dorm,
-                    staym: cmt_dorm,
-                    courses: course,
-                    coursem: cmt_food,
-                    teachers: teacher,
-                    teacherm: cmt_teacher,
+                    url: app.globalData.url + 'WxCourse/UpdateStuComment',
+                    data: {
+                        orderid: that.data.orderid,
+                        stuid: user.id,
+                        foods: food,
+                        foodm: cmt_food,
+                        services: service,
+                        servicem: cmt_service,
+                        stays: dorm,
+                        staym: cmt_dorm,
+                        courses: course,
+                        coursem: cmt_food,
+                        teachers: teacher,
+                        teacherm: cmt_teacher,
 
+                    },
+                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                    // header: {}, // 设置请求的 header
+                    success: function(res) {
+                        // success
+                        console.log("评价内容");
+                        console.log(res)
+                        if (res.data.data.msg == '更新评价成功') {
+                            wx.showToast({
+                                title: '提交成功',
+                                icon: 'success',
+                                duration: 800
+                            })
+
+                        } else {
+                            wx.showToast({
+                                title: '提交失败',
+                                icon: 'success',
+                                duration: 800
+                            })
+                        }
+                    },
+                    fail: function() {
+                        // fail
+                    },
+                    complete: function() {
+                        // complete
+                    }
+                })
+                // 提交对研学基地的评价
+            wx.request({
+                url: app.globalData.url + 'WxCourse/UpdateBaseClubComment',
+                data: {
+                    orderid: that.data.orderid,
+                    comment: that.data.comment,
                 },
                 method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
                 // header: {}, // 设置请求的 header
                 success: function(res) {
                     // success
-                    console.log("评价内容");
-                    console.log(res)
-                    if (res.data.data.msg == '更新评价成功') {
+                    console.log("上传研学基地评价");
+                    console.log(res);
+                    if (res.data.data.msg != '更新评价成功') {
                         wx.showToast({
                             title: '提交成功',
                             icon: 'success',
@@ -176,6 +243,7 @@ Page({
                             duration: 800
                         })
                     }
+
                 },
                 fail: function() {
                     // fail
@@ -184,7 +252,6 @@ Page({
                     // complete
                 }
             })
-
             setTimeout(function() {
                 wx.navigateBack({
                     delta: 0,
@@ -199,21 +266,81 @@ Page({
             })
         }
     },
+    Init: function() {
+        console.log("评价信息");
+        let data = ['service', 'course', 'food', 'dorm', 'teacher'],
+            rate_data = {};
+        for (let j = 0; j < this.data.base_club.length; j++) {
+            data.push(this.data.base_club[j].club_name);
+        }
+        for (let i = 0; i < data.length; i++) {
 
+            rate_data[`${data[i]}`] = [{ 'id': 0, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+                { 'id': 1, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+                { 'id': 2, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+                { 'id': 3, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+                { 'id': 4, 'rate': 0, 'icon': '/icon/star_ept_blue.png' },
+            ];
+        }
+        console.log(rate_data);
+
+        this.setData({
+            rate_data: rate_data,
+        })
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-
         let that = this;
         console.log("评价")
         console.log(options)
         that.setData({
-            courseid: options.id
+            orderid: options.orderid
         })
-
+        that.GetBaseClub();
+        that.Init();
     },
 
+    // 获取研学基地
+    GetBaseClub: function(options) {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxCourse/GetBaseClub',
+            data: {
+                orderid: that.options.orderid,
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("研学基地信息");
+                console.log(res);
+                if (res.data.data.length > 0) {
+                    that.setData({
+                        base_club: res.data.data
+                    });
+                    for (var item of res.data.data) {
+                        console.log("基地");
+                        console.log(item);
+                        let base_club_comment = { 'baseclubid': '', 'baseclub': '', 'score': "", 'comment': "" };
+                        base_club_comment['baseclubid'] = item.id;
+                        base_club_comment['baseclub'] = item.club_name;
+                        that.data.comment.push(base_club_comment);
+
+                    }
+                    that.Init();
+                    console.log(that.data.comment);
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+    },
     /**
      * 生命周期函数--监听页面初次渲染完成
      */

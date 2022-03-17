@@ -36,6 +36,7 @@ Page({
         // 剩余时间
         remain_time: 0,
         countDown: 0,
+        coupons: 0,
     },
 
     getTime: async function(e) {
@@ -133,11 +134,12 @@ Page({
      */
     onLoad: function(options) {
         // 获取订单时间
-        this.getTime();
-        console.log("确认支付11");
+        // this.getTime();
+        console.log("确认支付");
         console.log(options);
         this.setData({
             price: options.price,
+            coupons: options.coupons,
         })
         this.getCourse(options.orderid);
         user = wx.getStorageSync('user');
@@ -167,7 +169,7 @@ Page({
                 that.setData({
                     listData: listData,
                 })
-                if (that.data.order.payState != '支付成功') {
+                if (that.data.order.status == 2) {
                     that.setCountDown();
                     that.setTimeCount();
                 }
@@ -186,12 +188,15 @@ Page({
         console.log("正在获取MD5和account");
         let that = this;
         console.log(that.data.order)
-
+        let price = that.data.price;
+        if (that.options.key != "") {
+            price = (that.data.price - that.options.coupons).toFixed(2);
+        }
         wx.request({
             url: app.globalData.url + "WxSign/tgPay",
             data: {
                 lowOrderId: that.data.order.id, //后台雪花算法生成的订单号
-                payMoney: that.data.price, //支付金额
+                payMoney: price, //支付金额
                 body: that.data.order.coursename, //商品描述
                 notifyUrl: app.globalData.url + "WxSign/AccepttgPay", //回调地址
                 isMinipg: 1, //是否是小程序
@@ -217,6 +222,7 @@ Page({
                                 lowOrderId: that.options.orderid,
                                    //后台雪花算法生成的订单号
                                  status: "SUCCESS",
+                                key: that.options.key,
                             },
                                 method: 'GET',
                                 success: function(res) {  
@@ -332,36 +338,99 @@ Page({
         })
         setTimeout(this.setTimeCount, 1000);
     },
+    setTime: async function(e, callback) {
+        let listData = this.data.order;
+        // 计时结束回调函数
+        if (typeof(callback) === 'function') {
+            // 后台销毁订单
+            UpdateOrder(listData.id, '支付失败', 1);
+            return -1;
+        }
+        // 每过1000ms计算一次
+        const that = this;
+        let st = setInterval(async function() {
+            let now = +new Date();
+            let duration = (that.data.endTime - now) / 1000;
+            if (duration <= 0) {
+                // 倒计时结束，回调函数
+                clearInterval(st);
+                return await that.setTime(0, function() {
+                    console.log('Time out!');
+                })
+            }
+            let time = parseInt(duration / 60) + '分' + parseInt(duration % 60) + '秒';
+            that.setData({
+                time: time,
+            })
+        }, 1000)
+    },
+
     /**
      * 倒计时
      */
-    setCountDown: function() {
+    setCountDown: async function(e, callback) {
         let time = 1000,
             that = this;
         let listData = this.data.order;
-        var now = new Date;
-        var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-        that.setData({
-            now: date
-        })
-        var payendTime = new Date(listData.payendTime);
-        var remain_time = payendTime - now;
-        let formatTime = this.getFormat(remain_time);
-        remain_time -= time;
-        var countDown = `${formatTime.mm}:${formatTime.ss}`;
-        that.setData({
-            listData: listData,
-            countDown: countDown,
-            remain_time: remain_time,
-        })
-        if (remain_time > 0 && listData.status == 2 && listData.payState == '') {
-            setTimeout(this.setCountDown, time);
-        } else if (remain_time <= 0 && listData.status == 2 && listData.payState != '支付成功') {
+        // var now = new Date;
+        // var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+        // that.setData({
+        //     now: date
+        // })
+        // var payendTime = new Date(listData.payendTime);
+        // var remain_time = payendTime - now;
+        // let formatTime = this.getFormat(remain_time);
+        // remain_time -= time;
+        // var countDown = `${formatTime.mm}:${formatTime.ss}`;
+        // that.setData({
+        //     listData: listData,
+        //     countDown: countDown,
+        //     remain_time: remain_time,
+        // })
+        // if (remain_time > 0 && listData.status == 2 && listData.payState == '') {
+        //     setTimeout(this.setCountDown, time);
+        // } else if (remain_time <= 0 && listData.status == 2 && listData.payState != '支付成功') {
+        //     UpdateOrder(listData.id, '支付失败', 1);
+        //     that.getCourse(listData.id);
+        // } else if (remain_time > 0 && listData.payState == "支付成功") {
+        //     that.getCourse(listData.id);
+        // }
+
+
+        // 计时结束回调函数
+        if (typeof(callback) === 'function') {
+            // 后台销毁订单
+            console.log("计时结束");
             UpdateOrder(listData.id, '支付失败', 1);
-            that.getCourse(listData.id);
-        } else if (remain_time > 0 && listData.payState == "支付成功") {
-            that.getCourse(listData.id);
+            return -1;
         }
+        // 每过1000ms计算一次
+        // const that = this;
+        let st = setInterval(async function() {
+            // let now = +new Date();
+            var now = new Date;
+            var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+            that.setData({
+                now: date
+            })
+            var payendTime = new Date(listData.payendTime);
+            let duration = payendTime - now;
+            let formatTime = that.getFormat(duration);
+            var countDown = `${formatTime.mm}:${formatTime.ss}`;
+            if (duration <= 0) {
+                // 倒计时结束，回调函数
+                clearInterval(st);
+                return await that.setTime(0, function() {
+                    console.log('Time out!');
+                })
+            }
+            let time = parseInt(duration / 60) + '分' + parseInt(duration % 60) + '秒';
+            that.setData({
+                remain_time: duration,
+                countDown: countDown,
+            })
+        }, 1000)
+
     },
 
     /**

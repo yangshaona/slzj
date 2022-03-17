@@ -6,7 +6,7 @@
 </view>
 <block wx:if="{{!cangetUserInfo}}">
     <view class="primary">
-        <button class="submit" bindtap="getNickName">注册</button>
+        <!-- <button class="submit" bindtap="getNickName">注册</button> -->
         <button class="submit" bindtap="login">登录</button>
     </view>
 </block>

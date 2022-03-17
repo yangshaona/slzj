@@ -1,10 +1,8 @@
 /* pages/register/register_stu.wxss */
 
-
-/* 未获取用户昵称时 */
-
 @import '../template/agree_protocol/agree_protocol.wxss';
 @import '../dev/cut.wxss';
+@import '../template/course_check/course_check.wxss';
 view {
     position: relative;
 }

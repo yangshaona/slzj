@@ -1,11 +1,12 @@
 <!--pages/register/register_stu.wxml-->
+<import src="../template/course_check/course_check.wxml" />
 
 <block wx:if="{{showCut}}">
-    <import src="../dev/we-cropper.wxml"/>
+    <import src="../dev/we-cropper.wxml" />
 
     <view class="cropper-wrapper">
-    <template is="we-cropper" data="{{...cropperOpt}}"/>
-    <!-- <view class="cropper-buttons" style="color: {{cropperOpt.boundStyle.color}}">
+        <template is="we-cropper" data="{{...cropperOpt}}" />
+        <!-- <view class="cropper-buttons" style="color: {{cropperOpt.boundStyle.color}}">
         <view class="upload btn" bindtap="uploadTap">
         上传图片
         </view>
@@ -13,59 +14,59 @@
         生成图片
         </view>
     </view> -->
-    <view class="button-box" style="top: {{windowHeight}}px;">
-        <button bindtap="uploadTap" class="btn-left">重新选择</button>
-        <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
-    </view>
+        <view class="button-box" style="top: {{windowHeight}}px;">
+            <button bindtap="uploadTap" class="btn-left">重新选择</button>
+            <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
+        </view>
     </view>
 </block>
 
 <block wx:else>
-<view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
-    <include src="../template/agree_protocol/agree_protocol"></include>
-</view>
-
-<!-- 注册框 -->
-<block wx:if="{{!cangetUserInfo}}">
-    <view class="primary">
-        <button class="submit" bindtap="getNickName">注册</button>
-        <button class="submit" bindtap="login">登录</button>
-        <view class="change" bindtap="changeToTeacher">切换教师端</view>
-        <view class="change" bindtap="changeToParent">切换家长端</view>
+    <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
+        <include src="../template/agree_protocol/agree_protocol"></include>
     </view>
-</block>
-<block wx:if="{{cangetUserInfo}}">
-    <view class="ctnBox">
-        <form bindsubmit="submit">
-            <view>
-                <view class="desc">姓名
-                    <image mode="widthFix" src="/icon/account.png"></image>
-                </view>
-                <input type="text" name="name" id="name" placeholder="姓名" bindblur="InputName" />
-            </view>
-            <view>
-                <view class="desc">身份证号
-                    <image mode="widthFix" src="/icon/id.png"></image>
-                </view>
-                <input type="idcard" name="idnum" id="idNum" placeholder="身份证号" maxlength="18" bindblur="InputIdNum" />
-            </view>
-            <view>
-                <view class="desc">生日
-                    <image mode="widthFix" src="/icon/birth.png"></image>
-                </view>
-                <input type="text" name="birth" id="birth" placeholder="生日" value="{{stu_info.birthday}}" disabled="true" />
 
-            </view>
-            <view>
-                <view class="desc">性别
-                    <image mode="widthFix" src="/icon/sex.png"></image>
+    <!-- 注册框 -->
+    <block wx:if="{{!cangetUserInfo}}">
+        <view class="primary">
+            <button class="submit" bindtap="getNickName">注册</button>
+            <button class="submit" bindtap="login">登录</button>
+            <view class="change" bindtap="changeToTeacher" id="teacher">切换教师端</view>
+            <view class="change" bindtap="changeToParent" id="parent">切换家长端</view>
+        </view>
+    </block>
+    <block wx:if="{{cangetUserInfo}}">
+        <view class="ctnBox">
+            <form bindsubmit="submit">
+                <view>
+                    <view class="desc">姓名
+                        <image mode="widthFix" src="/icon/account.png"></image>
+                    </view>
+                    <input type="text" name="name" id="name" placeholder="姓名" bindblur="InputName" />
                 </view>
-                <radio-group name="sex" id="sex" class="box" style="display: flex;">
-                    <label style="width: 50%;display: block;"><radio disabled='true' value="男"  checked="{{sex=='男'?true:false}}">男</radio></label>
-                    <label style="width: 50%;display: block;"><radio disabled='true'  value="女" checked="{{sex=='女'?true:false}}">女</radio></label>
-                </radio-group>
-            </view>
-            <!-- <view>
+                <view>
+                    <view class="desc">身份证号
+                        <image mode="widthFix" src="/icon/id.png"></image>
+                    </view>
+                    <input type="idcard" name="idnum" id="idNum" placeholder="身份证号" maxlength="18" bindblur="InputIdNum" />
+                </view>
+                <view>
+                    <view class="desc">生日
+                        <image mode="widthFix" src="/icon/birth.png"></image>
+                    </view>
+                    <input type="text" name="birth" id="birth" placeholder="生日" value="{{stu_info.birthday}}" disabled="true" />
+
+                </view>
+                <view>
+                    <view class="desc">性别
+                        <image mode="widthFix" src="/icon/sex.png"></image>
+                    </view>
+                    <radio-group name="sex" id="sex" class="box" style="display: flex;">
+                        <label style="width: 50%;display: block;"><radio disabled='true' value="男"  checked="{{sex=='男'?true:false}}">男</radio></label>
+                        <label style="width: 50%;display: block;"><radio disabled='true'  value="女" checked="{{sex=='女'?true:false}}">女</radio></label>
+                    </radio-group>
+                </view>
+                <!-- <view>
                 <view class="desc">在读学历
                     <image mode="widthFix" src="/icon/edu.png"></image>
                 </view>
@@ -73,23 +74,23 @@
                     {{edu_idx == null ? "请选择" : edu[edu_idx]}}
                 </picker>
             </view> -->
-            <view>
-                <view class="desc">昵称(微信授权获取)</view>
-                <input type="text" id="nickname" name="nickname" disabled="true" value="{{nickName}}" />
-            </view>
-            <view>
-                <view class="desc">手机号
-                    <image mode="widthFix" src="/icon/phone.png"></image>
+                <view>
+                    <view class="desc">昵称(微信授权获取)</view>
+                    <input type="text" id="nickname" name="nickname" disabled="true" value="{{nickName}}" />
                 </view>
-                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
-            </view>
-            <!-- <view>
+                <view>
+                    <view class="desc">手机号
+                        <image mode="widthFix" src="/icon/phone.png"></image>
+                    </view>
+                    <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
+                </view>
+                <!-- <view>
                 <view class="desc">学校名称
                     <image mode="widthFix" src="/icon/school.png"></image>
                 </view>
                 <input type="text" name="schoolname" id="schoolname" placeholder="输入学校全称" />
             </view> -->
-            <!-- <view>
+                <!-- <view>
                 <view class="desc">年级
                     <image mode="widthFix" src="/icon/grade.png"></image>
                 </view>
@@ -102,37 +103,39 @@
                 <input name="class" id="class" type="number" maxlength="5" placeholder="输入班级" />
             </view> -->
 
-            <view>
-                <view class="desc">地区
-                    <image mode="widthFix" src="/icon/address.png"></image>
+                <view>
+                    <view class="desc">地区
+                        <image mode="widthFix" src="/icon/address.png"></image>
+                    </view>
+                    <picker mode="multiSelector" name="region" id="region" value="{{multiIndex}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
+                        {{reg_idx == null ? "请选择" : reg}}
+                    </picker>
                 </view>
-                <picker mode="multiSelector" name="region" id="region" value="{{multiIndex}}" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
-                    {{reg_idx == null ? "请选择" : reg}}
-                </picker>
-            </view>
-            <view>
-                <view class="desc">信息备注
-                    <image mode="widthFix" src="/icon/remark.png"></image>
+                <view>
+                    <view class="desc">信息备注
+                        <image mode="widthFix" src="/icon/remark.png"></image>
+                    </view>
+                    <input type="text" name="remark" id="remark" placeholder="信息备注" />
                 </view>
-                <input type="text" name="remark" id="remark" placeholder="信息备注" />
-            </view>
 
-            <!-- 获取用户头像 -->
-            <view style="height: auto;">
-                <view class="desc">实名头像</view>
-                <block wx:if="{{avator}}">
-                    <image style="display: block; position: relative; width: 30%; height: auto;" mode="widthFix" src="{{avator}}" bindtap="chooseImg"></image>
-                </block>
-                <block wx:else>
-                    <button class="chooseImg" bindtap="chooseImg">选择文件</button>
-                </block>
-                <input type="text" name="avator" id="avator" value="{{avator}}" disabled="true" style="display:none;" />
-            </view>
-            <!-- <image mode="widthFix" src="{{avator}}"></image> -->
-            <!-- 提交检查/注册 -->
-            <button form-type="submit" class="submit">注册</button>
-        </form>
-    </view>
+                <!-- 获取用户头像 -->
+                <view style="height: auto;">
+                    <view class="desc">实名头像</view>
+                    <block wx:if="{{avator}}">
+                        <image style="display: block; position: relative; width: 30%; height: auto;" mode="widthFix" src="{{avator}}" bindtap="chooseImg"></image>
+                    </block>
+                    <block wx:else>
+                        <button class="chooseImg" bindtap="chooseImg">选择文件</button>
+                    </block>
+                    <input type="text" name="avator" id="avator" value="{{avator}}" disabled="true" style="display:none;" />
+                </view>
+                <!-- <image mode="widthFix" src="{{avator}}"></image> -->
+                <!-- 提交检查/注册 -->
+                <button form-type="submit" class="submit">注册</button>
+            </form>
+        </view>
+    </block>
+    <!-- <view class=""> </view> -->
 </block>
-<!-- <view class=""> </view> -->
-</block>
+
+<template is="course_check" data="{{showModal,title}}" />

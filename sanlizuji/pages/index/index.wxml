@@ -1,4 +1,6 @@
 <!--pages/index/index.wxml-->
+<import src="../template/course_check/course_check.wxml" />
+
 <view class="top" style="padding-top: {{statusHeight+16}}px;">
     首页
 </view>
@@ -36,7 +38,7 @@
         </view>
         <!-- 活动卡片 -->
         <block wx:for="{{activity}}" wx:key="item" data-id="{{index}}">
-            <view class="actBox" bindtap='goodsDetails' data-id='{{item.id}}'>
+            <view class="actBox" bindtap='goodsDetails' data-id='{{item.id}}' data-isOnly="{{item.isOnly}}">
                 <!-- 活动缩略图 -->
                 <view class="actImg">
                     <image src="{{item.PicUrl}}" mode="aspectFill"></image>
@@ -66,7 +68,7 @@
         </view>
         <!-- 活动卡片 -->
         <block wx:for="{{history}}" wx:key="item" data-id="{{index}}">
-            <view class="actBox" bindtap='goodsDetails' data-id='{{item.id}}'>
+            <view class="actBox" bindtap='goodsDetails' data-id='{{item.id}}' data-isOnly="{{item.isOnly}}">
                 <!-- 活动缩略图 -->
                 <view class="actImg">
                     <image src="{{item.PicUrl}}" mode="aspectFill"></image>
@@ -90,3 +92,4 @@
         </block>
     </view>
 </view>
+<template is="course_check" data="{{showModal}}" wx:if="{{isOnly}}" />

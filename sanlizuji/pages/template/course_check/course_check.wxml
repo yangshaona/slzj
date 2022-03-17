@@ -1,0 +1,21 @@
+<template name="course_check">
+<view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
+</view>
+<view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
+    <!-- 报名信息的填写 -->
+    <view class="info">
+
+        <view class='change-name'>
+            <text class=''>{{title}}</text>
+        </view>
+        <view class='input-info'>
+            <view class='input-view'>密码</view>
+            <input type='text' class="input-name" bindinput='InputPwd' placeholder='请输入课程密码'></input>
+        </view>
+    </view>
+    <view class='modal-btn-wrapper'>
+        <view class='cancel-btn' style='color:rgba(7,17,27,0.6)' bindtap='back'>取消</view>
+        <view class='confirm-btn' style='color:#1677ff;' bindtap='ok'>确定</view>
+    </view>
+
+</view></template>

@@ -22,7 +22,9 @@ Page({
         activity: [],
         activity2: {},
         id_flag: "",
-        user: user
+        user: user,
+
+        kids_name: "",
     },
     // 跳转到报名
     //前往报名
@@ -37,9 +39,10 @@ Page({
         var courseid = e.currentTarget.dataset.courseid;
         var teacherid = e.currentTarget.dataset.teacherid;
         if (courseid == '' || teacherid == '') {
-            wx.showModal({
-                title: '未分配导师',
-                showCancel: false,
+            wx.showToast({
+                title: '还未分配导师',
+                icon: "none",
+                duration: 800,
             })
         } else {
             wx.navigateTo({
@@ -207,6 +210,15 @@ Page({
         })
         if (id_flag == "student") that.GetStuActivity();
         else if (id_flag == "parent") that.GetKidsActivity();
+        // if (user != null && user != '') {
+
+        //     if (id_flag == 'parent') {
+        //         console.log("家长身份");
+        //         console.log(that.data.id_flag);
+        //         this.getKidsList()
+        //     }
+
+        // }
     },
 
     /**
@@ -242,5 +254,68 @@ Page({
      */
     onShareAppMessage: function() {
 
-    }
+    },
+    // 选中孩子
+    select: function(e) {
+        console.log("选中的值是");
+        console.log(e.detail);
+        var type = e.detail.value
+        if (e.detail.value == "请选择") {
+            type = "";
+        }
+
+        for (var i = 1; i < this.data.kids_name.length; i++) {
+            var tmp = "kids_name[" + i + "].isActive"
+            this.setData({
+                [tmp]: false,
+            })
+            if (e.detail.id == this.data.kids_name[i].id) {
+                this.setData({
+                    [tmp]: true
+                })
+            }
+        }
+        if (e.detail.kid_id == 0) {
+            this.getApply(user.id, 'parent', 'parent');
+
+        } else {
+            this.getApply(e.detail.kid_id, 'student', 'student');
+
+        }
+    },
+    // 获取孩子信息
+    getKidsList: function() {
+        let that = this;
+        wx.request({
+            url: app.globalData.url + 'WxUser/GetKidsList',
+            data: {
+                id: user.id
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("孩子信息111");
+                console.log(res);
+                if (res.data.data.length > 0) {
+                    var kids = [];
+                    kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
+                    for (var i = 0; i < res.data.data.length; i++) {
+                        var kid = { "id": "0" + (i + 2), "isActive": false, "value": res.data.data[i].name, "kid_id": res.data.data[i].id };
+                        kids.push(kid);
+                    }
+                    that.setData({
+                        kids_name: kids
+                    })
+                    console.log(that.data.kids_name);
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+    },
 })

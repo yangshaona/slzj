@@ -1,6 +1,6 @@
 // var host = "http://localhost/gitSanli/sanli/index.php?r="
 // var host = "https://shenhailao.com/hsreport/index.php?r="
-var host = "https://sanli-tracks.com/sanli/index.php?r="
+var host = "https://sanli-tracks.com/sanlia/index.php?r="
     // 
 let config = {
     host,

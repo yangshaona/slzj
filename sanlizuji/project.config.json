@@ -1,341 +1,341 @@
 {
-  "description": "项目配置文件",
-  "packOptions": {
-    "ignore": []
-  },
-  "setting": {
-    "urlCheck": false,
-    "es6": true,
-    "enhance": true,
-    "postcss": true,
-    "preloadBackgroundData": false,
-    "minified": true,
-    "newFeature": true,
-    "coverView": true,
-    "nodeModules": false,
-    "autoAudits": false,
-    "showShadowRootInWxmlPanel": true,
-    "scopeDataCheck": false,
-    "uglifyFileName": false,
-    "checkInvalidKey": true,
-    "checkSiteMap": false,
-    "uploadWithSourceMap": true,
-    "compileHotReLoad": false,
-    "lazyloadPlaceholderEnable": false,
-    "useMultiFrameRuntime": true,
-    "useApiHook": true,
-    "useApiHostProcess": true,
-    "babelSetting": {
-      "ignore": [],
-      "disablePlugins": [],
-      "outputPath": ""
-    },
-    "enableEngineNative": false,
-    "useIsolateContext": true,
-    "userConfirmedBundleSwitch": false,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
-    "minifyWXSS": true,
-    "disableUseStrict": false,
-    "showES6CompileOption": false,
-    "useCompilerPlugins": false,
-    "minifyWXML": true
-  },
-  "compileType": "miniprogram",
-  "libVersion": "2.22.1",
-  "appid": "wx4fdb5515fe59ddab",
-  "projectname": "%E4%B8%89%E7%AB%8B%E8%B6%B3%E8%BF%B9",
-  "debugOptions": {
-    "hidedInDevtools": []
-  },
-  "isGameTourist": false,
-  "simulatorType": "wechat",
-  "simulatorPluginLibVersion": {},
-  "condition": {
-    "search": {
-      "list": []
-    },
-    "conversation": {
-      "list": []
-    },
-    "plugin": {
-      "list": []
-    },
-    "game": {
-      "list": []
-    },
-    "gamePlugin": {
-      "list": []
-    },
-    "miniprogram": {
-      "list": [
-        {
-          "id": 0,
-          "name": "pages/index1/index",
-          "pathName": "pages/index1/index",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": 6,
-          "name": "pages/register/register_stu",
-          "pathName": "pages/register/register_stu",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/course/course",
-          "pathName": "pages/course/course",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/person/person",
-          "pathName": "pages/person/person",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/mycourse/mycourse_stu",
-          "pathName": "pages/mycourse/mycourse_stu",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/login/login",
-          "pathName": "pages/login/login",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/register/register_teacher",
-          "pathName": "pages/register/register_teacher",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": 7,
-          "name": "pages/task/task",
-          "pathName": "pages/task/task",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": 8,
-          "name": "pages/myApply/myApply",
-          "pathName": "pages/myApply/myApply",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/mycourse/mycourse_stu",
-          "pathName": "pages/mycourse/mycourse_stu",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": 10,
-          "name": "pages/doing/doing_parent",
-          "pathName": "pages/doing/doing_parent",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/journey/journey",
-          "pathName": "pages/journey/journey",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/person/parent",
-          "pathName": "pages/person/parent",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/person/teacher",
-          "pathName": "pages/person/teacher",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/person/teacher",
-          "pathName": "pages/person/teacher",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/willDo/willDo",
-          "pathName": "pages/willDo/willDo",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/doing/doing_tc",
-          "pathName": "pages/doing/doing_tc",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": 17,
-          "name": "pages/doing/doing_stuprt",
-          "pathName": "pages/doing/doing_stuprt",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/login/login",
-          "pathName": "pages/login/login",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/test/test",
-          "pathName": "pages/test/test",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/detail/teacher",
-          "pathName": "pages/detail/teacher",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/mycourse/mycourse_stu",
-          "pathName": "pages/mycourse/mycourse_stu",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": 22,
-          "name": "pages/person_info/teacher_info",
-          "pathName": "pages/person_info/teacher_info",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/person_info/stu_info",
-          "pathName": "pages/person_info/stu_info",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": 24,
-          "name": "pages/pay/confirm",
-          "pathName": "pages/pay/confirm",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/myApply/myApply",
-          "pathName": "pages/myApply/myApply",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/doing/doing_tc",
-          "pathName": "pages/doing/doing_tc",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/course2/course",
-          "pathName": "pages/course2/course",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/news/news",
-          "pathName": "pages/news/news",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/login/login",
-          "pathName": "pages/login/login",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/test/test",
-          "pathName": "pages/test/test",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/willDo/willDo",
-          "pathName": "pages/willDo/willDo",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/protocol/protocol",
-          "pathName": "pages/protocol/protocol",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/privacy_policy/privacy_policy",
-          "pathName": "pages/privacy_policy/privacy_policy",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/teaApply/teaApply",
-          "pathName": "pages/teaApply/teaApply",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/pay/pay",
-          "pathName": "pages/pay/pay",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/myApply/comment",
-          "pathName": "pages/myApply/comment",
-          "query": "",
-          "scene": null
-        },
-        {
-          "id": -1,
-          "name": "pages/dev/dev",
-          "pathName": "pages/dev/dev",
-          "query": "",
-          "scene": null
-        }
-      ]
-    }
-  }
+	"description": "项目配置文件",
+	"packOptions": {
+		"ignore": []
+	},
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"enhance": true,
+		"postcss": true,
+		"preloadBackgroundData": false,
+		"minified": true,
+		"newFeature": true,
+		"coverView": true,
+		"nodeModules": false,
+		"autoAudits": false,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"uglifyFileName": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": false,
+		"uploadWithSourceMap": true,
+		"compileHotReLoad": false,
+		"lazyloadPlaceholderEnable": false,
+		"useMultiFrameRuntime": true,
+		"useApiHook": true,
+		"useApiHostProcess": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"enableEngineNative": false,
+		"useIsolateContext": true,
+		"userConfirmedBundleSwitch": false,
+		"packNpmManually": false,
+		"packNpmRelationList": [],
+		"minifyWXSS": true,
+		"disableUseStrict": false,
+		"showES6CompileOption": false,
+		"useCompilerPlugins": false,
+		"minifyWXML": true
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.22.1",
+	"appid": "wx4fdb5515fe59ddab",
+	"projectname": "%E4%B8%89%E7%AB%8B%E8%B6%B3%E8%BF%B9",
+	"debugOptions": {
+		"hidedInDevtools": []
+	},
+	"isGameTourist": false,
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"list": []
+		},
+		"conversation": {
+			"list": []
+		},
+		"plugin": {
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"gamePlugin": {
+			"list": []
+		},
+		"miniprogram": {
+			"list": [
+				{
+					"id": 0,
+					"name": "pages/index/index",
+					"pathName": "pages/index/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 6,
+					"name": "pages/register/register_stu",
+					"pathName": "pages/register/register_stu",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/course/course",
+					"pathName": "pages/course/course",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/person/person",
+					"pathName": "pages/person/person",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/mycourse/mycourse_stu",
+					"pathName": "pages/mycourse/mycourse_stu",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/login/login",
+					"pathName": "pages/login/login",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/register/register_teacher",
+					"pathName": "pages/register/register_teacher",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 7,
+					"name": "pages/task/task",
+					"pathName": "pages/task/task",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 8,
+					"name": "pages/myApply/myApply",
+					"pathName": "pages/myApply/myApply",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/mycourse/mycourse_stu",
+					"pathName": "pages/mycourse/mycourse_stu",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 10,
+					"name": "pages/doing/doing_parent",
+					"pathName": "pages/doing/doing_parent",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/journey/journey",
+					"pathName": "pages/journey/journey",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/person/parent",
+					"pathName": "pages/person/parent",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/person/teacher",
+					"pathName": "pages/person/teacher",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/person/teacher",
+					"pathName": "pages/person/teacher",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/willDo/willDo",
+					"pathName": "pages/willDo/willDo",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/doing/doing_tc",
+					"pathName": "pages/doing/doing_tc",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 17,
+					"name": "pages/doing/doing_stuprt",
+					"pathName": "pages/doing/doing_stuprt",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/login/login",
+					"pathName": "pages/login/login",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/test/test",
+					"pathName": "pages/test/test",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/detail/teacher",
+					"pathName": "pages/detail/teacher",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/mycourse/mycourse_stu",
+					"pathName": "pages/mycourse/mycourse_stu",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 22,
+					"name": "pages/person_info/teacher_info",
+					"pathName": "pages/person_info/teacher_info",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/person_info/stu_info",
+					"pathName": "pages/person_info/stu_info",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 24,
+					"name": "pages/pay/confirm",
+					"pathName": "pages/pay/confirm",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myApply/myApply",
+					"pathName": "pages/myApply/myApply",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/doing/doing_tc",
+					"pathName": "pages/doing/doing_tc",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/course2/course",
+					"pathName": "pages/course2/course",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/news/news",
+					"pathName": "pages/news/news",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/login/login",
+					"pathName": "pages/login/login",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/test/test",
+					"pathName": "pages/test/test",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/willDo/willDo",
+					"pathName": "pages/willDo/willDo",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/protocol/protocol",
+					"pathName": "pages/protocol/protocol",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/privacy_policy/privacy_policy",
+					"pathName": "pages/privacy_policy/privacy_policy",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/teaApply/teaApply",
+					"pathName": "pages/teaApply/teaApply",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/pay/pay",
+					"pathName": "pages/pay/pay",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myApply/comment",
+					"pathName": "pages/myApply/comment",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/dev/dev",
+					"pathName": "pages/dev/dev",
+					"query": "",
+					"scene": null
+				}
+			]
+		}
+	}
 }

@@ -18,6 +18,10 @@
         </block>
         <view class="total" id="total" wx:else>
             <!-- 全部活动 -->
+            <!-- <view wx:if="{{id_flag=='parent'}}" class="select-wrap">
+                <view class="news-type">选择孩子：</view>
+                <select id="select" prop-array="{{kids_name}}" bind:select="select"></select>
+            </view> -->
             <view class="actTop">
                 <block wx:for="{{activity}}">
 

@@ -217,3 +217,35 @@
     margin-left: 5%;
     right: 5%;
 }
+
+.term {
+    border-radius: 20rpx;
+}
+
+.cancel-term {
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 2%;
+}
+
+.term-text {
+    font-size: 1rem;
+    background-color: rgb(230, 253, 235);
+    border-radius: 20rpx;
+    margin: 3% 10%;
+    padding: 2%;
+    align-items: center;
+}
+
+.confirm {
+    flex: 1;
+    border-radius: 30rpx;
+    margin: 5% 4%;
+    color: #fff;
+    background-color: rgb(3, 193, 95);
+}
+
+.button {
+    display: flex;
+    justify-content: space-between;
+}
