@@ -6,7 +6,7 @@
 </view>
 <block wx:if="{{!cangetUserInfo}}">
     <view class="primary">
-        <!-- <button class="submit" bindtap="getNickName">注册</button> -->
+        <button wx:if="{{is_show}}" class="submit" bindtap="getNickName">注册</button>
         <button class="submit" bindtap="login">登录</button>
     </view>
 </block>
@@ -46,12 +46,6 @@
                     {{reg_idx == null ? "请选择" : reg}}
                 </picker>
             </view>
-            <!-- <view>
-                <view class="desc">绑定孩子
-                </view>
-                <button class="bind">绑定</button>
-            </view> -->
-            <!-- 提交检查/注册 -->
             <button form-type="submit" class="submit">注册</button>
         </form>
     </view>

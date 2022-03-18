@@ -8,6 +8,7 @@ Page({
      * 页面的初始数据
      */
     data: {
+        id_flag: "",
         width: app.globalData.width,
         // 今日日期
         date: "",
@@ -254,7 +255,8 @@ Page({
         console.log(e)
         var fid = e.currentTarget.dataset.fid;
         var isOnly = e.currentTarget.dataset.isonly;
-        if (isOnly) {
+        console.log(this.data.id_flag);
+        if (isOnly && this.data.id_flag != 'teacher') {
             this.setData({
                 isOnly: isOnly,
                 courseid: fid,
@@ -448,6 +450,10 @@ Page({
         this.getSearchData();
         app.globalData.viewMore = '';
         this.InitArea();
+        let id_flag = wx.getStorageSync('id_flag');
+        this.setData({
+            id_flag: id_flag,
+        })
 
     },
 

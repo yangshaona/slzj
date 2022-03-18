@@ -195,7 +195,8 @@ Page({
         input_class: "", //获取报名时的输入的班级信息
         actionSheetHidden: true,
         actionSheetItems: [
-            '活动开始前1天收取退款订单总额的70%', '活动开始前2天收取退款订单总额的50%',
+            '活动开始前1天收取退款订单总额的70%',
+            '活动开始前2天收取退款订单总额的50%',
             '活动开始前3天收取退款订单总额的0%'
         ],
     },
@@ -342,8 +343,8 @@ Page({
 
                 let service_club = [];
                 that.getClub(res.data.data[0].serviceClub, service_club);
-                // service_club.push(tmp);
-                that.getClub(res.data.data[0].club_id, service_club);
+
+                if (res.data.data[0].club_id != '') that.getClub(res.data.data[0].club_id, service_club);
 
             }
         })
@@ -585,12 +586,13 @@ Page({
         })
     },
     back: function() {
+        let that = this;
         wx.showModal({
             title: "是否取消报名",
             success(res) {
                 if (res.cancel) {
 
-                } else if (res.confirm) {
+                } else {
                     that.setData({
                         showModal: false,
                     })

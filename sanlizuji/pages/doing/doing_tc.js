@@ -211,19 +211,6 @@ Page({
 
     },
 
-    toSetting() {
-        let self = this
-        console.log('11111111')
-        wx.openSetting({
-            success(res) {
-                console.log(res)
-                if (res.authSetting["scope.userLocation"]) {
-                    // res.authSetting["scope.userLocation"]为trueb表示用户已同意获得定位信息，此时调用getlocation可以拿到信息
-                    self.authorization()
-                }
-            }
-        })
-    },
 
     // 获取定位
     getLocation: function(e) {
@@ -232,14 +219,11 @@ Page({
         var id = '';
         console.log(e)
         if (isNumber(e)) {
-            console.log("1111")
             id = e;
         } else {
-            console.log("2223")
             id = e.currentTarget.dataset.id;
         }
-        console.log("idshi:", id)
-            //判断是否为数字
+        //判断是否为数字
         function isNumber(val) {
             var regPos = /^\d+(\.\d+)?$/; //非负浮点数io
             if (regPos.test(val)) {
@@ -251,80 +235,6 @@ Page({
         user = wx.getStorageSync('user');
         if (user != null && user != '') {
             that.authorization(id);
-            /**wx.getLocation({
-                type: "gcj02",
-                altitude: 'true',
-                isHighAccuracy: 'true',
-                highAccuracyExpireTime: '3500',
-                success: (res) => {
-                    var latitude = res.latitude;
-                    var longtitude = res.longitude;
-                    console.log(res)
-                    wx.request({
-                        url: app.globalData.url + 'WxOther/GpsRequest',
-                        data: {
-                            teacherid: user.id,
-                            courseid: that.data.courseid,
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log("导师请求获取某个学生的位置信息");
-                            console.log(res)
-                            that.setData({
-                                request_code: res.data.data.code,
-                            })
-                            if (res.data.data.code == 1) {
-                                that.getStuGps(id);
-                            } else {
-                                wx.showToast({
-                                    title: '请求失败',
-                                    duration: 800,
-                                });
-                                that.data.realTime = setInterval(function() {
-                                        // 请求服务器数据
-                                        console.log('请求接口：刷新数据')
-                                        that.TeaNowCourse();
-                                        that.getLocation(id)
-
-                                    }, 10000) //间隔时间
-
-                                // 更新数据
-                                that.setData({
-                                    realTime: that.data.realTime, //实时数据对象(用于关闭实时刷新方法)
-
-                                })
-                            }
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
-                        }
-                    })
-                    var longitude2 = "tea_location.longitude",
-                        latitude2 = "tea_location.latitude";
-
-                    this.setData({
-                        [latitude2]: latitude,
-                        [longitude2]: longtitude,
-                        stuid: id
-                    })
-                    console.log("获取用户位置成功");
-                    console.log(this.data.mark)
-                },
-                fail: (res) => {
-                    wx.showToast({
-                        title: '获取失败',
-                        icon: 'error',
-                        duration: 800
-                    })
-                    console.log(res);
-                }
-            })
-            */
         }
     },
     //这个函数是一开始点击事件触发的：
@@ -349,6 +259,7 @@ Page({
     },
 
     getWxLocation(id) {
+        console.log("定位中");
         let that = this;
         wx.showLoading({
             title: '定位中...',
@@ -446,4 +357,5 @@ Page({
             }
         })
     },
+
 })

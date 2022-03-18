@@ -60,6 +60,7 @@ Page({
         pwd: "",
         courseid: "",
         isOnly: 0,
+        id_flag: "",
     },
 
     //点击轮播图
@@ -116,7 +117,7 @@ Page({
     goodsDetails: function(e) {
         var fid = e.currentTarget.dataset.id;
         var isOnly = e.currentTarget.dataset.isonly;
-        if (isOnly) {
+        if (isOnly && this.data.id_flag != 'teacher') {
             this.setData({
                 isOnly: isOnly,
                 courseid: fid,
@@ -292,7 +293,11 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-        let user = wx.getStorageSync('user')
+        let user = wx.getStorageSync('user');
+        let id_flag = wx.getStorageSync('id_flag');
+        this.setData({
+                id_flag: id_flag,
+            })
             // app.globalData.navigate_name = "亲子活动"
         this.readData(app.globalData.navigate_name);
     },

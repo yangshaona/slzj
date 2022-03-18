@@ -87,4 +87,4 @@
     </view>
 
 </view>
-<template is="course_check" data="{{showModal,title}}" wx:if="{{isOnly}}" />
+<template is="course_check" data="{{showModal,title}}" wx:if="{{isOnly&&id_flag!='teacher'}}" />

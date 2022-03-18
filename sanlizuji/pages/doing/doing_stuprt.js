@@ -277,14 +277,14 @@ Page({
          * 当页面隐藏时关闭定时器(关闭实时刷新)
          * 切换到其他页面了
          */
-        clearInterval(this.data.realTime)
+        // clearInterval(this.data.realTime)
     },
 
     /**
      * 生命周期函数--监听页面卸载
      */
     onUnload: function() {
-        clearInterval(this.data.realTime)
+        // clearInterval(this.data.realTime)
         wx.navigateBack({
             delta: 0,
         })

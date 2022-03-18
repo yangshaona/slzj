@@ -51,6 +51,7 @@ Page({
         //是否显示用户协议
         isTipTrue: false,
         isAgree: false,
+        is_show: 0,
     },
     // 同意协议
     tipAgree: function() {
@@ -570,7 +571,8 @@ Page({
         var now = new Date;
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         this.setData({
-            time: time
+            time: time,
+            is_show: app.globalData.is_show,
         })
         var province = [],
             city = [],

@@ -123,6 +123,7 @@ Page({
         pwd: '',
         register_role: '',
         user_group: '',
+        is_show: 0, //是否显示注册按钮
     },
     newCut(src) {
         const { cropperOpt } = this.data
@@ -395,19 +396,13 @@ Page({
                     this.setData({
                         cangetUserInfo: true,
                         nickName: res.userInfo.nickName,
-                        // header: res.userInfo.avatarUrl
                     })
-
-                    // console.log(this.data.stu_info.nickName);
-                    // console.log(header)
                 },
                 fail: (res) => {
                     console.log(res.errMsg)
                 }
             })
-        } // else if (!this.data.isAgree) {
-
-        // }
+        }
     },
 
     // 学历选择器改变
@@ -913,7 +908,7 @@ Page({
         that.setData({
             time: time,
             isTipTrue: false,
-
+            is_show: app.globalData.is_show,
         })
         var province = [],
             city = [],

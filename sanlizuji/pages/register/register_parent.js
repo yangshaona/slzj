@@ -401,7 +401,8 @@ Page({
         })
         this.setData({
             multiArray: [provinceList, cityList, quyuList],
-            province
+            province,
+            is_show: app.globalData.is_show,
         })
     },
 

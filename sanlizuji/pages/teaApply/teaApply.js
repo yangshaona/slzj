@@ -89,11 +89,38 @@ Page({
     },
     // 查看导师
     teacherTap: function(e) {
-        var id = e.currentTarget.dataset.id;
-        console.log("点击导师按钮")
-        console.log(id)
+        var courseid = e.currentTarget.dataset.id;
+        var starttime = e.currentTarget.dataset.starttime;
+        let teacherid = "";
+        console.log("点击导师按钮");
+        console.log(courseid);
+        // 获取导师信息
+        wx.request({
+            url: app.globalData.url + "WxOther/GetTeacher",
+            data: {
+                courseid: courseid,
+                starttime: starttime,
+            },
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log(res);
+                if (res.data.data1.length != 0) {
+                    teacherid = res.data.data1[0].userid;
+                }
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
         wx.navigateTo({
-            url: '../detail/teacher?course_id=' + id,
+            url: '../detail/teacher?course_id=' + courseid + "&teacherid=" + teacherid,
+
+            // url: '../detail/teacher?course_id=' + id,
         })
     },
 
@@ -106,7 +133,7 @@ Page({
         var modelName = "teaSignList";
         let that = this;
         wx.showModal({
-            content: "是否删除该记录",
+            content: "是否取消报名",
             success(res) {
                 if (res.confirm) {
                     wx.request({

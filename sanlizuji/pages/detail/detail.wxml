@@ -42,11 +42,11 @@
 </block>
 <view class="infoBox">
     <view class="infoTtl">活动简介</view>
-    <view>{{course_detail.introduction!=""?course_detail.introduction:"暂无活动简介"}}</view>
+    <view class="rich-text">{{course_detail.introduction!=""?course_detail.introduction:"暂无活动简介"}}</view>
 </view>
 <view class="infoBox">
     <view class="infoTtl">活动详情</view>
-    <view style='margin-left:.3em;margin-right:.15em;'>
+    <view class="rich-text">
         <rich-text nodes="{{course_detail.text==''?'暂无活动详情':course_detail.text}}"></rich-text>
     </view>
 </view>
@@ -188,17 +188,17 @@
         </view>
         <view class='input-info'>
             <view class='input-view'>学校</view>
-            <input type='text' class="input-name" bindinput='InputSchool' placeholder='请输入学校'></input>
+            <input type='text' class="input-name" bindinput='InputSchool' placeholder='请填写所在学校'></input>
         </view>
 
         <view class='input-info'>
             <view class='input-view'>年级</view>
-            <input type='text' class="input-name" bindinput='InputGrade' placeholder='请输入年级'></input>
+            <input type='text' class="input-name" bindinput='InputGrade' placeholder='请填写所教年级'></input>
         </view>
 
         <view class='input-info'>
             <view class='input-view'>班级</view>
-            <input type='text' class="input-name" bindinput='InputClass' placeholder='请输入班级'></input>
+            <input type='text' class="input-name" bindinput='InputClass' placeholder='请填写所教班级'></input>
 
         </view>
     </view>

@@ -516,3 +516,9 @@ button::after {
     color: #fff;
     background-color: rgb(3, 193, 95);
 }
+
+.rich-text {
+    white-space: pre-wrap;
+    margin-left: .3em;
+    margin-right: .15em;
+}

@@ -17,24 +17,14 @@ App({
         //this.getSystemInfo();
         //  return ;
         wx.getSystemInfo({
-                success: (result) => {
-                    this.globalData.statusHeight = result.statusBarHeight;
-                    this.globalData.height = result.screenHeight;
-                    this.globalData.canHeight = result.windowHeight;
-                    this.globalData.width = result.screenWidth;
-                },
-            })
-            // wx.login({
-            //     success: function() {
-            //         wx.getUserInfo({
-            //             success: function(res) {
-            //                 that.globalData.userInfo = res.userInfo;
-            //                 console.log("app.js登录")
-            //                 console.log(res)
-            //             }
-            //         });
-            //     }
-            // });
+            success: (result) => {
+                this.globalData.statusHeight = result.statusBarHeight;
+                this.globalData.height = result.screenHeight;
+                this.globalData.canHeight = result.windowHeight;
+                this.globalData.width = result.screenWidth;
+            },
+        })
+
     },
 
     //获取用户信息
@@ -123,7 +113,8 @@ App({
         // imgUrl: 'http://localhost/gitSanli/sanli/uploads/temp/WxImg/',
         // okayapiHost: "http://test_phalapi.com", // TODO: 配置成你所在的接口域名
         okayApiAppKey: "appkey", // TODO：改为你的APP_KEY 在http://open.yesapi.cn/?r=App/Mine寻找
-        okayApiAppSecrect: "appsecret" // TODO：改为你的APP_SECRECT
+        okayApiAppSecrect: "appsecret", // TODO：改为你的APP_SECRECT
+        is_show: 0, //是否显示注册按钮
     },
 
     show_msg: function(msg) {
@@ -226,7 +217,7 @@ App({
                 if (res.data.data[0] == "无正在进行的课程") {
 
                 } else {
-                    that.globalData.realTime = setTimeout(function() {
+                    that.globalData.realTime = setInterval(function() {
                         courseid = res.data.data[0].courseid;
                         wx.request({
                             url: that.globalData.url + 'WxOther/GpsAccept',
@@ -251,7 +242,7 @@ App({
                                 // complete
                             }
                         })
-                    }, 30000)
+                    }, 300000)
                 }
             },
             fail: function() {
@@ -262,6 +253,7 @@ App({
             }
         })
     },
+
     onShow: function() {
         let id_flag = wx.getStorageSync("id_flag");
         let user = wx.getStorageSync('user')
@@ -283,9 +275,28 @@ App({
             // }, 30000) //间隔时间
 
             // 更新数据
-            that.globalData.realTime = that.globalData.realTime; //实时数据对象(用于关闭实时刷新方法)
+            // that.globalData.realTime = that.globalData.realTime; //实时数据对象(用于关闭实时刷新方法)
 
         }
+        wx.request({
+            url: that.globalData.url + 'WxSign/isShow',
+            data: {},
+            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            // header: {}, // 设置请求的 header
+            success: function(res) {
+                // success
+                console.log("收到的数据是");
+                console.log(res);
+                that.globalData.is_show = res.data.data.code;
+                console.log(that.globalData.is_show);
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
     },
     //上传学生定位
     UpStuLocation: function(courseid, latitude, longitude) {
@@ -330,7 +341,7 @@ App({
             // header: {}, // 设置请求的 header
             success: function(res) {
                 // success
-                console.log("成功上传位置信息")
+                console.log("成功上传导师位置信息")
                 console.log(res)
             },
             fail: function() {
@@ -380,6 +391,6 @@ App({
          * 当页面隐藏时关闭定时器(关闭实时刷新)
          * 切换到其他页面了
          */
-        clearInterval(this.globalData.realTime)
+        // clearInterval(this.globalData.realTime)
     },
 })

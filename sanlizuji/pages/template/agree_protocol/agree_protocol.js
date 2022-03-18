@@ -1,4 +1,3 @@
-
 Page({
 
     /**
@@ -10,8 +9,6 @@ Page({
 
     onLoad: function(e) {
         var that = this;
-        // time = e.formatTime(new Date());
-        console.log("打开小程序的时间是：")
         that.setData({
             isTipTrue: true
         })
@@ -23,44 +20,3 @@ Page({
     }
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
