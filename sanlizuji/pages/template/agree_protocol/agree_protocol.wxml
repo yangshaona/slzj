@@ -3,19 +3,22 @@
         <view class="tips_box">
             <view class="hint_view">
                 <view class="text">
-                    <view class="hint1" style="font-size:40rpx;font-weight:bold;">用户须知</view>
+                    <view class="hint1">用户须知</view>
+                    <scroll-view>
+                        <view class="hint2">欢迎您使用三立足迹智慧研学小程序，您可使用本应用实现研学活动的相关服务功能，在使用本小程序的过程中，我们将联网并向您申请以下权限：
+                            <view>🔘 获取微信账号信息：用于小程序的登录功能；</view>
+                            <view>🔘 获取用户位置信息：用于参加活动时显示；</view>
 
-                    <view class="hint2">欢迎您使用三立足迹智慧研学小程序，您可使用本应用实现研学活动的相关服务功能，在使用本小程序的过程中，我们将联网并向您申请以下权限：</view>
-
-                    <!-- </scroll-view> -->
+                        </view>
+                    </scroll-view>
                 </view>
 
             </view>
-            <view class="hint2" style="align-items: center;margin:0 .6em;">请您阅读并同意我们的<text style="color: #6177ff;" bindtap="toProtocol">《用户协议》</text>与<text style="color: #6177ff;" bindtap="toPrivacy">《隐私政策》</text>，了解您的用户权益及相关的使用数据的处理方法</view>
+            <view class="hint3 agree_tips" style="align-items: center;margin:0 .6em;">请您阅读并同意我们的<text style="color: #6177ff;" bindtap="toProtocol">《用户协议》</text>与<text style="color: #6177ff;" bindtap="toPrivacy">《隐私政策》</text>，了解您的用户权益及相关的使用数据的处理方法。</view>
 
             <view class="modal-btn-wrapper">
 
-                <button bindtap='tipCancel' class="cancel-btn" formType="submit">不同意</button>
+                <button bindtap='tipCancel' class="cancel-btn" formType="submit">退出</button>
                 <button bindtap='tipAgree' class="confirm-btn" style="background-color:#1677ff ;color: #fff;" formType="submit">同意</button>
             </view>
         </view>

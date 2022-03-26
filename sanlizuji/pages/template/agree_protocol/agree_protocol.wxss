@@ -33,26 +33,41 @@
 .text {
     display: flex;
     flex-direction: column;
-    margin: 12rpx 24rpx;
+    margin: 8rpx 24rpx;
 }
 
 .hint1 {
-    margin-top: 38rpx;
+    margin-top: 10rpx;
     text-align: center;
-    font-size: 30rpx;
     color: #1a1a1a;
-    /* line-height: 52rpx; */
-    top: 10%;
-    border-bottom: 1px solid;
+    font-size: 40rpx;
+    border-bottom: 1px solid #333;
+    font-weight: bold;
 }
 
 .hint2 {
-    margin-top: 14rpx;
+    margin-top: 12rpx;
     text-align: justify;
-    text-indent: 52rpx;
-    font-size: 30rpx;
+    text-indent: 64rpx;
+    font-size: 28rpx;
     color: rgb(26, 25, 25);
     line-height: 42rpx;
+    overflow: scroll;
+}
+
+.hint3 {
+    margin-top: 12rpx;
+    text-align: justify;
+    text-indent: 64rpx;
+    font-size: 28rpx;
+    color: rgb(26, 25, 25);
+    line-height: 42rpx;
+}
+
+.agree_tips {
+    position: absolute;
+    bottom: 105rpx;
+    left: 0;
 }
 
 .modal-btn-wrapper {

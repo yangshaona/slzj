@@ -38,11 +38,13 @@
         </view>
     </view>
 </view>
-<view class="total" id="total">
     <!-- 顶部标题-->
+    <view class="top-box" style="padding-top: {{statusHeight+45}}px;">
     <view class="top" style="padding-top: {{statusHeight+16}}px;">
         {{title_name==''?'课程':title_name}}
     </view>
+    </view>
+  <view class="total" id="total">
 
     <view class="filterTop" catchtap="filterTap">
         <image src="/icon/filter.png" mode="widthFix"></image>

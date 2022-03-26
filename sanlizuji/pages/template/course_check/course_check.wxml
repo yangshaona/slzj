@@ -10,7 +10,7 @@
         </view>
         <view class='input-info'>
             <view class='input-view'>密码</view>
-            <input type='text' class="input-name" bindinput='InputPwd' placeholder='请输入课程密码'></input>
+            <input type='text' class="input-name" bindinput='InputPwd' placeholder='请输入密码'></input>
         </view>
     </view>
     <view class='modal-btn-wrapper'>

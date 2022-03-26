@@ -419,7 +419,12 @@ Page({
                                     console.log("表单检查成功");
                                     that.getUserInfo();
                                     console.log(res)
-                                    if (res.data.data.msg == "该手机号已注册") {
+                                    if (res.data.data.msg == "该微信已注册") {
+                                        wx.showModal({
+                                            content: '该微信已注册',
+                                            showCancel: false,
+                                        })
+                                    } else if (res.data.data.msg == "该手机号已注册") {
                                         wx.showModal({
                                             content: '该手机号已注册',
                                             showCancel: false,

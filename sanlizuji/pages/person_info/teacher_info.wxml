@@ -3,25 +3,58 @@
 <view class="primary">
     <view class="info_desc">
         <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
-        <desc bindtap="Bind" data-trigger="name" inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
-        <desc bindtap="Bind" data-trigger="birthday" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
-        <desc bindtap="Bind" data-trigger="idnum" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
-        <desc bindtap="Bind" data-trigger="phone" inner-text="联系方式：{{user.phone==''?'无':tools.sub(user.phone, 3, 1)}}" icon="/icon/phone.png"></desc>
-        <view bindtap="Bind" data-trigger="type">
-            <view wx:if="{{user.type==1}}">
-                <desc inner-text="类型：企业" icon="/icon/edu.png"></desc>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="name">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="birthday">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="idnum">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="联系方式：{{user.phone==''?'无':tools.sub(user.phone, 3, 1)}}" icon="/icon/phone.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="phone">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <view class="info-bar-desc">
+                <view wx:if="{{user.type==1}}">
+                    <desc inner-text="类型：企业" icon="/icon/edu.png"></desc>
+                </view>
+                <view wx:elif="{{user.type==2}}">
+                    <desc inner-text="类型：学校" icon="/icon/edu.png"></desc>
+                </view>
+                <view wx:elif="{{user.type==3}}">
+                    <desc inner-text="类型：兼职" icon="/icon/edu.png"></desc>
+                </view>
+                <view wx:else>
+                    <desc inner-text="类型：未知" icon="/icon/edu.png"></desc>
+                </view>
             </view>
-            <view wx:elif="{{user.type==2}}">
-                <desc inner-text="类型：学校" icon="/icon/edu.png"></desc>
-            </view>
-            <view wx:elif="{{user.type==3}}">
-                <desc inner-text="类型：兼职" icon="/icon/edu.png"></desc>
-            </view>
-            <view wx:else>
-                <desc inner-text="类型：未知" icon="/icon/edu.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="type">
+                <picker name="type" id="type" mode="selector" bindchange="typeChange" range="{{tp}}" class="{{tp_idx == null ? 'default' : ''}}">
+                    >
+                </picker>
             </view>
         </view>
-        <desc inner-text="住址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="住址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
+            <view class="info-bar-view">
+                <picker mode="multiSelector" name="region" id="region" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
+                    >
+                </picker>
+            </view>
+        </view>
+        <view class="line"></view>
+
     </view>
     <button class="logout" bindtap="logout" type="button">退出登录</button>
 </view>
@@ -38,7 +71,7 @@
                 <text class=''>修改姓名</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindblur='teaName' placeholder='请输入姓名'></input>
+                <input type='text' class="input" bindblur='teaName' placeholder='请输入姓名' value="{{user.name}}"></input>
             </view>
         </view>
 
@@ -46,10 +79,10 @@
         <view wx:if="{{trigger=='idnum'}}" class="info">
 
             <view class='change-name'>
-                <text class=''>修改身份证</text>
+                <text class=''>查看身份证</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindblur='teaIdNum' placeholder='请输入身份证'></input>
+                <input type='text' class="input" bindblur='teaIdNum' value="{{user.idnum}}" disabled="true"></input>
             </view>
         </view>
 
@@ -60,7 +93,7 @@
                 <text class=''>修改手机号</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindblur='teaPhone' placeholder='请输入内容'></input>
+                <input type='text' class="input" bindblur='teaPhone' placeholder='请输入手机号' value="{{user.phone}}"></input>
             </view>
         </view>
 

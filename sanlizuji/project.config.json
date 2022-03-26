@@ -334,6 +334,26 @@
 					"pathName": "pages/dev/dev",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/news/news",
+					"pathName": "pages/news/news",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/person_info/parent_info",
+					"pathName": "pages/person_info/parent_info",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myApply/myApply",
+					"pathName": "pages/myApply/myApply",
+					"scene": null
 				}
 			]
 		}

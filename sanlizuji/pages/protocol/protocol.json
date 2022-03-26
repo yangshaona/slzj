@@ -1,4 +1,4 @@
 {
-    "usingComponents": {},
+    "usingComponents": { "mp-html": "/components/mp-html/index" },
     "navigationBarTitleText": "用户协议"
 }

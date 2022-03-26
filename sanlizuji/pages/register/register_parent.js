@@ -320,7 +320,12 @@ Page({
                                     console.log(that.data.openid)
                                     console.log("注册信息")
                                     console.log(res)
-                                    if (res.data.data.msg == "该手机号已注册") {
+                                    if (res.data.data.msg == "该微信已注册") {
+                                        wx.showModal({
+                                            content: '该微信已注册',
+                                            showCancel: false,
+                                        })
+                                    } else if (res.data.data.msg == "该手机号已注册") {
                                         wx.showModal({
                                             content: '该手机号已注册',
                                             showCancel: false,

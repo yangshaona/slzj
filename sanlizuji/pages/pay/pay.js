@@ -39,102 +39,11 @@ Page({
         coupons: 0,
     },
 
-    getTime: async function(e) {
-        const that = this;
-        // 页面跳转后立刻生成订单提交时间
-        function createTime() {
-            const startTime = +new Date();
-            // 十五分钟
-            const endTime = startTime + 900000;
-            // 向服务器提交订单提交时间和订单截止时间
-            wx.request({
-                url: 'url',
-                data: {
-                    startTime: startTime,
-                    endTime: endTime,
-                },
-                method: 'POST',
-            })
-
-
-            that.setData({
-                startTime: startTime,
-                endTime: endTime,
-            })
-            that.setTime();
-        }
-        // 向服务器请求数据，若已存在此订单的截止时间，则直接拿下来用
-        wx.request({
-            url: 'url',
-            data: {
-
-            },
-            success: res => {
-                console.log(res);
-                // 获得订单截止时间
-                that.setData({
-                    endTime: res.data.endTime,
-                })
-                that.setTime();
-            },
-            fail: err => {
-                console.log(err);
-                // 新生成截止时间, 并提交后台
-                createTime();
-            }
-        })
-
-    },
-
-    setTime: async function(e, callback) {
-        // 计时结束回调函数
-        if (typeof(callback) === 'function') {
-            // 异步跳转
-            setTimeout(function() {
-                wx.reLaunch({
-                    // 跳转到某个页面
-                    url: '../index/index',
-                })
-            }, 800)
-            wx.showToast({
-                    title: '订单过期！',
-                    icon: 'error',
-                    duration: 800,
-                })
-                // 后台销毁订单
-            wx.request({
-                url: 'url',
-                data: {},
-            })
-            return -1;
-        }
-
-
-        // 每过1000ms计算一次
-        const that = this;
-        let st = setInterval(async function() {
-            let now = +new Date();
-            let duration = (that.data.endTime - now) / 1000;
-            if (duration <= 0) {
-                // 倒计时结束，回调函数
-                clearInterval(st);
-                return await that.setTime(0, function() {
-                    console.log('Time out!');
-                })
-            }
-            let time = parseInt(duration / 60) + '分' + parseInt(duration % 60) + '秒';
-            that.setData({
-                time: time,
-            })
-        }, 1000)
-    },
-
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
         // 获取订单时间
-        // this.getTime();
         console.log("确认支付");
         console.log(options);
         this.setData({
@@ -170,8 +79,10 @@ Page({
                     listData: listData,
                 })
                 if (that.data.order.status == 2) {
-                    that.setCountDown();
-                    that.setTimeCount();
+                    // that.setCountDown();
+                    // that.setTimeCount();
+                    that.getTime();
+
                 }
             },
             fail: function() {
@@ -182,7 +93,165 @@ Page({
             }
         })
     },
+    // 订单支付倒计时
+    getTime: async function(e) {
+        const that = this;
+        // 页面跳转后立刻获取订单提交时间和截止时间
+        that.setData({
+            endTime: that.data.order.payendTime,
+        })
+        that.setTime();
+    },
 
+    setTime: async function(e, callback) {
+        let listData = this.data.order;
+        const that = this;
+        // 计时结束回调函数
+        if (typeof(callback) === 'function') {
+            // 后台销毁订单
+            wx.request({
+                url: app.globalData.url + 'WxSign/GetOrderDetail',
+                data: {
+                    id: orderid,
+                    modelName: 'SignList',
+                },
+                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                // header: {}, // 设置请求的 header
+                success: function(res) {
+                    // success
+                    console.log("订单详情")
+                    console.log(res)
+                    that.setData({
+                        order: res.data.data[0],
+                    });
+                    listData = that.data.order;
+                    if (listData.isshow) {
+                        console.log("计时结束时回调函数")
+
+                        UpdateOrder(listData.id, '支付失败', 1);
+                    }
+
+                },
+                fail: function() {
+                    // fail
+                },
+                complete: function() {
+                    // complete
+                }
+            })
+            return -1;
+        }
+        // 每过1000ms计算一次
+
+        let st = setInterval(async function() {
+            let now = new Date();
+            var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+            that.setData({
+                now: date
+            })
+            var payendTime = new Date(listData.payendTime);
+            let duration = payendTime - now;
+            let formatTime = that.getFormat(duration);
+            var countDown = `${formatTime.mm}:${formatTime.ss}`;
+            if (duration <= 0) {
+                // 倒计时结束，回调函数
+                clearInterval(st);
+                return await that.setTime(0, function() {
+                    console.log('Time out!');
+                })
+            }
+            that.setData({
+                remain_time: duration,
+                countDown: countDown,
+            })
+        }, 1000)
+    },
+    /**
+     * 60s倒计时
+     */
+    setTimeCount: function() {
+        let time = this.data.time
+        time--;
+        if (time <= 0) {
+            time = 0;
+        }
+        this.setData({
+            time: time
+        })
+        setTimeout(this.setTimeCount, 1000);
+    },
+
+
+    /**
+     * 倒计时
+     */
+    setCountDown: async function(e, callback) {
+        let time = 1000,
+            that = this;
+        let listData = that.data.order;
+        // 计时结束回调函数
+        if (typeof(callback) === 'function') {
+            // 后台销毁订单
+            console.log("计时结束");
+            wx.showToast({
+                title: "时间到",
+                duration: 1000,
+            })
+            UpdateOrder(listData.id, '支付失败', 1);
+
+            return -1;
+        }
+
+        let st = setInterval(async function() {
+            var now = new Date;
+            var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+            that.setData({
+                now: date
+            })
+            var payendTime = new Date(listData.payendTime);
+            let duration = payendTime - now;
+            let formatTime = that.getFormat(duration);
+            var countDown = `${formatTime.mm}:${formatTime.ss}`;
+            if (duration <= 0) {
+                // 倒计时结束，回调函数
+                wx.showToast({
+                    title: "超时",
+                    duration: 1000,
+                })
+                clearInterval(st);
+                return await that.setCountDown(0, function() {
+                    console.log('Time out!');
+                })
+            }
+            that.setData({
+                remain_time: duration,
+                countDown: countDown,
+            })
+        }, 1000)
+
+    },
+
+    /**
+     * 格式化时间
+     */
+    getFormat: function(msec) {
+        let ss = parseInt(msec / 1000);
+        let ms = parseInt(msec % 1000);
+        let mm = 0;
+        let hh = 0;
+        if (ss > 60) {
+            mm = parseInt(ss / 60);
+            ss = parseInt(ss % 60);
+            if (mm > 60) {
+                hh = parseInt(mm / 60);
+                mm = parseInt(mm % 60);
+            }
+        }
+        ss = ss > 9 ? ss : `0${ss}`;
+        mm = mm > 9 ? mm : `0${mm}`;
+        hh = hh > 9 ? hh : `0${hh}`;
+        return { ss, mm, hh };
+    },
     // 支付接口
     Submit: function() {
         console.log("正在获取MD5和account");
@@ -196,7 +265,7 @@ Page({
             url: app.globalData.url + "WxSign/tgPay",
             data: {
                 lowOrderId: that.data.order.id, //后台雪花算法生成的订单号
-                payMoney: price, //支付金额
+                payMoney: 0.01, //支付金额
                 body: that.data.order.coursename, //商品描述
                 notifyUrl: app.globalData.url + "WxSign/AccepttgPay", //回调地址
                 isMinipg: 1, //是否是小程序
@@ -229,11 +298,10 @@ Page({
                                 console.log("支付成功");                              
                                 console.log(res);                                
                                 wx.showToast({
-                                        title: '支付成功',
-                                        icon: 'success',
-                                        duration: 800,
-                                    })                            
-                                    // UpdateOrder(that.data.order.id, '支付成功', 3);  
+                                    title: '支付成功',
+                                    icon: 'success',
+                                    duration: 800,
+                                })                            
 
                             }                                             
                         })
@@ -324,134 +392,6 @@ Page({
     onShareAppMessage: function() {
 
     },
-    /**
-     * 60s倒计时
-     */
-    setTimeCount: function() {
-        let time = this.data.time
-        time--;
-        if (time <= 0) {
-            time = 0;
-        }
-        this.setData({
-            time: time
-        })
-        setTimeout(this.setTimeCount, 1000);
-    },
-    setTime: async function(e, callback) {
-        let listData = this.data.order;
-        // 计时结束回调函数
-        if (typeof(callback) === 'function') {
-            // 后台销毁订单
-            UpdateOrder(listData.id, '支付失败', 1);
-            return -1;
-        }
-        // 每过1000ms计算一次
-        const that = this;
-        let st = setInterval(async function() {
-            let now = +new Date();
-            let duration = (that.data.endTime - now) / 1000;
-            if (duration <= 0) {
-                // 倒计时结束，回调函数
-                clearInterval(st);
-                return await that.setTime(0, function() {
-                    console.log('Time out!');
-                })
-            }
-            let time = parseInt(duration / 60) + '分' + parseInt(duration % 60) + '秒';
-            that.setData({
-                time: time,
-            })
-        }, 1000)
-    },
-
-    /**
-     * 倒计时
-     */
-    setCountDown: async function(e, callback) {
-        let time = 1000,
-            that = this;
-        let listData = this.data.order;
-        // var now = new Date;
-        // var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-        // that.setData({
-        //     now: date
-        // })
-        // var payendTime = new Date(listData.payendTime);
-        // var remain_time = payendTime - now;
-        // let formatTime = this.getFormat(remain_time);
-        // remain_time -= time;
-        // var countDown = `${formatTime.mm}:${formatTime.ss}`;
-        // that.setData({
-        //     listData: listData,
-        //     countDown: countDown,
-        //     remain_time: remain_time,
-        // })
-        // if (remain_time > 0 && listData.status == 2 && listData.payState == '') {
-        //     setTimeout(this.setCountDown, time);
-        // } else if (remain_time <= 0 && listData.status == 2 && listData.payState != '支付成功') {
-        //     UpdateOrder(listData.id, '支付失败', 1);
-        //     that.getCourse(listData.id);
-        // } else if (remain_time > 0 && listData.payState == "支付成功") {
-        //     that.getCourse(listData.id);
-        // }
 
 
-        // 计时结束回调函数
-        if (typeof(callback) === 'function') {
-            // 后台销毁订单
-            console.log("计时结束");
-            UpdateOrder(listData.id, '支付失败', 1);
-            return -1;
-        }
-        // 每过1000ms计算一次
-        // const that = this;
-        let st = setInterval(async function() {
-            // let now = +new Date();
-            var now = new Date;
-            var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-            that.setData({
-                now: date
-            })
-            var payendTime = new Date(listData.payendTime);
-            let duration = payendTime - now;
-            let formatTime = that.getFormat(duration);
-            var countDown = `${formatTime.mm}:${formatTime.ss}`;
-            if (duration <= 0) {
-                // 倒计时结束，回调函数
-                clearInterval(st);
-                return await that.setTime(0, function() {
-                    console.log('Time out!');
-                })
-            }
-            let time = parseInt(duration / 60) + '分' + parseInt(duration % 60) + '秒';
-            that.setData({
-                remain_time: duration,
-                countDown: countDown,
-            })
-        }, 1000)
-
-    },
-
-    /**
-     * 格式化时间
-     */
-    getFormat: function(msec) {
-        let ss = parseInt(msec / 1000);
-        let ms = parseInt(msec % 1000);
-        let mm = 0;
-        let hh = 0;
-        if (ss > 60) {
-            mm = parseInt(ss / 60);
-            ss = parseInt(ss % 60);
-            if (mm > 60) {
-                hh = parseInt(mm / 60);
-                mm = parseInt(mm % 60);
-            }
-        }
-        ss = ss > 9 ? ss : `0${ss}`;
-        mm = mm > 9 ? mm : `0${mm}`;
-        hh = hh > 9 ? hh : `0${hh}`;
-        return { ss, mm, hh };
-    }
 })

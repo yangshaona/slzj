@@ -29,13 +29,14 @@
 <block wx:for="{{service_club}}">
     <view class="infoBox" data-id="{{item.id}}" bindtap="serviceDetail">
         <view class="service">
-            <image src="{{item.pic=='https://sanli-tracks.com/sanlia/uploads/temp/'?'/icon/no_pic.png':item.pic}}" mode="widthFix" class="logo"></image>
+            <image src="{{item.pic=='https://sanli-tracks.com/sanli/uploads/temp/'?'/icon/no_pic.png':item.pic}}" mode="aspectFill" class="logo"></image>
             <view class="serviceName">{{item.club_name}}</view>
             <image src="/icon/prove.png" mode="widthFix" class="icon"></image>
         </view>
         <view class="desc">
             <view style='margin-left:.3em;margin-right:.15em;'>
-                <rich-text nodes="{{item.introduce==''?'暂无的简介':item.introduce}}"></rich-text>
+                <!-- <rich-text nodes="{{item.introduce==''?'暂无的简介':item.introduce}}"></rich-text> -->
+                <mp-html content="{{item.introduce==''?'暂无的简介':item.introduce}}" />
             </view>
         </view>
     </view>
@@ -47,7 +48,8 @@
 <view class="infoBox">
     <view class="infoTtl">活动详情</view>
     <view class="rich-text">
-        <rich-text nodes="{{course_detail.text==''?'暂无活动详情':course_detail.text}}"></rich-text>
+        <!-- <rich-text nodes="{{course_detail.text==''?'暂无活动详情':course_detail.text}}"></rich-text> -->
+        <mp-html content="{{course_detail.text==''?'暂无活动详情':course_detail.text}}" />
     </view>
 </view>
 
@@ -94,70 +96,16 @@
     </block>
 </view>
 
-<!-- 评价栏 -->
-<block wx:if="{{cmt_display}}">
-    <view class="infoBox">
-        <view class="rating">
-            <view class="ttl">服务：</view>
-            <block wx:for="{{service_rate}}" wx:key="id">
-                <image src="{{item.icon}}" mode="widthFix" class="comment-star" data-value="{{item.rate}}">
-                    <view class="star_half_1" data-name="service" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
-                    <view class="star_half_2" data-name="service" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
-                </image>
-            </block>
-        </view>
-        <view class="rating">
-            <view class="ttl">课程：</view>
-            <block wx:for="{{course_rate}}" wx:key="id">
-                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
-                    <view class="star_half_1" data-name="course" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
-                    <view class="star_half_2" data-name="course" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
-                </image>
-            </block>
-        </view>
-        <view class="rating">
-            <view class="ttl">住宿：</view>
-            <block wx:for="{{dorm_rate}}" wx:key="id">
-                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
-                    <view class="star_half_1" data-name="dorm" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
-                    <view class="star_half_2" data-name="dorm" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
-                </image>
-            </block>
-        </view>
-        <view class="rating">
-            <view class="ttl">餐饮：</view>
-            <block wx:for="{{food_rate}}" wx:key="id">
-                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
-                    <view class="star_half_1" data-name="food" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
-                    <view class="star_half_2" data-name="food" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
-                </image>
-            </block>
-        </view>
-        <view class="rating">
-            <view class="ttl">导师：</view>
-            <block wx:for="{{teacher_rate}}" wx:key="id">
-                <image src="{{item.icon}}" mode="widthFix" class="star" data-id="{{item.id}}" data-value="{{item.rate}}">
-                    <view class="star_half_1" data-name="teacher" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
-                    <view class="star_half_2" data-name="teacher" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
-                </image>
-            </block>
-        </view>
 
-        <!-- 评价填写 -->
-        <form bindsubmit="cmt_submit">
-            <textarea type="text" class="cmt_input" name="comment" placeholder="评价一下吧"></textarea>
-            <button form-type="submit" class="button1">提交评价</button>
-        </form>
-    </view>
-</block>
 
 
 <!-- 底部fix栏 -->
 <view class="bottom">
     <view class="bottomHalf1">
-        <image src="/icon/kefu.png" mode="widthFix"></image>
-        <view>客服</view>
-
+        <button style='border:0;background-color:#fff;' open-type='contact' session-from=''>
+            <image src="/icon/kefu.png" mode="widthFix"></image>
+            <view>客服</view>
+        </button>
     </view>
     <view class="bottomHalf1" bindtap="actionSheetTap">
 

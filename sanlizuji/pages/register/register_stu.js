@@ -1,8 +1,9 @@
 // pages/register/register_stu.js
 import {
     checkPhone
-} from '../../utils/text.js'
 
+} from '../../utils/text.js'
+const formatTime = require('../../utils/text.js');
 import WeCropper from '../dev/we-cropper.js';
 import GlobalConfig from '../dev/config.js';
 
@@ -216,37 +217,7 @@ Page({
     chooseImg: function(e) {
         console.log("上传实名头像");
         console.log(e);
-        // wx.chooseMedia({
-        //     mediaType: ['image'],
-        //     count: 1,
-        //     sourceType: ['album', 'camera'],
-        //     success: (res) => {
-        //         console.log("成功上传头像")
-        //         console.log(res)
-        //         wx.showToast({
-        //             title: '保存成功!',
-        //             icon: 'success',
-        //             duration: 800
-        //         })
-        //         console.log("头像保存成功")
-        //         console.log(res);
-        //         console.log(res.tempFiles);
-        //         console.log(res.tempFiles[0]);
-        //         this.setData({
-        //             avator: res.tempFiles[0].tempFilePath,
-        //         })
-        //         console.log(res.tempFiles[0].tempFilePath);
-        //         console.log(this.data.avator)
-        //     },
-        //     fail: (res) => {
-        //         wx.showToast({
-        //             title: '选择错误',
-        //             icon: 'success',
-        //             duration: 800
-        //         })
-        //         console.log(res);
-        //     }
-        // })
+
         const that = this;
         wx.chooseImage({
             count: 1, // 默认9
@@ -363,7 +334,7 @@ Page({
             isAgree: false,
         })
         wx.showToast({
-            title: "请先同意服务协议",
+            title: "请先同意协议",
             duration: 1000,
         })
     },
@@ -621,7 +592,12 @@ Page({
                                 success(res) {
                                     console.log("注册信息")
                                     console.log(res)
-                                    if (res.data.data.msg == "该手机号已注册") {
+                                    if (res.data.data.msg == "该微信已注册") {
+                                        wx.showModal({
+                                            content: '该微信已注册',
+                                            showCancel: false,
+                                        })
+                                    } else if (res.data.data.msg == "该手机号已注册") {
                                         wx.showModal({
                                             content: '该手机号已注册',
                                             showCancel: false,
@@ -691,24 +667,25 @@ Page({
     //点击头像上传图片
     UpLoadImage: function(data) {
         let that = this;
-        console.log("图片路径");
-        console.log(that.data.avator);
         // tempFilePath可以作为img标签的src属性显示图片
         const tempFilePaths = that.data.avator;
         console.log("图片路径");
         console.log(tempFilePaths);
+        // 图片新命名
+        var time = Date.parse(new Date());
+        time /= 1000;
+        var newPicName = formatTime.formatTime(time, 'YMDhms');
         //上传图片
         wx.uploadFile({
             //请求后台的路径
             url: app.globalData.url + 'WxUser/SaveImg',
-
             //小程序本地的路径
             filePath: tempFilePaths,
 
             name: 'file',
             formData: {
                 //图片命名：用户id-商品id-1~9
-                newName: data.openid,
+                newName: newPicName,
                 id: data.id,
                 modelName: 'Userinfo',
                 file_type: '',
@@ -716,7 +693,7 @@ Page({
             success(res) {
                 console.log("成功保存图片");
                 console.log(res);
-                console.log(res.statusCode);
+
             },
             fail(res) {
                 flag = false;
@@ -826,77 +803,6 @@ Page({
             url: '../login/login?id=student',
         })
     },
-    //省市接口
-    getLocation: function() {
-        let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxOther/location',
-            data: {
-                pid: 0,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                var locationList = [];
-                for (var key of res.data.data) {
-                    locationList.push(key)
-                    wx.request({
-                        url: app.globalData.url + 'WxOther/location',
-                        data: {
-                            pid: key.id
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            for (var city of res.data.data) {
-                                locationList.push(city);
-                                wx.request({
-                                    url: app.globalData.url + 'WxOther/location',
-                                    data: {
-                                        pid: city.id
-                                    },
-                                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                                    // header: {}, // 设置请求的 header
-                                    success: function(res) {
-                                        // success
-                                        for (var area of res.data.data) {
-                                            locationList.push(area)
-                                        }
-                                    },
-                                    fail: function() {
-                                        // fail
-                                    },
-                                    complete: function() {
-                                        // complete
-                                    }
-                                })
-                            }
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
-                        }
-                    })
-                }
-                console.log("省市区")
-                console.log(locationList)
-                that.setData({
-                    location: locationList
-                })
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
-    },
-
 
     /**
      * 生命周期函数--监听页面加载

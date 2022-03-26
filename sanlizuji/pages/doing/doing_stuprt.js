@@ -52,7 +52,6 @@ Page({
 
     // 信息框赋值
     getData: function() {
-        console.log("nihao");
         var data = this.data.doing;
         var url = this.data.icon;
         var trans = { 'groupnum': '小组', 'hotel': '酒店', 'car': '车牌', 'starttime': '日期' }

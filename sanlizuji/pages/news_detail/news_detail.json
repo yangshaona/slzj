@@ -1,5 +1,5 @@
 {
-    "usingComponents": {},
+    "usingComponents": { "mp-html": "/components/mp-html/index" },
     "navigationBarTitleText": "新闻详情",
     "backgroundTextStyle": "light"
 }

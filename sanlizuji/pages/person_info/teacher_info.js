@@ -2,9 +2,9 @@
 import {
     SaveInfo,
     checkPhone,
-} from '../../utils/text.js'
+} from '../../utils/text.js';
+const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
-
 let user = wx.getStorageSync('user');
 const app = getApp();
 Page({
@@ -19,6 +19,14 @@ Page({
         showModal: false,
         trigger: '',
         reg: ['北京', '北京', '东城'],
+        //工作类型picker
+        tp: ['企业', '学校', '兼职'],
+        tp_idx: null,
+        // 地区更改
+        location: "",
+        multiArray: [],
+        multiIndex: [0, 0, 0],
+        province: [],
     },
     //退出登录
     logout: function() {
@@ -60,7 +68,8 @@ Page({
         })
         console.log("教师")
         console.log(user)
-        console.log(this.data.user)
+        console.log(this.data.user);
+        this.getArea();
     },
 
     /**
@@ -155,6 +164,17 @@ Page({
         console.log(this.data.tmp);
 
     },
+    // 工作类型选择器改变
+    typeChange: function(e) {
+        console.log("类型改变为: " + e.detail.value);
+        var type = parseInt(e.detail.value) + 1;
+        console.log(type);
+        this.setData({
+            tp_idx: e.detail.value,
+            tmp: type
+        });
+        this.checkInfo("type")
+    },
     /**
      * 控制显示
      */
@@ -186,7 +206,11 @@ Page({
                 showCancel: false,
             })
         } else {
-            _user[trigger] = that.data.tmp;
+            if (trigger == 'region') {
+                _user["province"] = that.data.tmp[0];
+                _user["city"] = that.data.tmp[1];
+                _user["district"] = that.data.tmp[2];
+            } else _user[trigger] = that.data.tmp;
 
             wx.setStorageSync('user', _user);
             var modelName = "Teacher";
@@ -206,12 +230,12 @@ Page({
                 resume: user.exp,
             }
             SaveInfo(modelData, modelName);
-
-            console.log("2222222");
             console.log(user);
             that.setData({
                 showModal: false,
                 tmp: '',
+                user: user,
+
             })
 
         }
@@ -241,5 +265,122 @@ Page({
         that.setData({
             user: user
         })
+    },
+    //获取地区
+    bindMultiPickerChange: function(e) {
+        console.log('picker发送选择改变，携带值为', e.detail.value)
+        this.setData({
+            multiIndex: e.detail.value,
+            reg_idx: 1
+        })
+    },
+    bindMultiPickerColumnChange: function(e) {
+        console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
+        var data = {
+            multiArray: this.data.multiArray,
+            multiIndex: this.data.multiIndex
+        };
+        data.multiIndex[e.detail.column] = e.detail.value;
+        const provinceName = data.multiArray[0][data.multiIndex[0]];
+        let provinceId = "";
+        let province = this.data.province;
+        let quyuList = [],
+            cityList = [],
+            provinceList = [],
+            city = [],
+            area = [];
+        try {
+            province.forEach(item => {
+                if (item.name === provinceName) {
+                    provinceId = item.id;
+                    throw (new Error('find item'))
+                }
+            })
+        } catch (err) {}
+        city = areaList.filter(item => {
+            return item.pid == provinceId;
+        })
+        if (e.detail.column == 0) {
+            data.multiIndex = [e.detail.value, 0, 0];
+            try {
+                area = areaList.filter(item => {
+                    return item.pid == city[data.multiIndex[1]].id;
+                })
+            } catch (err) {}
+        } else if (e.detail.column == 1) {
+            data.multiIndex[2] = 0;
+            area = areaList.filter(item => {
+                return item.pid == city[e.detail.value].id;
+            })
+        } else {
+            const cityName = data.multiArray[1][data.multiIndex[1]];
+            let cityId = '';
+            try {
+                areaList.forEach(item => {
+                    if (item.name === cityName) {
+                        cityId = item.id;
+                        throw (new Error('find item'));
+                    }
+                })
+            } catch (err) {}
+            area = areaList.filter(item => {
+                return item.pid == cityId;
+            })
+        }
+        provinceList = province.map(item => {
+            return item.name
+        })
+        cityList = city.map(item => {
+            return item.name;
+        })
+        quyuList = area.map(item => {
+            return item.name;
+        })
+        data.multiArray = [provinceList, cityList, quyuList],
+            this.setData(data);
+        var tmp = [];
+        for (var i = 0; i < 3; i++) {
+
+            tmp[i] = data.multiArray[i][data.multiIndex[i]];
+        }
+        if (tmp[1] == '北京市') {
+            tmp[1] = '北京';
+
+        } else if (tmp[1] == '天津市') {
+            tmp[1] = '天津';
+        }
+        console.log("选中的是：", tmp)
+        this.setData({
+            reg: tmp,
+            tmp: tmp,
+        })
+        this.checkInfo("region");
+    },
+    getArea: function() {
+        var province = [],
+            city = [],
+            area = [];
+        province = areaList.filter(item => {
+            return item.pid == 0;
+        })
+        city = areaList.filter(item => {
+            return item.pid == province[0].id;
+        })
+        area = areaList.filter(item => {
+            return item.pid == city[0].id;
+        })
+        var provinceList = province.map(item => {
+            return item.name
+        })
+        var cityList = city.map(item => {
+            return item.name;
+        })
+        var quyuList = area.map(item => {
+            return item.name;
+        })
+        this.setData({
+            multiArray: [provinceList, cityList, quyuList],
+            province
+        });
     }
 })

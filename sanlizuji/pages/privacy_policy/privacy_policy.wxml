@@ -1,7 +1,9 @@
 <!--pages/privacy_policy/privacy_policy.wxml-->
 
 <view style='margin:.7em;'>
-    <rich-text nodes="{{privacy}}"></rich-text>
+    <!-- <rich-text nodes="{{privacy}}"></rich-text> -->
+    <mp-html content="{{privacy}}"></mp-html>
+    <!-- <mp-html content="{{privacy}}" /> -->
 </view>
 
 <view class="protocol">

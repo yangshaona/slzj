@@ -28,7 +28,7 @@
         <view class="actTitle">{{doing.coursename}}</view>
         <!-- 导师名片 -->
         <view class="teacherBox" style="height: 300rpx;">
-            <image src="{{teacher.header==''?'/icon/用户头像.png':teacher.header}}" mode="widthFix" class="teacherImg"></image>
+            <image src="{{teacher.header==''?'/icon/not_load.png':teacher.header}}" mode="widthFix" class="teacherImg"></image>
             <view class="teacherInfo">
                 <view class="infoTitle">导师信息</view>
                 <view class="teacherName">

@@ -3,8 +3,9 @@
 .desc_box {
     display: flex;
     box-sizing: border-box;
-    width: 95%;
-    margin: 4% 2.5%;
+    /* width: 95%; */
+    /* margin: 4% 2.5%; */
+    margin: 4% 2.5% 0% 2.5%;
 }
 
 .icon {

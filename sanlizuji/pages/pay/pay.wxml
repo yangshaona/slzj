@@ -13,13 +13,26 @@
             <view wx:elif="{{order.status==3}}" class="deal">
                 交易成功
             </view>
+            <view wx:elif="{{order.status==4}}" class="deal">
+                待退款
+            </view>
+            <view wx:elif="{{order.status==5}}" class="deal">
+                全额退款成功
+            </view>
+            <view wx:elif="{{order.status==6}}" class="deal">
+                部分退款成功
+            </view>
         </view>
     </view>
-    <!-- </view> -->
+
+
+
     <view class="deal-info-box">
         <view class="deal-desc-box">
-            <desc inner-text="{{order.registrationtime}}" icon="/icon/time2.png"></desc>
+            <desc class="info-bar-desc" inner-text="{{order.registrationtime}}" icon="/icon/time2.png"></desc>
+            <view class="line"></view>
             <desc inner-text="订单号: {{order.id}}" icon="/icon/deal2.png"></desc>
+            <view class="line"></view>
         </view>
 
     </view>

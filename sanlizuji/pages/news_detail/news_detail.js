@@ -33,8 +33,8 @@ Page({
                     //formatRichText 调用方法    
                     //解决rich-text放入图片时富文本无法换行的问题  
                 var content = "";
-                content = formatRichText(res.data.data[0].content);
-                res.data.data[0].content = content;
+                // content = formatRichText(res.data.data[0].content);
+                // res.data.data[0].content = content;
                 that.setData({
                     course_detail: res.data.data[0],
 

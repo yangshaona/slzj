@@ -1,4 +1,4 @@
 {
-    "usingComponents": {},
+    "usingComponents": { "mp-html": "/components/mp-html/index" },
     "navigationBarTitleText": "服务商详情"
 }

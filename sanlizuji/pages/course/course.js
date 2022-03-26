@@ -240,12 +240,12 @@ Page({
     startChange: function(e) {
         this.setData({
             start: e.detail.value,
-            end: e.detail.value
+
         })
     },
     endChange: function(e) {
         this.setData({
-            end: e.detail.value
+            end: e.detail.value,
         })
     },
 

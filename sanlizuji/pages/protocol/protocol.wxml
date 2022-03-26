@@ -83,7 +83,8 @@
 </view> -->
 
 <view style='margin:.5em;'>
-    <rich-text nodes="{{protocol}}"></rich-text>
+    <!-- <rich-text nodes="{{protocol}}"></rich-text> -->
+    <mp-html content="{{protocol}}"></mp-html>
 </view>
 <view class="protocol">
     <text style="margin-top:100rpx;">点击下面的复制链接 ，再打开浏览器粘贴地址即可下载：</text>

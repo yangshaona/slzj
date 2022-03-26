@@ -8,7 +8,7 @@
 <!-- 教师用户基本信息栏 -->
 <view wx:if="{{id_flag=='teacher'}}">
     <view class="infoBox">
-        <view class="avator" style="height: {{imgHeight}}px;" bindtap="UpLoadImage">
+        <view class="avator" style="height: {{imgHeight}}px;" bindtap="chooseImage">
             <image wx:if="{{!user}}" src="/icon/not_load.png" mode="widthFix"></image>
             <image wx:else src="{{user.header}}" mode="widthFix"></image>
         </view>
@@ -41,7 +41,7 @@
 <!-- 父母用户基本信息栏 -->
 <view wx:elif="{{id_flag=='parent'}}">
     <view class="infoBox">
-        <view class="avator" style="height: {{imgHeight}}px;" bindtap="UpLoadImage">
+        <view class="avator" style="height: {{imgHeight}}px;" bindtap="chooseImage">
             <image src="{{user.header}}" mode="widthFix"></image>
         </view>
         <view style="display: block; width: 55%;" wx:if="{{user!=null&&user!=''}}">
@@ -73,10 +73,12 @@
 <!-- 学生用户基本信息栏 -->
 <view wx:else>
     <view class="infoBox">
-        <view class="avator" style="height: {{imgHeight}}px;" bindtap="UpLoadImage">
+        <view class="avator" style="height: {{imgHeight}}px;" bindtap="chooseImage">
             <image wx:if="{{!user}}" src="/icon/not_load.png" mode="widthFix"></image>
             <image wx:else src="{{user.header}}" mode="widthFix"></image>
+
         </view>
+
         <view style="display: block; width: 55%;" wx:if="{{user!=null&&user!=''}}">
             <view class="infoCtn">
                 <view>{{user.name}}</view>
@@ -118,3 +120,15 @@
         <view class="text-bar">退出登录</view>
     </view>
 </view>
+
+<block wx:if="{{showCut}}">
+    <import src="../dev/we-cropper.wxml" />
+
+    <view class="cropper-wrapper">
+        <template is="we-cropper" data="{{...cropperOpt}}" />
+        <view class="button-box" style="top: {{windowHeight-20}}px;">
+            <button bindtap="uploadTap" class="btn-left">重新选择</button>
+            <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
+        </view>
+    </view>
+</block>

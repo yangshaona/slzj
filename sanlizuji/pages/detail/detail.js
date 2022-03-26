@@ -315,13 +315,11 @@ Page({
                     //formatRichText 调用方法    
                     //解决rich-text放入图片时富文本无法换行的问题  
                 var content = "";
-                content = formatRichText(res.data.data[0].text);
-                res.data.data[0].text = content;
-
+                // content = formatRichText(res.data.data[0].text);
+                // res.data.data[0].text = content;
                 that.setData({
                     index: res.data.data.id,
                     course_detail: res.data.data[0],
-
                 });
                 var now = new Date;
                 var sign_date_end = new Date(res.data.data[0].sign_date_end);
@@ -710,8 +708,8 @@ Page({
     // 生成订单
     GenerateOrder: function(id, name) {
         let that = this;
-
-        if (that.data.course_detail.sign_num >= that.data.course_detail.sign_max) {
+        console.log(that.data.course_detail.sign_num, that.data.course_detail.sign_max);
+        if (parseInt(that.data.course_detail.sign_num) >= parseInt(that.data.course_detail.sign_max)) {
             wx.showModal({
                 title: '名额不足',
                 content: '希望下次早点报名哦！',

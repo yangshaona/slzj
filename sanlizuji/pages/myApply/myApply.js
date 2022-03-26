@@ -82,17 +82,21 @@ Page({
 
         console.log("删除订单")
         console.log(e)
-        var orderid = e.currentTarget.dataset.id;
-        var modelName = "SignList";
+        let orderid = e.currentTarget.dataset.id;
+        let status = e.currentTarget.dataset.status;
+
         let that = this;
+        if (status == 2) {
+            UpdateOrder(orderid, '支付失败', 1);  
+        }
         wx.showModal({
             content: "是否删除该记录",
             success(res) {
                 if (res.confirm) {
                     wx.request({
-                        url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
+                        url: app.globalData.url + 'WxSign/orderisshow',
                         data: {
-                            modelName: modelName,
+                            // modelName: modelName,
                             id: orderid,
                         },
                         method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
@@ -101,7 +105,7 @@ Page({
                             // success
                             console.log("删除结果");
                             console.log(res);
-                            if (res.data.data == '不存在该ID，删除失败') {
+                            if (res.data.data == '删除失败') {
                                 wx.showToast({
                                     title: "删除失败",
                                     icon: 'cancel',
@@ -273,10 +277,11 @@ Page({
                 })
                 for (var i = 0; i < that.data.filter.length; i++) {
                     var end_pay_time = new Date(that.data.filter[i].payendTime);
-
-                    console.log(that.data.filter[i]);
                     if (that.data.filter[i].status == 2 && (end_pay_time < now || that.data.filter[i].endTime < now)) {
                         UpdateOrder(that.data.filter[i].id, '支付失败', 1);
+                        that.setData({
+                            ["filter[" + i + "].status"]: 1,
+                        })
                     }
                 }
                 console.log("所有报名数据")

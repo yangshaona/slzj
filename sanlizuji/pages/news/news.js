@@ -75,6 +75,7 @@ Page({
                 { "id": "03", "isActive": false, "value": "信息通知" },
                 { "id": "04", "isActive": false, "value": "单位介绍" },
                 { "id": "05", "isActive": false, "value": "时政信息" },
+                { "id": "06", "isActive": false, "value": "招标信息" },
             ],
         })
     },

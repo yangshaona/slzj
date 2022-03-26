@@ -9,7 +9,8 @@
 <!-- 新闻内容 -->
 <view class="infoBox">
     <view style='margin-left:.3em;margin-right:.15em;'>
-        <rich-text nodes="{{course_detail.content}}"></rich-text>
+        <!-- <rich-text nodes="{{course_detail.content}}"></rich-text> -->
+        <mp-html content="{{course_detail.content}}"></mp-html>
     </view>
     <view class="date">发布时间：{{course_detail.uDate}}</view>
     <!-- <view class="view">

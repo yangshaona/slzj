@@ -4,17 +4,74 @@
 <view class="primary">
     <view class="info_desc">
         <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
-        <desc bindtap="Bind" data-trigger="name" inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
-        <desc bindtap="Bind" data-trigger="birthday" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
-        <desc bindtap="Bind" data-trigger="idnum" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
-        <desc bindtap="Bind" data-trigger="phone" inner-text="手机号：{{tools.sub(user.phone,3,1)}}" icon="/icon/phone.png"></desc>
-        <!-- <desc bindtap="Bind" data-trigger="schoolname" inner-text="学校：{{user.schoolname}}" icon="/icon/school.png"></desc> -->
-        <!-- <desc bindtap="Bind" data-trigger="education" inner-text="学历：{{user.education}}" icon="/icon/edu.png"></desc> -->
-        <!-- <desc bindtap="Bind" data-trigger="grade" inner-text="年级：{{user.grade}}年级" icon="/icon/grade.png"></desc> -->
-        <desc bindtap="Bind" data-trigger="address" inner-text="地址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
-        <desc inner-text="监护人姓名：{{user.parents==''?'未绑定':user.parents}}" icon="/icon/guardian.png"></desc>
-        <desc inner-text="监护人手机：{{user.p_phone==''?'未绑定':user.p_phone}}" icon="/icon/phone.png"></desc>
-        <desc bindtap="Bind" data-trigger="aller" inner-text="备注信息：{{user.aller}}" icon="/icon/remark.png"></desc>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="name">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="birthday">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="idnum">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="手机号：{{tools.sub(user.phone,3,1)}}" icon="/icon/phone.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="phone">></view>
+        </view>
+        <view class="line"></view>
+
+        <view wx:if="{{is_show}}">
+            <view class="info-bar">
+                <desc class="info-bar-desc" inner-text="学校：{{user.schoolname}}" icon="/icon/school.png"></desc>
+                <view class="info-bar-view" bindtap="Bind" data-trigger="schoolname">></view>
+            </view>
+            <view class="line"></view>
+            <view class="info-bar">
+                <desc class="info-bar-desc" inner-text="学历：{{user.education}}" icon="/icon/edu.png"></desc>
+                <view class="info-bar-view">
+                    <picker name="education" id="edu" mode="selector" bindchange="eduChange" range="{{edu}}" class="{{edu_idx == null ? 'default' : ''}}">
+                        >
+                    </picker>
+                </view>
+            </view>
+            <view class="line"></view>
+            <view class="info-bar">
+                <desc class="info-bar-desc" inner-text="年级：{{user.grade}}年级" icon="/icon/grade.png"></desc>
+                <view class="info-bar-view" bindtap="Bind" data-trigger="grade">></view>
+            </view>
+            <view class="line"></view>
+        </view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="地址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
+            <view class="info-bar-view">
+                <picker mode="multiSelector" name="region" id="region" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
+                    >
+                </picker>
+            </view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="监护人姓名：{{user.parents==''?'未绑定':user.parents}}" icon="/icon/guardian.png"></desc>
+            <view class="info-bar-view">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="监护人手机：{{user.p_phone==''?'未绑定':user.p_phone}}" icon="/icon/phone.png"></desc>
+            <view class="info-bar-view">></view>
+
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="备注：{{user.aller}}" icon="/icon/remark.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="aller">></view>
+        </view>
+        <view class="line"></view>
+
 
     </view>
     <view>
@@ -33,10 +90,10 @@
                 <text class='userTitle'>监护人信息</text>
             </view>
             <view class='wishName'>监护人姓名：
-                <input bindinput='nameInput' placeholder='请输入内容' class='wish_put'></input>
+                <input bindinput='nameInput' placeholder='请输入监护人姓名' class='wish_put'></input>
             </view>
             <view class='wishName'>监护人手机号：
-                <input bindinput='phoneInput' placeholder='请输入内容' class='wish_put'></input>
+                <input bindinput='phoneInput' placeholder='请输入监护人手机号' class='wish_put'></input>
             </view>
         </view>
 
@@ -47,7 +104,7 @@
                 <text class=''>修改姓名</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuName' placeholder='请输入姓名'></input>
+                <input type='text' class="input" bindinput='stuName' placeholder='请输入姓名' value="{{user.name}}"></input>
             </view>
         </view>
 
@@ -55,10 +112,10 @@
         <view wx:if="{{trigger=='idnum'}}" class="info">
 
             <view class='change-name'>
-                <text class=''>修改身份证</text>
+                <text class=''>查看身份证</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuIdNum' placeholder='请输入身份证'></input>
+                <input type='text' class="input" bindinput='stuIdNum' placeholder='请输入身份证' value="{{user.idnum}}" disabled="true"></input>
             </view>
         </view>
 
@@ -69,7 +126,7 @@
                 <text class=''>修改手机号</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuPhone' placeholder='请输入内容'></input>
+                <input type='text' class="input" bindinput='stuPhone' value="{{user.phone}}"></input>
             </view>
         </view>
         <!-- 学校的修改 -->
@@ -79,7 +136,7 @@
                 <text class=''>修改学校</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuSchool' placeholder='请输入内容'></input>
+                <input type='text' class="input" bindinput='stuSchool' placeholder='请输入学校' value="{{user.schoolname}}"></input>
             </view>
         </view>
 
@@ -90,7 +147,7 @@
                 <text class=''>修改年级</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuGrade' placeholder='请输入内容'></input>
+                <input type='text' class="input" bindinput='stuGrade' placeholder='请输入年级' value="{{user.grade}}"></input>
             </view>
         </view>
         <!-- 备注的修改 -->
@@ -100,7 +157,7 @@
                 <text class=''>备注信息</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuMark' placeholder='请输入内容'></input>
+                <input type='text' class="input" bindinput='stuMark' placeholder='请输入备注信息' value="{{user.aller}}"></input>
             </view>
         </view>
 
@@ -110,4 +167,14 @@
         </view>
 
     </view>
+
+
+    <!-- <view wx:if="{{trigger=='education'}}"> -->
+
+    <!-- 学历的修改 -->
+    <view wx:if="{{trigger=='education'}}" class="info">
+
+
+    </view>
+    <!-- </view> -->
 </view>

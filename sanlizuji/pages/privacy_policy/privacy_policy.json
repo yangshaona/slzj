@@ -1,4 +1,6 @@
 {
-    "usingComponents": {},
+    "usingComponents": {
+        "mp-html": "/components/mp-html/index"
+    },
     "navigationBarTitleText": "三立足迹隐私政策"
 }

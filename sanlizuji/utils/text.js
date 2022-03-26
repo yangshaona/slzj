@@ -11,42 +11,23 @@ const app = getApp();
 let user = wx.getStorageSync('user');
 
 function formatRichText(html) {
-    let newContent = html.replace(/<img[^>]*>/gi, function(match, capture) {
-        match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
-        match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
-        match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
-        return match;
-    });
-    newContent = newContent.replace(/style="[^"]+"/gi, function(match, capture) {
-        match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
-        return match;
-    });
-    newContent = newContent.replace(/(\s*<[^>]+>)([^<>]*)(<\/[^>]+>\s*)/g, function(str, $1, $2, $3) {
-        return [$1.trim(), $2.replace(/\s/gi, '\xa0'), $3.trim()].join('')
-    })
-    newContent = newContent.replace(/<br[^>]*\/>/gi, '');
-    newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-top:0;margin-bottom:0;"');
-    return newContent;
+    // let newContent = html.replace(/<img[^>]*>/gi, function(match, capture) {
+    //     match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
+    //     match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
+    //     match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
+    //     return match;
+    // });
+    // newContent = newContent.replace(/style="[^"]+"/gi, function(match, capture) {
+    //     match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
+    //     return match;
+    // });
+    let newContent = newContent.replace(/(\s*<[^>]+>)([^<>]*)(<\/[^>]+>\s*)/g, function(str, $1, $2, $3) {
+            return [$1.trim(), $2.replace(/\s/gi, '\xa0'), $3.trim()].join('')
+        })
+        // newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+        // newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-bottom:0;"');
+        // return newContent;
 }
-
-// export function formatRichText(html) {
-//     let newContent = html.replace(/<img[^>]*>/gi, function (match, capture) {
-//       match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
-//       match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
-//       match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
-//       return match;
-//     });
-//     newContent = newContent.replace(/style="[^"]+"/gi, function (match, capture) {
-//       match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
-//       return match;
-//     });
-//     newContent = newContent.replace(/(\s*<[^>]+>)([^<>]*)(<\/[^>]+>\s*)/g, function (str, $1, $2, $3) {
-//       return [$1.trim(), $2.replace(/\s/gi, '\xa0'), $3.trim()].join('')
-//     })
-//     newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-top:0;margin-bottom:0;"');
-//     return newContent;
-//   }
-
 
 // 保存更改信息
 function SaveInfo(modelData, modelName) {
@@ -282,6 +263,36 @@ const getLocation = () => {
     })
 }
 
+//数据转化
+function formatNumber(n) {
+    n = n.toString()
+    return n[1] ? n : '0' + n
+}
+/**
+ * 时间戳转化为年 月 日 时 分 秒
+ * number: 传入时间戳
+ * format：返回格式，支持自定义，但参数必须与formateArr里保持一致
+ */
+function formatTime(number, format) {
+
+    var formateArr = ['Y', 'M', 'D', 'h', 'm', 's'];
+    var returnArr = [];
+
+    var date = new Date(number * 1000);
+    returnArr.push(date.getFullYear());
+    returnArr.push(formatNumber(date.getMonth() + 1));
+    returnArr.push(formatNumber(date.getDate()));
+
+    returnArr.push(formatNumber(date.getHours()));
+    returnArr.push(formatNumber(date.getMinutes()));
+    returnArr.push(formatNumber(date.getSeconds()));
+
+    for (var i in returnArr) {
+        format = format.replace(formateArr[i], returnArr[i]);
+    }
+    return format;
+}
+
 // 这个属性是将方法名暴露出来，否则需要引用的页面取不到
 module.exports = {
     formatRichText,
@@ -290,6 +301,8 @@ module.exports = {
     UpdateOrder,
     checkPhone,
     checkName,
-    getLocation
+    getLocation,
+
+    formatTime: formatTime // 时间戳转换
 
 }

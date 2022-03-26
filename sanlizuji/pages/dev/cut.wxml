@@ -1,17 +1,10 @@
-<import src="../dev/we-cropper.wxml"/>
+<import src="../dev/we-cropper.wxml" />
 
 <view class="cropper-wrapper">
-  <template is="we-cropper" data="{{...cropperOpt}}"/>
-  <!-- <view class="cropper-buttons" style="color: {{cropperOpt.boundStyle.color}}">
-    <view class="upload btn" bindtap="uploadTap">
-      上传图片
+    <template is="we-cropper" data="{{...cropperOpt}}" />
+
+    <view class="button-box" style="top: {{windowHeight}}px;">
+        <button bindtap="uploadTap" class="btn-left">重新选择</button>
+        <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
     </view>
-    <view class="getCropperImage btn" style="background-color: {{cropperOpt.boundStyle.color}};" bindtap="getCropperImage">
-      生成图片
-    </view>
-  </view> -->
-  <view class="button-box" style="top: {{windowHeight}}px;">
-    <button bindtap="uploadTap" class="btn-left">重新选择</button>
-    <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
-  </view>
 </view>

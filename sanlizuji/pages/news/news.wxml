@@ -2,18 +2,18 @@
 <import src="../template/not_found/not_found.wxml" />
 
 <!-- 总页面 -->
-<view class="total" id="total">
-    <!-- 顶部标题-->
-    <view class="top" style="padding-top: {{statusHeight+16}}px;">
-        新闻
-    </view>
 
+<!-- 顶部标题-->
+<view class="top" style="padding-top: {{statusHeight+16}}px;">
+    新闻
+</view>
+<view class="total" id="total">
     <!-- 全部活动 -->
     <view class="actTop">
         <view class="type">
             <view class="title">News</view>
         </view>
-        <view class="select-wrap">
+        <view class="select-wrap" wx:if="{{news!=''}}">
             <view class="news-type">文章类型：</view>
             <select id="select" prop-array="{{options}}" bind:select="select"></select>
 
