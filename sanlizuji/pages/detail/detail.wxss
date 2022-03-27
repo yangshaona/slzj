@@ -415,6 +415,7 @@ button::after {
     height: fit-content;
     padding: 2.5%;
     color: white;
+    font-size: 1.1rem;
     background-image: linear-gradient(to right, #6177ff, #8898ff);
 }
 

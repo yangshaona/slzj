@@ -34,3 +34,35 @@
 .logout {
     margin-top: 10%;
 }
+
+.resume {
+    line-height: 3rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #6177ff;
+}
+
+.info-resume-desc {
+    width: 80%;
+}
+
+.info-resume {
+    width: fit-content;
+    margin-top: 3%;
+    color: white;
+    float: right;
+    border-radius: 28rpx;
+    background-color: #6177ff;
+    font-size: 28rpx;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+}

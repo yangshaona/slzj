@@ -4,6 +4,7 @@
 /* 未获取用户昵称时 */
 
 @import '../template/agree_protocol/agree_protocol.wxss';
+@import './register_stu.wxss';
 .primary {
     display: block;
     box-sizing: border-box;

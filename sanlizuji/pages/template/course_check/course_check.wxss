@@ -12,7 +12,7 @@
 .modalDlg {
     width: 80%;
     position: fixed;
-    top: 45%;
+    top: 35%;
     left: 0;
     right: 0;
     z-index: 9999;

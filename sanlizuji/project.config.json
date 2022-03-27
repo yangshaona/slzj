@@ -353,6 +353,13 @@
 					"id": -1,
 					"name": "pages/myApply/myApply",
 					"pathName": "pages/myApply/myApply",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/person_info/teacher_info",
+					"pathName": "pages/person_info/teacher_info",
 					"scene": null
 				}
 			]

@@ -3,6 +3,7 @@
 
 /* 未获取用户昵称时 */
 
+@import './register_stu.wxss';
 @import '../template/agree_protocol/agree_protocol.wxss';
 .primary {
     display: block;

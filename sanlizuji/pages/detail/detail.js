@@ -195,9 +195,9 @@ Page({
         input_class: "", //获取报名时的输入的班级信息
         actionSheetHidden: true,
         actionSheetItems: [
-            '活动开始前1天收取退款订单总额的70%',
-            '活动开始前2天收取退款订单总额的50%',
-            '活动开始前3天收取退款订单总额的0%'
+            '活动开始前1天退款订单总额的0%',
+            '活动开始前2天退款订单总额的50%',
+            '活动开始前3天退款订单总额的70%'
         ],
     },
 
@@ -619,6 +619,7 @@ Page({
     // 初始化学员选择器
     loadStu: function(e) {
         // 和后台拿东西setData
+        console.log("下标是", this.data.idx);
         let that = this;
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');

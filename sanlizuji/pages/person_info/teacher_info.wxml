@@ -54,8 +54,15 @@
             </view>
         </view>
         <view class="line"></view>
+        <view class="info-bar">
 
+
+
+            <desc class="info-resume-desc" inner-text="简历（上传pdf文件）" icon="/icon/resume.png"></desc>
+            <button data-resume="{{user.resume}}" class="info-resume" bindtap="UpResume">上传</button>
+        </view>
     </view>
+    <view class="resume" bindtap="DownloadResume" data-resume="{{user.resume}}">{{user.resume}}</view>
     <button class="logout" bindtap="logout" type="button">退出登录</button>
 </view>
 

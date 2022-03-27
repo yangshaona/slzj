@@ -109,7 +109,7 @@ App({
         longtitude: "",
         realTime: null, //实时数据对象(用于关闭实时刷新方法)
         // imgUrl: 'https://shenhailao.com/hsreport/uploads/temp/WxImg/',
-        imgUrl: 'https://sanli-tracks.com/sanlia/uploads/temp/WxImg/',
+        imgUrl: 'https://sanli-tracks.com/sanli/uploads/temp/WxImg/',
         // imgUrl: 'http://localhost/gitSanli/sanli/uploads/temp/WxImg/',
         // okayapiHost: "http://test_phalapi.com", // TODO: 配置成你所在的接口域名
         okayApiAppKey: "appkey", // TODO：改为你的APP_KEY 在http://open.yesapi.cn/?r=App/Mine寻找

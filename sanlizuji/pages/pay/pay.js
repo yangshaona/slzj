@@ -265,7 +265,7 @@ Page({
             url: app.globalData.url + "WxSign/tgPay",
             data: {
                 lowOrderId: that.data.order.id, //后台雪花算法生成的订单号
-                payMoney: 0.01, //支付金额
+                payMoney: price, //支付金额
                 body: that.data.order.coursename, //商品描述
                 notifyUrl: app.globalData.url + "WxSign/AccepttgPay", //回调地址
                 isMinipg: 1, //是否是小程序

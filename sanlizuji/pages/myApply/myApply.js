@@ -40,8 +40,9 @@ Page({
         lowOrderId: '',
         actionSheetHidden: true,
         actionSheetItems: [
-            '活动开始前1天收取退款订单总额的70%', '活动开始前2天收取退款订单总额的50%',
-            '活动开始前3天收取退款订单总额的0%'
+            '活动开始前1天退款订单总额的0%',
+            '活动开始前2天退款订单总额的50%',
+            '活动开始前3天收取退款订单总额的70%'
         ],
     },
 
@@ -69,9 +70,6 @@ Page({
         // 点击的id
         var id = e.currentTarget.dataset.courseid;
         var price = e.currentTarget.dataset.price;
-        // wx.navigateTo({
-        //     url: '../pay/pay?orderid=' + id+,
-        // })
         wx.navigateTo({
             url: '../pay/pay?orderid=' + id + '&price=' + price,
 
@@ -198,18 +196,16 @@ Page({
         })
         var identity;
         if (id_flag == 'student') {
-            identity = "student"
-            console.log("学生")
+            identity = "student";
         } else if (id_flag == 'teacher') {
-            identity = "teacher"
-            console.log("教师")
+            identity = "teacher";
         } else if (id_flag == 'parent') {
             identity = "parent";
-            console.log("父母");
             that.setTitle("孩子的报名")
         }
         that.getApply(user.id, identity, id_flag);
     },
+
     // 获取报名数据
     getApply: function(id, identity, idflag) {
         let that = this;
@@ -224,8 +220,7 @@ Page({
             // header: {}, // 设置请求的 header
             success: function(res) {
                 // success
-                console.log("我的报名")
-                console.log(res)
+                console.log("我的报名", res);
                 var total = [],
                     kid_apply = [],
                     apply = [];
@@ -235,13 +230,16 @@ Page({
                             kid_apply = mergerArr(res.data.data.data[i].data1, res.data.data.data[i].data2);
                             apply.push(kid_apply);
                         }
-
+                        console.log("孩子报名数据", apply);
                         for (var i = 0; i < apply.length; i++) {
                             for (var j = 0; j < apply[i].length; j++) {
-                                console.log(apply[i][j]);
-                                total.push(apply[i][j])
+
+                                total.push(apply[i][j]);
                             }
                         }
+
+                        let result = total.sort(that.compare("id"));
+                        console.log(result);
                     }
                 } else {
                     total = mergerArr(res.data.data1, res.data.data2)
@@ -284,8 +282,6 @@ Page({
                         })
                     }
                 }
-                console.log("所有报名数据")
-                console.log(that.data.filter)
 
                 function mergerArr(arr1, arr2) {
                     if (arr1 == [] || arr1.length == 0) {
@@ -306,6 +302,15 @@ Page({
             }
         })
 
+    },
+    // 当身份为监护人时对报名数据进行排序
+    compare: function(property) {
+        return function(a, b) {
+            let value1 = a[property];
+            let value2 = b[property];
+            let result = value2 - value1;
+            return result;
+        }
     },
     //登录查看更多
     _goLogin: function() {
@@ -355,8 +360,7 @@ Page({
             // header: {}, // 设置请求的 header
             success: function(res) {
                 // success
-                console.log("孩子信息111");
-                console.log(res);
+                console.log("孩子信息", res);
                 if (res.data.data.length > 0) {
                     var kids = [];
                     kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
@@ -367,7 +371,6 @@ Page({
                     that.setData({
                         kids_name: kids
                     })
-                    console.log(that.data.kids_name);
                 }
             },
             fail: function() {
@@ -409,7 +412,6 @@ Page({
     // 退款
     Refund: function(e) {
         console.log(e);
-        console.log("你哈");
         let that = this;
         that.actionSheetTap();
         that.setData({
@@ -438,8 +440,6 @@ Page({
         if (user != null && user != '') {
             that.setFilter();
             if (id_flag == 'parent') {
-                console.log("家长身份");
-                console.log(that.data.id_flag);
                 this.getKidsList()
             }
 

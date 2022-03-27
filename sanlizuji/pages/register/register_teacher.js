@@ -389,7 +389,6 @@ Page({
                             that.setData({
                                 openid: res.data.openid
                             });
-                            console.log("22222222222")
                             var type = parseInt(data.type) + 1;
                             console.log(type)
                             app.globalData.openid = res.data.openid;
