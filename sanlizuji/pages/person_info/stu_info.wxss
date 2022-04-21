@@ -219,3 +219,11 @@
 .default {
     color: #888888;
 }
+
+.show-picker {
+    display: block;
+}
+
+.off-picker {
+    display: none;
+}

@@ -156,26 +156,26 @@
     font-size: 0.75rem;
 }
 
-.ddl {
+
+/* .ddl {
     display: block;
     width: 70%;
     text-align: left;
     font-weight: 100 !important;
     color: #888888;
     margin: auto 0;
-}
+} */
 
 .numBox {
     display: flex;
     box-sizing: border-box;
-    width: 60%;
     flex-direction: row-reverse;
 }
 
 .numBox image {
     width: 1rem;
     position: relative;
-    margin: auto 0;
+   margin:auto 10rpx auto 5rpx;
 }
 
 .numBox view {

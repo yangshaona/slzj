@@ -1,5 +1,6 @@
 // pages/course/course.js
 const app = getApp();
+import { GetDiff } from '../../utils/apis.js'
 Page({
 
     /**
@@ -32,33 +33,24 @@ Page({
     // 根据类型获取文章数据
     getNews: function(type) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + "WxOther/GetDiff",
-            data: {
-                type: type
-            },
-            success: function(res) {
-                // success
-                console.log("成功获取发布信息");
-                console.log(res);
-                if (res.data.data.length != 0) {
-                    that.setData({
-                        news: res.data.data
-                    })
-                } else {
-                    that.setData({
-                        news: "",
-                    })
-                }
-
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        const p = GetDiff({
+            type: type
+        });
+        p.then(value => {
+            console.log("成功获取发布信息");
+            console.log(value);
+            if (value.data.data.length != 0) {
+                that.setData({
+                    news: value.data.data
+                })
+            } else {
+                that.setData({
+                    news: "",
+                })
             }
-        })
+        }, reason => {
+            console.log("获取数据失败", reason);
+        });
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -77,7 +69,8 @@ Page({
                 { "id": "05", "isActive": false, "value": "时政信息" },
                 { "id": "06", "isActive": false, "value": "招标信息" },
             ],
-        })
+        });
+        this.getNews("");
     },
     select: function(e) {
         console.log("选中的值是");
@@ -86,7 +79,6 @@ Page({
         if (e.detail.value == "请选择") {
             type = "";
         }
-
         for (var i = 1; i < this.data.options.length; i++) {
             var tmp = "options[" + i + "].isActive"
             this.setData({
@@ -98,7 +90,6 @@ Page({
                 })
             }
         }
-
         this.getNews(type);
     },
     /**

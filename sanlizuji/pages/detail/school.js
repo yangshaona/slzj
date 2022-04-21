@@ -1,4 +1,5 @@
 // pages/detail/school.js
+import { Clubdetail, GetClubActivity } from '../../utils/apis.js'
 const app = getApp();
 Page({
 
@@ -11,10 +12,7 @@ Page({
         // 屏幕宽度
         width: getApp().globalData.width,
         // 学校缩略图 数组放url 可多张
-        actImg: [
-            "https://s3.bmp.ovh/imgs/2022/01/6ab7032e3f6c3bde.jpg",
-            "https://s3.bmp.ovh/imgs/2022/01/817aed11996fdc0b.jpg"
-        ],
+        actImg: ["/icon/unload.png"],
         service_club: { // 机构名称及机构logo
             club_name: '',
             // 学校logo
@@ -23,7 +21,8 @@ Page({
             introduce: [],
         },
         // 学校往期活动照片 数组 多个url及其描述
-        schoolImg: []
+        schoolImg: [],
+        imgPrefix: app.globalData.imgPrefix,
 
     },
 
@@ -34,55 +33,28 @@ Page({
         console.log("服务商详情")
         console.log(options)
         let that = this;
-        wx.request({
-            url: app.globalData.url + "WxCourse/Clubdetail",
-            data: {
-                clubid: options.id
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("服务商数据")
-                console.log(res)
-                that.setData({
-                    service_club: res.data.data[0]
-                })
-                that.getClubActivity(res.data.data[0].id)
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+        Clubdetail({
+            clubid: options.id,
+        }).then(value => {
+            console.log("服务商数据", value)
+            that.setData({
+                service_club: value.data.data[0]
+            })
+            that.getClubActivity(value.data.data[0].id)
+        }, reason => {
+            console.log("无法获取到服务商数据", reason);
         })
-
     },
     //获取对应服务商的活动数据
     getClubActivity: function(id) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + "WxOther/GetClubActivity",
-            data: {
-                id: id
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("服务商的活动数据")
-                console.log(res)
-                that.setData({
-                    schoolImg: res.data.data
-                })
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+        GetClubActivity({
+            id: id,
+        }).then(value => {
+            console.log("服务商的活动数据", value)
+            that.setData({
+                schoolImg: value.data.data
+            })
         })
     },
     //跳转到对应活动

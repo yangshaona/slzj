@@ -1,7 +1,8 @@
 // pages/doing/doing_tc.js
 const app = getApp();
 let user = wx.getStorageSync('user')
-
+const webSocket = require('../../utils/webSocket.js');
+import { GetStuUpGps, TeaNowCourse, GpsRequest } from '../../utils/apis.js';
 Page({
 
     /**
@@ -37,43 +38,69 @@ Page({
     //获取学生定位
     getStuGps: function(id) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxOther/GetStuUpGps',
-            data: {
-                userid: id,
-                courseid: that.data.courseid
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
+        const p = GetStuUpGps({
+            orderid: id,
+        });
+        p.then(value => {
                 console.log("导师获取某个学生的位置信息");
-                console.log(res)
+                console.log(value)
                 var tmp = [];
                 tmp.push(that.data.tea_location);
                 var latitude = "stu_location.latitude",
                     longitude = "stu_location.longitude";
 
                 that.setData({
-                    location: [res.data.data[0].latitude, res.data.data[0].longitude],
-                    [latitude]: res.data.data[0].latitude,
-                    [longitude]: res.data.data[0].longitude,
+                    location: [value.data.data[0].latitude, value.data.data[0].longitude],
+                    [latitude]: value.data.data[0].latitude,
+                    [longitude]: value.data.data[0].longitude,
 
                 })
                 tmp.push(that.data.stu_location);
                 console.log(tmp)
                 that.setData({
-                        mark: tmp
-                    })
-                    // console.log(that.data.mark)
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
+                    mark: tmp
+                })
+            }, reason => {
+                console.log("获取学生的位置数据失败", reason);
+            })
+            /*    wx.request({
+                   url: app.globalData.url + 'WxOther/GetStuUpGps',
+                   data: {
+                       // userid: id,
+                       // courseid: that.data.courseid
+                       orderid: id,
+                   },
+                   method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                   // header: {}, // 设置请求的 header
+                   success: function(res) {
+                       // success
+                       console.log("导师获取某个学生的位置信息");
+                       console.log(res)
+                       var tmp = [];
+                       tmp.push(that.data.tea_location);
+                       var latitude = "stu_location.latitude",
+                           longitude = "stu_location.longitude";
+
+                       that.setData({
+                           location: [res.data.data[0].latitude, res.data.data[0].longitude],
+                           [latitude]: res.data.data[0].latitude,
+                           [longitude]: res.data.data[0].longitude,
+
+                       })
+                       tmp.push(that.data.stu_location);
+                       console.log(tmp)
+                       that.setData({
+                               mark: tmp
+                           })
+                           // console.log(that.data.mark)
+                   },
+                   fail: function() {
+                       // fail
+                   },
+                   complete: function() {
+                       // complete
+                   }
+               }) */
     },
 
     //获取学生信息
@@ -82,34 +109,56 @@ Page({
         let that = this;
         user = wx.getStorageSync('user');
         if (user != null && user != '') {
-            wx.request({
-                url: app.globalData.url + 'WxSign/TeaNowCourse&id=' + user.id,
-                data: {},
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
+            const p = TeaNowCourse({
+                id: user.id,
+            });
+            p.then(value => {
                     console.log("导师获取学生数据")
-                    console.log(res)
-                    if (res.data.data[0] == "无正在进行的课程") {
+                    console.log(value)
+                    if (value.data.data[0] == "无正在进行的课程") {
                         that.setData({
-                            title: res.data.data[0]
+                            title: value.data.data[0]
                         })
                     } else {
                         that.setData({
-                            students: res.data.data,
-                            title: res.data.data[0].coursename,
-                            courseid: res.data.data[0].courseid,
+                            students: value.data.data,
+                            title: value.data.data[0].coursename,
+                            courseid: value.data.data[0].courseid,
                         })
                     }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
-                }
-            })
+                }, reason => {
+                    console.log("导师获取学生数据失败", reason);
+                })
+                /*   wx.request({
+                      url: app.globalData.url + 'WxSign/TeaNowCourse',
+                      data: {
+                          id: user.id,
+                      },
+                      method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                      // header: {}, // 设置请求的 header
+                      success: function(res) {
+                          // success
+                          console.log("导师获取学生数据")
+                          console.log(res)
+                          if (res.data.data[0] == "无正在进行的课程") {
+                              that.setData({
+                                  title: res.data.data[0]
+                              })
+                          } else {
+                              that.setData({
+                                  students: res.data.data,
+                                  title: res.data.data[0].coursename,
+                                  courseid: res.data.data[0].courseid,
+                              })
+                          }
+                      },
+                      fail: function() {
+                          // fail
+                      },
+                      complete: function() {
+                          // complete
+                      }
+                  }) */
         }
     },
     //登录查看更多
@@ -122,6 +171,7 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+
         user = wx.getStorageSync('user');
         if (user != null && user != '') {
             this.TeaNowCourse();
@@ -142,6 +192,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
+
         /**
          * 每隔一段时间请求服务器刷新数据(客户状态)
          * 当页面显示时开启定时器(开启实时刷新)
@@ -154,20 +205,9 @@ Page({
         })
         var that = this;
         if (user != null && user != '') {
-            // this.data.realTime = setInterval(function() {
-            // 
             // 请求服务器数据
             console.log('请求接口：刷新数据')
             that.TeaNowCourse();
-            // that.getLocation(that.data.stuid)
-
-            // }, 30000) //间隔时间
-
-            // 更新数据
-            // this.setData({
-            //     realTime: this.data.realTime, //实时数据对象(用于关闭实时刷新方法)
-
-            // })
         }
     },
 
@@ -214,6 +254,7 @@ Page({
 
     // 获取定位
     getLocation: function(e) {
+        console.log("定位");
         let that = this;
         console.log(e)
         var id = '';
@@ -272,23 +313,18 @@ Page({
 
                 var latitude = res.latitude;
                 var longtitude = res.longitude;
-                console.log(res)
-                wx.request({
-                    url: app.globalData.url + 'WxOther/GpsRequest',
-                    data: {
-                        teacherid: user.id,
-                        courseid: that.data.courseid,
-                    },
-                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                    // header: {}, // 设置请求的 header
-                    success: function(res) {
-                        // success
+                console.log(res);
+                const p = GpsRequest({
+                    teacherid: user.id,
+                    courseid: that.data.courseid,
+                });
+                p.then(value => {
                         console.log("导师请求获取某个学生的位置信息");
-                        console.log(res)
+                        console.log(value)
                         that.setData({
-                            request_code: res.data.data.code,
+                            request_code: value.data.data.code,
                         })
-                        if (res.data.data.code == 1) {
+                        if (value.data.data.code == 1) {
                             that.getStuGps(id);
                         } else {
                             wx.showToast({
@@ -301,7 +337,7 @@ Page({
                                     that.TeaNowCourse();
                                     that.getLocation(id)
 
-                                }, 10000) //间隔时间
+                                }, 30000) //间隔时间
 
                             // 更新数据
                             that.setData({
@@ -309,14 +345,53 @@ Page({
 
                             })
                         }
-                    },
-                    fail: function() {
-                        // fail
-                    },
-                    complete: function() {
-                        // complete
-                    }
-                })
+                    }, reason => {
+                        console.log("获取学生位置数据失败", reason);
+                    })
+                    /*      wx.request({
+                             url: app.globalData.url + 'WxOther/GpsRequest',
+                             data: {
+                                 teacherid: user.id,
+                                 courseid: that.data.courseid,
+                             },
+                             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+                             // header: {}, // 设置请求的 header
+                             success: function(res) {
+                                 // success
+                                 console.log("导师请求获取某个学生的位置信息");
+                                 console.log(res)
+                                 that.setData({
+                                     request_code: res.data.data.code,
+                                 })
+                                 if (res.data.data.code == 1) {
+                                     that.getStuGps(id);
+                                 } else {
+                                     wx.showToast({
+                                         title: '请求失败',
+                                         duration: 800,
+                                     });
+                                     that.data.realTime = setInterval(function() {
+                                             // 请求服务器数据
+                                             console.log('请求接口：刷新数据')
+                                             that.TeaNowCourse();
+                                             that.getLocation(id)
+
+                                         }, 30000) //间隔时间
+
+                                     // 更新数据
+                                     that.setData({
+                                         realTime: that.data.realTime, //实时数据对象(用于关闭实时刷新方法)
+
+                                     })
+                                 }
+                             },
+                             fail: function() {
+                                 // fail
+                             },
+                             complete: function() {
+                                 // complete
+                             }
+                         }); */
                 var longitude2 = "tea_location.longitude",
                     latitude2 = "tea_location.latitude";
 
@@ -357,5 +432,10 @@ Page({
             }
         })
     },
-
+    getGps: function() {
+        var data = { "type": "getgps" }
+        var time = setTimeout(() => {
+            webSocket.sendSocketMessage(data);
+        }, 1000);
+    }
 })

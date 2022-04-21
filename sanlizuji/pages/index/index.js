@@ -1,5 +1,6 @@
 // pages/index/index.js
 import config from '../../config.js'
+import { GetClubNews, Advertisement, CourseCheck } from '../../utils/apis.js'
 var swiperIndex = 0;
 var Urlsid = [1, 2, 3, 4];
 var app = getApp();
@@ -19,20 +20,20 @@ Page({
         duration: "1000", //滑动动画时长//uploads/temp/WxImg/turn_img1.jpg
         isHideLoadMore: true,
         activity: [{
-                'PicUrl': '/icon/图标未加载.png',
+                'PicUrl': '/icon/unload.png',
                 'Name': ''
             },
             {
-                'PicUrl': '/icon/图标未加载.png',
+                'PicUrl': '/icon/unload.png',
                 'Name': ''
             }
         ],
         history: [{
-                'PicUrl': '/icon/图标未加载.png',
+                'PicUrl': '/icon/unload.png',
                 'Name': ''
             },
             {
-                'PicUrl': '/icon/图标未加载.png',
+                'PicUrl': '/icon/unload.png',
                 'Name': ''
             }
         ],
@@ -134,41 +135,30 @@ Page({
     ok: function() {
         let that = this;
         if (that.data.pwd != '') {
-            wx.request({
-                url: app.globalData.url + 'WxCourse/CourseCheck',
-                data: {
-                    courseid: that.data.courseid,
-                    password: that.data.pwd,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("课程密码校验结果");
-                    console.log(res);
-                    if (res.data.data.msg == '密码正确') {
-                        that.setData({
-                            showModal: false,
-                        })
-                        wx.navigateTo({
-                            url: '../detail/detail?id=' + that.data.courseid,
-                        });
-
-                    } else {
-                        wx.showToast({
-                            title: '课程密码有误', //提示的内容,
-                            duration: 800,
-                        })
-                    }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
-                }
+            const p = CourseCheck({
+                courseid: that.data.courseid,
+                password: that.data.pwd,
             })
+            p.then(value => {
+                console.log("课程密码校验结果");
+                console.log(value);
+                if (value.data.data.msg == '密码正确') {
+                    that.setData({
+                        showModal: false,
+                    })
+                    wx.navigateTo({
+                        url: '../detail/detail?id=' + that.data.courseid,
+                    });
 
+                } else {
+                    wx.showToast({
+                        title: '课程密码有误', //提示的内容,
+                        duration: 800,
+                    })
+                }
+            }, reason => {
+                console.log("无法进入该课程", reason);
+            });
         } else {
             wx.showToast({
                 title: '请输入密码',
@@ -182,28 +172,24 @@ Page({
     back: function() {
         this.setData({
             showModal: false,
-        })
-
+        });
     },
     InputPwd: function(e) {
         console.log(e)
         this.setData({
             pwd: e.detail.value,
-        })
+        });
     },
     //查看更多
     viewMore: function(e) {
         app.globalData.viewMore = this.data.navigat_name;
-        console.log("12222");
         console.log(app.globalData.viewMore);
-
         wx.switchTab({
             url: '../course/course',
         })
     },
     readData: function(e) {
         var that = this;
-        //   console.log(app.globalData.url + "WxCourse/GetClubNews");
         if (e == '更多活动') {
             wx.switchTab({
                 url: '../course/course',
@@ -212,24 +198,21 @@ Page({
             this.setData({
                 navigat_name: e,
             })
-            console.log(that.data.navigat_name)
-            app.globalData.navigate_name = this.data.navigat_name
-            wx.request({
-                url: app.globalData.url + "WxCourse/GetClubNews",
-                data: { id: e, },
-                header: {
-                    'cookie': "UM_distinctid=17c7eea955811d-074deee6c4e0f3-c791e37-144000-17c7eea9559220; CNZZDATA155540=cnzz_eid%3D1159189188-1634211971-http%253A%252F%252Flocalhost%252F%26ntime%3D1636677369; PHPSESSID=k9euq11vro8ic2pcor2gukmt9h; _currentUrl_=%2Fsanli%2Findex.php%3Fr%3DClubNews%2Findex%26news_type%3D0"
-                },
-                success(res) {
-                    that.setData({
-                        activity: res.data.data,
-                        history: res.data.history,
-                    })
-                    console.log("课程数据")
-                    console.log(res)
-
-                }
-            })
+            console.log(that.data.navigat_name);
+            app.globalData.navigate_name = this.data.navigat_name;
+            const p = GetClubNews({
+                id: e,
+            });
+            p.then(value => {
+                that.setData({
+                    activity: value.data.data,
+                    history: value.data.history,
+                });
+                console.log("课程数据");
+                console.log(value);
+            }, reason => {
+                console.log("获取课程数据失败", reason);
+            });
         }
     },
     reReadData: function(e) {
@@ -238,17 +221,20 @@ Page({
         var text = e.currentTarget.dataset.id;
         // 样式改变
         var navigation = this.data.navigation;
-        for (var item in navigation) {
-            console.log("item", navigation[item])
-            if (navigation[item].text == text) {
-                navigation[item].class = 'selected';
-            } else {
-                navigation[item].class = 'select';
+        console.log(navigation)
+        if (text != '更多活动') {
+            for (var item in navigation) {
+                console.log("item", navigation[item])
+                if (navigation[item].text == text) {
+                    navigation[item].class = 'selected';
+                } else {
+                    navigation[item].class = 'select';
+                }
             }
+            this.setData({
+                navigation: navigation,
+            })
         }
-        this.setData({
-            navigation: navigation,
-        })
         this.readData(e.currentTarget.dataset.id);
 
 
@@ -261,25 +247,23 @@ Page({
         let user = wx.getStorageSync('user');
         this.readData("亲子活动");
         let that = this;
-
-        wx.request({
-            url: app.globalData.url + 'WxOther/Advertisement',
-            data: {},
-            success(res) {
-                console.log("轮播图");
-                console.log(res)
-                var i = 0,
-                    img = [];
-                for (var tmp of res.data.data) {
-                    i++;
-                    img.push(tmp)
-                }
-                console.log(img)
-                that.setData({
-                    imgUrl: img
-                })
+        const p = Advertisement({});
+        p.then(value => {
+            console.log("轮播图");
+            console.log(value)
+            var i = 0,
+                img = [];
+            for (var tmp of value.data.data) {
+                i++;
+                img.push(tmp)
             }
-        })
+            console.log(img)
+            that.setData({
+                imgUrl: img
+            })
+        }, reason => {
+            console.log("获取轮播图数据失败", reason);
+        });
     },
 
     /**
@@ -296,9 +280,8 @@ Page({
         let user = wx.getStorageSync('user');
         let id_flag = wx.getStorageSync('id_flag');
         this.setData({
-                id_flag: id_flag,
-            })
-            // app.globalData.navigate_name = "亲子活动"
+            id_flag: id_flag,
+        });
         this.readData(app.globalData.navigate_name);
     },
 

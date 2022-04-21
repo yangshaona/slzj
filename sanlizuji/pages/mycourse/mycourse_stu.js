@@ -1,4 +1,5 @@
 // pages/course/course.js
+import { GetKidsActivity, GetKidsList, GetMyAct } from '../../utils/apis.js';
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
@@ -12,18 +13,10 @@ Page({
         statusHeight: app.globalData.statusHeight,
         // 设备高度
         height: app.globalData.height,
-        // 全部活动
-        /* 需要的key: 
-          imgUrl: 缩略图链接
-          actTitle: 活动标题
-          actNum: 报名人数
-          ddl: 报名截止日期
-        */
         activity: [],
         activity2: {},
         id_flag: "",
         user: user,
-
         kids_name: "",
     },
     // 跳转到报名
@@ -35,8 +28,8 @@ Page({
     },
     // 导师详情
     showTeacherDetail: function(e) {
-        console.log("点击导师")
-        var courseid = e.currentTarget.dataset.courseid;
+        console.log("点击导师", e);
+        var courseid = e.currentTarget.dataset.id;
         var teacherid = e.currentTarget.dataset.teacherid;
         if (courseid == '' || teacherid == '') {
             wx.showToast({
@@ -59,47 +52,34 @@ Page({
                 id_flag: id_flag,
             })
             //获取已绑定的孩子信息
-        wx.request({
-            url: app.globalData.url + 'WxCourse/GetKidsActivity',
-            data: {
-                pid: user.id,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("成功获取绑定孩子qq信息");
-                console.log(res);
-                var activity = [];
-                for (var item of res.data.data.data) {
-                    activity.push(mergeArr(item.data1, item.data2));
-
-                }
-
-                function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                    if (arr1.length == 0) {
-                        return [];
-                    }
-                    let arr3 = [];
-                    arr1.map((item, index) => {
-                        arr3.push(Object.assign(item, arr2[index]));
-                    })
-                    return arr3;
-                }
-                that.setData({
-                    activity: activity
-                })
-                console.log("我的活动数据")
-                console.log(activity)
-                console.log(that.data.activity)
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        const p = GetKidsActivity({
+            pid: user.id,
+        });
+        p.then(value => {
+            console.log("成功获取绑定孩子信息", value);
+            var activity = [];
+            for (var item of value.data.data.data) {
+                activity.push(mergeArr(item.data1, item.data2));
             }
-        })
+
+            function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
+                if (arr1.length == 0) {
+                    return [];
+                }
+                let arr3 = [];
+                arr1.map((item, index) => {
+                    arr3.push(Object.assign(item, arr2[index]));
+                })
+                return arr3;
+            }
+            that.setData({
+                activity: activity
+            })
+            console.log("我的活动数据", activity);
+            console.log(that.data.activity);
+        }, reason => {
+            console.log("获取绑定孩子的活动数据失败", reason);
+        });
     },
 
 
@@ -107,39 +87,29 @@ Page({
     GetStuActivity: function() {
         let that = this;
         user = wx.getStorageSync("user");
-        wx.request({
-            url: app.globalData.url + 'WxOther/GetMyAct',
-            data: {
-                id: user.id
-            },
-            success: function(res) {
-                // success
-                console.log("我的活动")
-                console.log(res);
-                var activity = mergeArr(res.data.data1, res.data.data2)
-                that.setData({
-                    activity: activity
-                })
-                console.log("ac");
-                console.log(activity)
+        const p = GetMyAct({
+            id: user.id,
+        });
+        p.then(value => {
+            console.log("我的活动")
+            console.log(value);
+            var activity = mergeArr(value.data.data1, value.data.data2)
+            that.setData({
+                activity: activity
+            })
 
-                function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                    if (arr1.length == 0) {
-                        return [];
-                    }
-                    let arr3 = [];
-                    arr1.map((item, index) => {
-                        arr3.push(Object.assign(item, arr2[index]));
-                    })
-                    return arr3;
+            function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
+                if (arr1.length == 0) {
+                    return [];
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+                let arr3 = [];
+                arr1.map((item, index) => {
+                    arr3.push(Object.assign(item, arr2[index]));
+                })
+                return arr3;
             }
+        }, reason => {
+            console.log("获取我的活动数据失败", reason);
         });
     },
 
@@ -155,8 +125,7 @@ Page({
         id_flag = wx.getStorageSync('id_flag');
         wx.navigateTo({
             url: '../person_info/parent_info',
-        })
-
+        });
     },
     /**
      * 生命周期函数--监听页面加载
@@ -175,7 +144,6 @@ Page({
             that.GetKidsActivity();
             that.setTitle("孩子的活动");
         }
-
     },
     // 设置标题
     setTitle: function(tname) {
@@ -210,15 +178,6 @@ Page({
         })
         if (id_flag == "student") that.GetStuActivity();
         else if (id_flag == "parent") that.GetKidsActivity();
-        // if (user != null && user != '') {
-
-        //     if (id_flag == 'parent') {
-        //         console.log("家长身份");
-        //         console.log(that.data.id_flag);
-        //         this.getKidsList()
-        //     }
-
-        // }
     },
 
     /**
@@ -286,36 +245,26 @@ Page({
     // 获取孩子信息
     getKidsList: function() {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/GetKidsList',
-            data: {
-                id: user.id
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("孩子信息111");
-                console.log(res);
-                if (res.data.data.length > 0) {
-                    var kids = [];
-                    kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
-                    for (var i = 0; i < res.data.data.length; i++) {
-                        var kid = { "id": "0" + (i + 2), "isActive": false, "value": res.data.data[i].name, "kid_id": res.data.data[i].id };
-                        kids.push(kid);
-                    }
-                    that.setData({
-                        kids_name: kids
-                    })
-                    console.log(that.data.kids_name);
+        const p = GetKidsList({
+            id: user.id
+        });
+        p.then(value => {
+            console.log("孩子信息");
+            console.log(value);
+            if (value.data.data.length > 0) {
+                var kids = [];
+                kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
+                for (var i = 0; i < value.data.data.length; i++) {
+                    var kid = { "id": "0" + (i + 2), "isActive": false, "value": value.data.data[i].name, "kid_id": value.data.data[i].id };
+                    kids.push(kid);
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+                that.setData({
+                    kids_name: kids
+                })
+                console.log(that.data.kids_name);
             }
-        })
+        }, reason => {
+            console.log("获取孩子信息失败", reason);
+        });
     },
 })

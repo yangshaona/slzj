@@ -38,13 +38,13 @@
         </view>
     </view>
 </view>
-    <!-- 顶部标题-->
-    <view class="top-box" style="padding-top: {{statusHeight+45}}px;">
+<!-- 顶部标题-->
+<view class="top-box" style="padding-top: {{statusHeight+45}}px;">
     <view class="top" style="padding-top: {{statusHeight+16}}px;">
         {{title_name==''?'课程':title_name}}
     </view>
-    </view>
-  <view class="total" id="total">
+</view>
+<view class="total" id="total">
 
     <view class="filterTop" catchtap="filterTap">
         <image src="/icon/filter.png" mode="widthFix"></image>
@@ -66,7 +66,7 @@
 
         <!-- 活动卡片 -->
         <block wx:for="{{activity}}" wx:key="item">
-            <view class="actBox" style="height: {{height*0.35+'px'}};" bindtap="toCourseDetail" data-fid="{{item.id}}" data-isOnly="{{item.isOnly}}">
+            <view class="actBox" style="height: {{height*0.35+'px'}};" bindtap="toCourseDetail" data-fid="{{item.id}}" data-isonly="{{item.isOnly}}">
                 <!-- 活动缩略图 -->
                 <view class="actImg">
                     <image src="{{item.pic}}" mode="aspectFill"></image>
@@ -78,10 +78,10 @@
                         <!-- 报名时间 -->
                         <view class="ddl">报名截止: <text style="color: #6177ff;">{{item.end_time}}</text></view>
                         <!-- 报名人数 -->
-                        <view class="numBox">
+                        <!-- <view class="numBox">
                             <view>已报名：{{item.sign_num==''?0:item.sign_num}}</view>
                             <image src="/icon/account.png" mode="widthFix"></image>
-                        </view>
+                        </view> -->
                     </view>
                 </view>
             </view>

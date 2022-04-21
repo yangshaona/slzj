@@ -7,7 +7,7 @@
     justify-content: space-between;
     align-items: center;
     justify-content: center;
-    height: 90%;
+    height: 100%;
     background-color: #e5e5e5;
     z-index: 99;
 }
@@ -39,7 +39,7 @@
 }
 
 .cropper-buttons {
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(253, 200, 200, 0.95);
 }
 
 .btn {
@@ -54,12 +54,17 @@
     display: flex;
     width: 100%;
     box-sizing: border-box;
-    height: 50px;
+    height: 18%;
     position: fixed;
+    left: 0;
+    bottom: 0;
     background: black;
+    justify-content: center;
+    content: '';
+    clear: both;
 }
 
-.btn-left {
+.button-box .btn-left {
     padding: 0 5%;
     height: 40px !important;
     margin: 0 12.5% 10px 12.5%;
@@ -68,9 +73,10 @@
     border-radius: 0.5rem;
     color: #6177ff;
     font-size: 0.85rem;
+    margin-top: 10%;
 }
 
-.btn-right {
+.button-box .btn-right {
     /* width:25% !important; */
     padding: 0 5%;
     height: 40px !important;
@@ -81,4 +87,10 @@
     color: white;
     font-size: 0.85rem;
     background-image: linear-gradient(to right, #8595ff, #6177ff);
+    margin-top: 10%;
+}
+
+.button-box button {
+    left: 0;
+    justify-content: space-between;
 }

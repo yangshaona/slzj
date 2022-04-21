@@ -1,11 +1,17 @@
 <!--pages/person_info/parent_info.wxml-->
 <!-- <view class="info_desc_box">个人信息</view> -->
+<wxs src="../../utils/subut.wxs" module="tools"></wxs>
 <view class="primary">
     <view class="info_desc">
         <!-- 以下将inner-text属性的内容替换成对应的{{页面data}}，icon属性不动 -->
         <view class="info-bar">
             <desc class="info-bar-desc" inner-text="姓名：{{user.name}}" icon="/icon/account.png"></desc>
             <view class="info-bar-view" bindtap="Bind" data-trigger="name">></view>
+        </view>
+        <view class="line"></view>
+        <view class="info-bar">
+            <desc class="info-bar-desc" inner-text="身份证：{{tools.sub(user.idnum,3,4)}}" icon="/icon/id.png"></desc>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="idnum">></view>
         </view>
         <view class="line"></view>
         <view class="info-bar">
@@ -20,7 +26,7 @@
 
         <view class="info-bar">
             <desc class="info-bar-desc" inner-text="孩子：{{user.kids==''?'未绑定孩子':user.kids}}" icon="/icon/parent_kid.png"></desc>
-            <view class="info-bar-view">></view>
+            <view class="info-bar-view"></view>
         </view>
         <view class="line"></view>
 
@@ -32,7 +38,7 @@
     </view>
     <button class="logout" bindtap="logout" type="button">退出登录</button>
 </view>
-<view wx:if="{{trigger=='name'||trigger=='bind'}}">
+<view wx:if="{{trigger=='name'||trigger=='bind'||trigger=='idnum'}}">
     <view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'></view>
     <view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
         <view wx:if="{{trigger=='bind'}}">
@@ -40,13 +46,13 @@
                 <text class='userTitle'>监护人信息</text>
             </view>
             <view class='wishName'>孩子姓名：
-                <input bindinput='nameInput' placeholder='请输入内容' class='wish_put'></input>
+                <input type="text" bindinput='nameInput' bindblur='checkInputName' placeholder='请输入内容' class='wish_put' auto-focus="true"></input>
             </view>
             <view class='wishName'>孩子身份证：
-                <input bindinput='idInput' placeholder='请输入内容' class='wish_put'></input>
+                <input type="idcard" bindinput='idInput' bindblur="checkIdNum" placeholder='请输入内容' class='wish_put'></input>
             </view>
             <view class='wishName'>孩子手机号：
-                <input bindinput='phoneInput' placeholder='请输入内容' class='wish_put'></input>
+                <input type="number" bindinput="phoneInput" bindblur="checkPhone" placeholder='请输入内容' class='wish_put'></input>
             </view>
 
         </view>
@@ -58,7 +64,19 @@
                 <text class=''>修改姓名</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='parentName' placeholder='请输入姓名'></input>
+                <input type='text' class="input" bindblur='checkInputName' placeholder='请输入姓名' value="{{user.name}}" auto-focus="true"></input>
+            </view>
+
+
+        </view>
+        <!-- 身份证的修改 -->
+        <view wx:if="{{trigger=='idnum'}}" class="info">
+
+            <view class='change-name'>
+                <text class=''>更改身份证</text>
+            </view>
+            <view class='input-name'>
+                <input type='idcard' class="input" bindblur="checkIdNum" placeholder='请输入身份证' value="{{user.idnum}}" auto-focus="true"></input>
             </view>
         </view>
         <view class='modal-btn-wrapper'>

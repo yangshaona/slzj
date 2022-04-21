@@ -1,36 +1,28 @@
 // pages/register/register_stu.js
-import {
-    checkPhone
-
-} from '../../utils/text.js'
+import { checkPhone } from '../../utils/text.js';
 const formatTime = require('../../utils/text.js');
 import WeCropper from '../dev/we-cropper.js';
 import GlobalConfig from '../dev/config.js';
-
-// const app = getApp();
+import { Register, schoollist, CheckRole, GetUserInfo2, getOpenId } from '../../utils/apis.js';
 const config = new GlobalConfig();
-
 config.init();
-
-const device = wx.getSystemInfoSync()
-const width = device.windowWidth
-    // const height = device.windowHeight - 50
+const device = wx.getSystemInfoSync();
+const width = device.windowWidth;
 const height = device.windowHeight - 50;
 const windowHeight = device.windowHeight - 50;
-
 var app = getApp();
 const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
-// const checkPhone = require('../../utils/text.js'); //路径根据自己的文件目录来
-
 Page({
-
     /**
      * 页面的初始数据
      */
-
     data: {
         windowHeight: windowHeight,
+        //标题高度
+        top_width: 0,
+        top_height: 0,
+        statusHeight: app.globalData.statusHeight,
         cropperOpt: {
             id: 'cropper',
             targetId: 'targetCropper',
@@ -125,6 +117,9 @@ Page({
         register_role: '',
         user_group: '',
         is_show: 0, //是否显示注册按钮
+        input_school: "", //用于输入学校进行模糊搜索
+        schoollist: [],
+        school_name: '',
     },
     newCut(src) {
         const { cropperOpt } = this.data
@@ -314,6 +309,8 @@ Page({
 
         } else if (tmp[1] == '天津市') {
             tmp[1] = '天津';
+        } else if (tmp[1] == '上海市') {
+            tmp[1] = '上海';
         }
         console.log("选中的是：", tmp)
         this.setData({
@@ -441,9 +438,6 @@ Page({
             })
             return false;
         } else {
-            // wx.showToast({
-            //     title: '通过了',
-            // })
             var birthday = "stu_info.birthday";
             this.setData({
                 [birthday]: data.birth,
@@ -460,27 +454,10 @@ Page({
     },
     // 检查姓名是否正确
     InputName: function(e) {
-        var that = this;
-        console.log(e);
-        var name = e.detail.value
-        var reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,6}$/;
-
-        if (name.match(reg)) {
-            console.log("111");
-            // that.setData({ allow_name: true });
-            wx.setStorageSync("name", name)
-        } else {
-            wx.showToast({
-                title: "姓名有误",
-                icon: 'error',
-                duration: 800
-            })
-        }
-        console.log(name)
+        check_idnum.checkName(e.detail.value);
     },
     // 检查手机号是否输入正确
     InputPhone: function(e) {
-        // this.checkPhone(e.detail.value);
         checkPhone(e.detail.value);
     },
 
@@ -547,89 +524,70 @@ Page({
                 success: function(res) {
                     // success
                     console.log("获取openid")
-                    console.log(res)
-                    wx.request({
-                        url: app.globalData.url + "WxUser/getOpenId",
-                        data: {
-                            code: res.code
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log(res)
-                            that.setData({
-                                openid: res.data.openid
-                            })
-                            app.globalData.openid = res.data.openid
-                            console.log("app openid")
-                            console.log(app.globalData.openid)
-                            console.log("学生数据")
-                            console.log(data)
-                            wx.request({
-                                url: app.globalData.url + 'WxUser/Register&modelName=Userinfo',
-                                data: {
-                                    Userinfo: {
-                                        name: data.name,
-                                        nikename: data.nickname,
-                                        openid: that.data.openid,
-                                        idnum: data.idnum,
-                                        birthday: data.birth,
-                                        sex: data.sex,
-                                        sexid: that.data.stu_info.sexid,
-                                        education: that.data.edu[data.education],
-                                        phone: data.phone,
-                                        schoolname: data.schoolname,
-                                        grade: data.grade,
-                                        class: data.class,
-                                        province: that.data.reg[0],
-                                        city: that.data.reg[1],
-                                        district: that.data.reg[2],
-                                        aller: data.remark,
-                                        regsterdate: data.regsterdate,
-                                    }
-                                },
-                                success(res) {
-                                    console.log("注册信息")
-                                    console.log(res)
-                                    if (res.data.data.msg == "该微信已注册") {
-                                        wx.showModal({
-                                            content: '该微信已注册',
-                                            showCancel: false,
-                                        })
-                                    } else if (res.data.data.msg == "该手机号已注册") {
-                                        wx.showModal({
-                                            content: '该手机号已注册',
-                                            showCancel: false,
-                                        })
-                                    } else {
-                                        wx.setStorageSync('avator', that.data.avator)
+                    console.log(res);
+                    const p = getOpenId({
+                        code: res.code
+                    }).then(value => {
+                        console.log(value)
+                        that.setData({
+                            openid: value.data.openid
+                        })
+                        app.globalData.openid = value.data.openid
+                        console.log("app openid", app.globalData.openid)
+                        console.log("学生数据", data);
+                        Register({
+                            modelName: "Userinfo",
+                            Userinfo: {
+                                name: data.name,
+                                nikename: data.nickname,
+                                openid: that.data.openid,
+                                idnum: data.idnum,
+                                birthday: data.birth,
+                                sex: data.sex,
+                                sexid: that.data.stu_info.sexid,
+                                education: that.data.edu[data.education],
+                                phone: data.phone,
+                                schoolname: data.schoolname,
+                                grade: data.grade,
+                                class: data.class,
+                                province: that.data.reg[0],
+                                city: that.data.reg[1],
+                                district: that.data.reg[2],
+                                aller: data.remark,
+                                regsterdate: data.regsterdate,
+                            }
+                        }).then(value => {
+                            console.log("注册信息", value)
+                            if (value.data.data.msg == "该微信已注册") {
+                                wx.showModal({
+                                    content: '该微信已注册',
+                                    showCancel: false,
+                                })
+                            } else if (value.data.data.msg == "该手机号已注册") {
+                                wx.showModal({
+                                    content: '该手机号已注册',
+                                    showCancel: false,
+                                })
+                            } else {
+                                wx.setStorageSync('avator', that.data.avator)
 
-                                        wx.showModal({
-                                            content: '成功添加个人信息',
-                                            showCancel: false,
-                                        })
-                                        console.log("表单检查成功");
-                                        console.log(that.data.stu_info);
-                                        that.getUserInfo();
-                                        setTimeout(function() {
-                                            wx.navigateTo({
-                                                url: '../login/login?id=student'
-                                            })
-                                        }, 800);
-                                    }
-
-                                }
-                            })
-
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
-                        }
-                    })
+                                wx.showModal({
+                                    content: '成功添加个人信息',
+                                    showCancel: false,
+                                })
+                                console.log("表单检查成功");
+                                console.log(that.data.stu_info);
+                                that.getUserInfo();
+                                setTimeout(function() {
+                                    wx.navigateTo({
+                                        url: '../login/login?id=student'
+                                    })
+                                }, 800);
+                            }
+                        })
+                    }).catch(err => {
+                        console.log("注册失败", err)
+                    });
                 },
                 fail: function() {
                     // fail
@@ -638,8 +596,6 @@ Page({
                     // complete
                 }
             })
-
-
         } else {
             console.log("手机号填写错误");
             return;
@@ -648,21 +604,15 @@ Page({
     // 获取用户信息
     getUserInfo: function(e) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/GetUserInfo2',
-            data: {
-                openid: app.globalData.openid,
-                id_flag: 'student',
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("获取成功");
-                console.log(res);
-                that.UpLoadImage(res.data.data);
-            }
-        })
+        const p = GetUserInfo2({
+            openid: app.globalData.openid,
+            id_flag: 'student',
+        }).then(value => {
+            console.log("获取成功", value);
+            that.UpLoadImage(value.data.data);
+        }, reason => {
+            console.log("获取用户信息失败", reason);
+        });
     },
     //点击头像上传图片
     UpLoadImage: function(data) {
@@ -730,39 +680,29 @@ Page({
     // 身份切换密码校验
     checkRole: function(user_group, register_role) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxSign/CheckRole',
-            data: {
-                user_group: user_group,
-                password: that.data.pwd,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("身份切换密码校验结果");
-                console.log(res);
-                if (res.data.data == '验证成功') {
-                    that.setData({
-                        showModal: false,
-                    })
-                    wx.navigateTo({
-                        url: './register_' + register_role,
-                    })
-                } else {
-                    wx.showToast({
-                        title: '密码有误', //提示的内容,
-                        duration: 800,
-                    })
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        CheckRole({
+            user_group: user_group,
+            password: that.data.pwd,
+        }).then(value => {
+            console.log("身份切换密码校验结果", value);
+            if (value.data.data == '验证成功') {
+                that.setData({
+                    showModal: false,
+                })
+                wx.navigateTo({
+                    url: './register_' + register_role,
+                })
+            } else {
+                wx.showToast({
+                    title: '密码有误', //提示的内容,
+                    duration: 800,
+                    image: '/icon/fail.svg',
+                    icon: "error",
+                })
             }
-        })
+        }, reason => {
+            console.log("无法校验密码", reason);
+        });
     },
     // 课程密码校验
     // 点击确定按钮
@@ -774,6 +714,8 @@ Page({
             wx.showToast({
                 title: '请输入密码',
                 duration: 500,
+                icon: "error",
+                image: '/icon/fail.svg',
             })
         }
         that.setData({
@@ -795,21 +737,27 @@ Page({
     // 绑定已有数据
     login: function(e) {
         app.globalData.flag_identity = [1, 0, 0];
-
-        console.log(app.globalData.flag_identity[0])
-        console.log(app.globalData.flag_identity[1])
-        console.log(app.globalData.flag_identity[2])
         wx.navigateTo({
             url: '../login/login?id=student',
         })
     },
-
+    getTopHeight: function() {
+        let that = this;
+        wx.createSelectorQuery().selectAll('#top').boundingClientRect(function(rect) {
+            that.setData({
+                top_height: rect[0].height,
+                top_width: rect[0].width,
+            });
+            console.log("高度是：", that.data.top_height);
+        }).exec();
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
         var now = new Date;
         let that = this;
+        that.getTopHeight();
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         that.setData({
             time: time,
@@ -854,9 +802,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-        let user = wx.getStorageSync('user');
         app.globalData.flag_identity = [1, 0, 0];
-
     },
 
     /**
@@ -865,7 +811,6 @@ Page({
     onHide: function() {
 
     },
-
     /**
      * 生命周期函数--监听页面卸载
      */
@@ -892,5 +837,63 @@ Page({
      */
     onShareAppMessage: function() {
 
+    },
+    Return: function() {
+        console.log("返回")
+        wx.navigateBack({
+            delta: 2, // 回退前 delta(默认为1) 页面
+            success: function(res) {
+                // success
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
+    },
+    // 搜索学校
+    InputSchool: function(e) {
+        console.log(e);
+        this.setData({
+            school_name: e.detail.value,
+        })
+        if (e.detail.value != '') {
+            this.getSchoolList(e.detail.value);
+        } else {
+            this.setData({
+                schoollist: [],
+            })
+        }
+    },
+    SchoolBlur: function(e) {
+        console.log(e);
+        this.setData({
+            schoollist: [],
+        })
+    },
+    getSchool: function(e) {
+        console.log(e.currentTarget.dataset.school);
+        this.setData({
+            school_name: e.currentTarget.dataset.school,
+        })
+    },
+    // 模糊搜索获取学校
+    getSchoolList: function(keyword) {
+        let that = this;
+        console.log("关键字", keyword)
+        schoollist({
+            keyword: keyword
+        }).then(value => {
+            console.log("学校记录", value);
+            that.setData({
+                schoollist: value.data.data
+            })
+            console.log(that.data.schoollist);
+            console.log(value.data.data)
+        }, reason => {
+            console.log("无法搜索到学校记录", reason);
+        });
     }
 })

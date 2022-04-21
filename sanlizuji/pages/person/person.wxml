@@ -105,6 +105,13 @@
     </view>
 </view>
 <view class="bottom-box">
+    <view class="info-bar">
+        <image class="img-icon" style=" width: 7%;" src="/icon/kefu.png" mode="widthFix"></image>
+        <button class="contact" open-type='contact' session-from=''>
+            <view class="text-bar">联系客服</view>
+        </button>
+    </view>
+    <view class="line"></view>
     <view class="info-bar" bindtap="toProtocol">
         <image class="img-icon" src="/icon/xieyi.png" mode="widthFix"></image>
         <view class="text-bar">用户服务协议</view>
@@ -126,7 +133,7 @@
 
     <view class="cropper-wrapper">
         <template is="we-cropper" data="{{...cropperOpt}}" />
-        <view class="button-box" style="top: {{windowHeight-20}}px;">
+        <view class="button-box">
             <button bindtap="uploadTap" class="btn-left">重新选择</button>
             <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
         </view>

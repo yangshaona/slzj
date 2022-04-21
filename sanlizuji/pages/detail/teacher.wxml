@@ -4,16 +4,18 @@
 <template is="not_found" wx:if="{{teacher_info=='该活动暂无导师'}}" />
 <view wx:else>
     <view class="top">
-        <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true">
+        <view wx:if="{{schoolImg==''}}">
+            <image class="actImg" src="/icon/not_found_pic.png" mode="widthFix"></image>
+        </view>
+        <swiper class="swiper" indicator-dots="true" autoplay="false" circular="true" wx:else>
             <block wx:for="{{schoolImg}}" wx:key="item">
                 <swiper-item class="swiper-item">
                     <image class="actImg" src="{{item.imagesurl}}" mode="widthFix"></image>
-
                 </swiper-item>
             </block>
         </swiper>
     </view>
-    <!-- <block wx:for="{{teacher_info}}" wx:key="item"> -->
+
     <!-- 小标题 -->
     <view class="infoTtl">导师信息</view>
 
@@ -41,9 +43,6 @@
     <!-- 小标题 -->
     <view class="infoTtl">活动回顾</view>
     <template is="not_found" wx:if="{{schoolImg.length==0}}" />
-
-    <!-- <view class="infoBox" wx:if="{{schoolImg.length==0}}">暂无活动相关回顾</view> -->
-
     <view class="infoBox" wx:else>
         <block wx:for="{{schoolImg}}" wx:key="item">
             <view class="schoolImg" bindtap="toCourseDetail" data-courseid="{{item.courseid}}">

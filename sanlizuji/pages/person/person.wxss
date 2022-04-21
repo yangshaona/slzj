@@ -260,3 +260,25 @@
 .line {
     border: 1rpx solid rgb(238, 235, 235);
 }
+
+
+/* 客服 */
+
+.contact {
+    display: block;
+    border: 0;
+    font-size: 32rpx;
+    background-color: rgba(0, 0, 0, 0);
+    margin-left: 0;
+    padding-left: 0;
+    text-align: center;
+}
+
+.contact .text-bar {
+    display: block;
+    margin-top: 15%;
+}
+
+.contact::after {
+    border: 0;
+}

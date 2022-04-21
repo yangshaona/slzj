@@ -1,12 +1,18 @@
 // pages/register/register_parent.js
 var app = getApp();
 const areaList = require('../../utils/arealist.js');
+const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+import { getOpenId, Register } from '../../utils/apis.js';
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
+        statusHeight: app.globalData.statusHeight,
+        //标题高度
+        top_width: 0,
+        top_height: 0,
         // 能否获得用户微信昵称
         cangetUserInfo: false,
         //表单各个小标题
@@ -44,8 +50,7 @@ Page({
             isTipTrue: false,
             isAgree: true,
         })
-        this.getNickName()
-
+        this.getNickName();
     },
     tipCancel: function() {
         this.setData({
@@ -77,6 +82,18 @@ Page({
             multiIndex: e.detail.value,
             reg_idx: 1
         })
+    },
+    areaColumnChange: function(res) {
+        data = {
+            "multiArray": this.data.multiArray,
+            "multiIndex": this.data.multiIndex,
+        }
+        var data = {
+            multiArray: res.multiArray,
+            multiIndex: res.multiIndex
+        };
+        data.multiIndex[e.detail.column] = e.detail.value;
+
     },
     bindMultiPickerColumnChange: function(e) {
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
@@ -152,6 +169,8 @@ Page({
 
         } else if (tmp[1] == '天津市') {
             tmp[1] = '天津';
+        } else if (tmp[1] == '上海市') {
+            tmp[1] = '上海';
         }
         console.log("选中的是：", tmp)
         this.setData({
@@ -194,7 +213,28 @@ Page({
             reg_idx: 1
         })
     },
+    // 身份证号输入验证
+    checkID: function(id) {
+        console.log("检查结果");
+        var data = check_idnum.checkIdCard(id);
+        console.log(data.idCardFlag);
+        if (!data.idCardFlag) {
+            wx.showToast({
+                title: '身份证号有误',
+                icon: 'error',
+                duration: 800
 
+            })
+            return false;
+        } else {
+            this.setData({
+                sex: data.sex,
+            })
+            console.log(data);
+            console.log(data.sex);
+            return true;
+        }
+    },
     //手机号码输入检查
     checkPhone: function(phNum) {
         var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
@@ -233,6 +273,10 @@ Page({
         }
         console.log(name)
     },
+    // 检查身份证是否正确
+    InputIdNum: function(e) {
+        this.checkID(e.detail.value);
+    },
     // 检查手机号是否输入正确
     InputPhone: function(e) {
         this.checkPhone(e.detail.value);
@@ -258,13 +302,24 @@ Page({
         // 全部已填写
         // 电话号码格式检查
         if (this.checkPhone(data.phone)) {
+
             let that = this;
+            // 身份证号格式检查
+            if (that.checkID(data.idnum)) {
+
+                console.log("格式无误")
+            } else {
+
+                console.log("身份证号填写有误");
+                return;
+            }
             // 赋值
             this.setData({
                 name: data.name,
                 sex: data.sex,
                 phone: data.phone,
                 region: data.region,
+                idnum: data.idnum,
             })
             if (data.sex == '男') {
                 that.setData({
@@ -280,82 +335,59 @@ Page({
                     // success
                     console.log("获取openid")
                     console.log(res)
-                    wx.request({
-                        url: app.globalData.url + "WxUser/getOpenId",
-                        data: {
-                            code: res.code
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log(res)
-                            that.setData({
-                                openid: res.data.openid
-                            })
-                            app.globalData.openid = res.data.openid
-                            console.log("app openid")
-                            console.log(app.globalData.openid)
-                            console.log("家长数据")
-                            console.log(data)
-                            wx.request({
-                                url: app.globalData.url + 'WxUser/Register&modelName=UserParent',
-                                data: {
-                                    UserParent: {
-
-
-                                        name: data.name,
-                                        nikename: data.nickName,
-                                        openid: that.data.openid,
-                                        header: that.data.header,
-                                        sex: data.sex,
-                                        sexid: that.data.sexid,
-                                        phone: data.phone,
-                                        province: that.data.reg[0],
-                                        city: that.data.reg[1],
-                                        district: that.data.reg[2],
-                                    }
-                                },
-                                success(res) {
-                                    console.log(that.data.openid)
-                                    console.log("注册信息")
-                                    console.log(res)
-                                    if (res.data.data.msg == "该微信已注册") {
-                                        wx.showModal({
-                                            content: '该微信已注册',
-                                            showCancel: false,
-                                        })
-                                    } else if (res.data.data.msg == "该手机号已注册") {
-                                        wx.showModal({
-                                            content: '该手机号已注册',
-                                            showCancel: false,
-                                        })
-                                    } else {
-                                        wx.showModal({
-                                            content: '成功添加个人信息',
-                                            showCancel: false,
-                                        })
-                                        console.log("表单检查成功");
-                                        console.log(that.data.stu_info);
-
-                                        setTimeout(function() {
-                                            wx.navigateTo({
-                                                url: '../login/login?id=parent'
-                                            })
-                                        }, 800);
-                                    }
-
-                                }
-                            })
-
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
-                        }
-                    })
+                    const p = getOpenId({
+                        code: res.code
+                    }).then(value => {
+                        console.log(value)
+                        that.setData({
+                            openid: value.data.openid
+                        })
+                        app.globalData.openid = value.data.openid
+                        console.log("app openid", app.globalData.openid)
+                        Register({
+                            modelName: 'UserParent',
+                            UserParent: {
+                                name: data.name,
+                                idnum: data.idnum,
+                                nikename: data.nickName,
+                                openid: that.data.openid,
+                                header: that.data.header,
+                                sex: data.sex,
+                                sexid: that.data.sexid,
+                                phone: data.phone,
+                                province: that.data.reg[0],
+                                city: that.data.reg[1],
+                                district: that.data.reg[2],
+                            }
+                        }).then(value => {
+                            console.log("注册信息", value)
+                            if (value.data.data.msg == "该微信已注册") {
+                                wx.showModal({
+                                    content: '该微信已注册',
+                                    showCancel: false,
+                                })
+                            } else if (value.data.data.msg == "该手机号已注册") {
+                                wx.showModal({
+                                    content: '该手机号已注册',
+                                    showCancel: false,
+                                })
+                            } else {
+                                wx.showModal({
+                                    content: '成功添加个人信息',
+                                    showCancel: false,
+                                })
+                                console.log("表单检查成功");
+                                console.log(that.data.stu_info);
+                                setTimeout(function() {
+                                    wx.navigateTo({
+                                        url: '../login/login?id=parent'
+                                    })
+                                }, 800);
+                            }
+                        })
+                    }).catch(err => {
+                        console.log("注册失败", err);
+                    });
                 },
                 fail: function() {
                     // fail
@@ -364,7 +396,6 @@ Page({
                     // complete
                 }
             })
-
         } else {
             console.log("手机号填写错误");
             return;
@@ -379,10 +410,23 @@ Page({
             url: '../login/login?id=parent',
         })
     },
+    // 获取标题栏高度
+    getTopHeight: function() {
+        let that = this;
+        wx.createSelectorQuery().selectAll('#top').boundingClientRect(function(rect) {
+            that.setData({
+                top_height: rect[0].height,
+                top_width: rect[0].width,
+            });
+            console.log("高度是：", that.data.top_height);
+        }).exec();
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        let that = this;
+        that.getTopHeight();
         var province = [],
             city = [],
             area = [];
@@ -459,5 +503,19 @@ Page({
      */
     onShareAppMessage: function() {
 
+    },
+    Return: function() {
+        wx.navigateBack({
+            delta: 1, // 回退前 delta(默认为1) 页面
+            success: function(res) {
+                // success
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
     }
 })

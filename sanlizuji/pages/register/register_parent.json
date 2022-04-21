@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
-  "navigationBarTitleText": "注册(家长端)"
+    "usingComponents": {},
+    "navigationBarTitleText": "注册(家长端)",
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black"
 }

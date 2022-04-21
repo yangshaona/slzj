@@ -1,4 +1,5 @@
 // pages/doing/doing_parent.js
+import { ParentGetStuActivityDetail } from '../../utils/apis.js'
 const app = getApp();
 let id_flag = wx.getStorageSync('id_flag')
 let user = wx.getStorageSync('user')
@@ -39,34 +40,24 @@ Page({
             user: user,
             id_flag: id_flag
         })
-        wx.request({
-            url: app.globalData.url + 'WxSign/ParentGetStuActivityDetail',
-            data: {
-                pid: user.id,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
+        const p = ParentGetStuActivityDetail({
+            pid: user.id,
+        });
+        p.then(value => {
                 // success
-                console.log("获取到真在活动的孩子的信息")
-                console.log(res)
-                console.log(res.data.data.data)
+                console.log("获取到正在活动的孩子的信息")
+                console.log(value);
                 var doing = [],
                     activity = [];
-                console.log(res.data.data.data[0])
-                for (var i = 0; i < res.data.data.data.length; i++) {
-                    // doing.push(item);
-                    doing.push(mergeArr(res.data.data.data[i][0].data, res.data.data.data[i][0].teacher));
-
+                for (var i = 0; i < value.data.data.data.length; i++) {
+                    doing.push(mergeArr(value.data.data.data[i][0].data, value.data.data.data[i][0].teacher));
                 }
                 for (var item of doing) {
                     activity.push(item[0])
-
                 }
                 that.setData({
                     activity: activity,
                 })
-
                 console.log("活动");
                 console.log(activity)
 
@@ -80,14 +71,55 @@ Page({
                     })
                     return arr3;
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
+
+            }, reason => {
+                console.log("获取正在活动的孩子信息失败", reason)
+            })
+            // wx.request({
+            //     url: app.globalData.url + 'WxSign/ParentGetStuActivityDetail',
+            //     data: {
+            //         pid: user.id,
+            //     },
+            //     method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            //     // header: {}, // 设置请求的 header
+            //     success: function(res) {
+            //         // success
+            //         console.log("获取到真在活动的孩子的信息")
+            //         console.log(res)
+            //         console.log(res.data.data.data)
+            //         var doing = [],
+            //             activity = [];
+            //         console.log(res.data.data.data[0])
+            //         for (var i = 0; i < res.data.data.data.length; i++) {
+            //             // doing.push(item);
+            //             doing.push(mergeArr(res.data.data.data[i][0].data, res.data.data.data[i][0].teacher));
+            //         }
+            //         for (var item of doing) {
+            //             activity.push(item[0])
+            //         }
+            //         that.setData({
+            //             activity: activity,
+            //         })
+            //         console.log("活动");
+            //         console.log(activity)
+            //         function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
+            //             if (arr1.length == 0) {
+            //                 return [];
+            //             }
+            //             let arr3 = [];
+            //             arr1.map((item, index) => {
+            //                 arr3.push(Object.assign(item, arr2[index]));
+            //             })
+            //             return arr3;
+            //         }
+            //     },
+            //     fail: function() {
+            //         // fail
+            //     },
+            //     complete: function() {
+            //         // complete
+            //     }
+            // })
 
     },
 

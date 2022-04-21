@@ -1,6 +1,10 @@
 // pages/person/demo.js
+import {
+    Unbound
+} from '../../utils/text.js';
 import WeCropper from '../dev/we-cropper.js';
 import GlobalConfig from '../dev/config.js';
+import { GetUserInfo2 } from "../../utils/apis.js";
 // import { formatTime } from '../../utils/text.js';
 const formatTime = require('../../utils/text.js');
 // const app = getApp();
@@ -103,12 +107,9 @@ Page({
         },
     },
     newCut(src) {
-        const { cropperOpt } = this.data
-
-        cropperOpt.boundStyle.color = config.getThemeColor()
-
-        this.setData({ cropperOpt })
-
+        const { cropperOpt } = this.data;
+        cropperOpt.boundStyle.color = config.getThemeColor();
+        this.setData({ cropperOpt });
         if (src) {
             cropperOpt.src = src
             this.cropper = new WeCropper(cropperOpt)
@@ -168,11 +169,9 @@ Page({
                 console.log(that.data.avator);
             }
         })
-
     },
     uploadTap() {
         const self = this
-
         wx.chooseImage({
             count: 1, // 默认9
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -180,7 +179,6 @@ Page({
             success(res) {
                 const src = res.tempFilePaths[0]
                     //  获取裁剪图片资源后，给data添加src属性及其值
-
                 self.cropper.pushOrign(src)
             }
         })
@@ -194,7 +192,6 @@ Page({
         if (!user) {
             wx.navigateTo({
                 url: '../register/register_stu',
-
             })
         } else {
             wx.chooseImage({
@@ -264,31 +261,38 @@ Page({
     toLogin: function(e) {
         wx.navigateTo({
             url: '../register/register_stu',
-
         })
     },
     // 跳转到用户协议
     toProtocol: function() {
         wx.navigateTo({
             url: '../protocol/protocol',
-
         })
     }, // 跳转到用户隐私
     toPrivacy: function() {
         wx.navigateTo({
             url: '../privacy_policy/privacy_policy',
-
         })
     },
     //退出登录
     logout: function() {
-        let that = this;
+        let that = this,
+            user = wx.getStorageSync('user');
         wx.showModal({
             content: '是否退出登录',
             success(res) {
                 if (res.cancel) {
 
                 } else if (res.confirm) {
+                    var modelName = '';
+                    if (id_flag == 'student') {
+                        modelName = "Userinfo";
+                    } else if (id_flag == 'teacher') {
+                        modelName = "Teacher";
+                    } else if (id_flag == 'parent') {
+                        modelName = "UserParent";
+                    }
+                    Unbound(user.id, modelName);
                     wx.setStorageSync('user', null);
                     wx.setStorageSync('id_flag', null);
                     wx.setStorageSync('avator', null);
@@ -303,9 +307,6 @@ Page({
                 }
             }
         })
-
-
-
     },
 
     //点击头像上传图片
@@ -341,24 +342,26 @@ Page({
                         icon: 'success',
                         duration: 800,
                     });
-                    wx.request({
-                        url: app.globalData.url + 'WxUser/GetUserInfo2',
-                        data: {
-                            openid: user.openid,
-                            id_flag: id_flag,
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            wx.setStorageSync('user', res.data.data);
-                            user = wx.getStorageSync('user');
-                            that.setData({
-                                user: user,
-                                header: res.data.data.header
-
-                            });
-                        },
-                    })
+                    const p = GetUserInfo2({
+                        openid: user.openid,
+                        id_flag: id_flag,
+                    });
+                    p.then(value => {
+                        console.log("收到的数据是", value);
+                        console.log(value.data.data)
+                        wx.setStorageSync('user', value.data.data);
+                        user = wx.getStorageSync('user');
+                        that.setData({
+                            user: user,
+                            header: value.data.data.header
+                        });
+                    }, reason => {
+                        wx.showToast({
+                            title: "上传失败",
+                            icon: 'success',
+                            duration: 800,
+                        });
+                    });
                 } else {
                     wx.showToast({
                         title: "上传失败",
@@ -376,9 +379,6 @@ Page({
                 })
             }
         })
-
-
-
         that.setData({
             user: user,
         });
@@ -391,7 +391,7 @@ Page({
         var height = this.data.width * 0.65 * 0.3;
         this.setData({
             imgHeight: height,
-        })
+        });
     },
 
     /**
@@ -406,7 +406,6 @@ Page({
      */
     onShow: function() {
         this.judgeIdentity();
-
     },
     // 判断类型
     judgeIdentity: function() {

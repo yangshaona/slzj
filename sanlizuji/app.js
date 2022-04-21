@@ -1,5 +1,7 @@
 //app.js
 import config from 'config.js';
+const webSocket = require('./utils/webSocket.js');
+import { isShow, TeaUpGps, UpGps, GpsAccept, ActiveStuDetail, TeaNowCourse } from './utils/apis.js';
 App({
     onLaunch: function() {
         var that = this;
@@ -108,13 +110,15 @@ App({
         latitude: "",
         longtitude: "",
         realTime: null, //实时数据对象(用于关闭实时刷新方法)
-        // imgUrl: 'https://shenhailao.com/hsreport/uploads/temp/WxImg/',
-        imgUrl: 'https://sanli-tracks.com/sanli/uploads/temp/WxImg/',
-        // imgUrl: 'http://localhost/gitSanli/sanli/uploads/temp/WxImg/',
+        imgUrl: 'https://sanli-tracks.com/sanlia/uploads/temp/WxImg/',
         // okayapiHost: "http://test_phalapi.com", // TODO: 配置成你所在的接口域名
         okayApiAppKey: "appkey", // TODO：改为你的APP_KEY 在http://open.yesapi.cn/?r=App/Mine寻找
         okayApiAppSecrect: "appsecret", // TODO：改为你的APP_SECRECT
         is_show: 0, //是否显示注册按钮
+        socketTask: '',
+        // 正在活动的orderid
+        orderid: "",
+        imgPrefix: 'https://sanli-tracks.com/sanlia/uploads/temp/',
     },
 
     show_msg: function(msg) {
@@ -171,189 +175,90 @@ App({
     TeaNowCourse: function() {
         var that = this
         let user = wx.getStorageSync('user');
-
         var id = "";
-        wx.request({
-            url: that.globalData.url + 'WxSign/TeaNowCourse&id=' + user.id,
-            data: {},
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("导师获取正在活动数据")
-                console.log(res)
-                if (res.data.data[0] != "无正在进行的课程") {
-                    id = res.data.data[0].courseid;
-                    that.GetLocation(id);
-                }
-
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        TeaNowCourse({
+            id: user.id,
+        }).then(value => {
+            console.log("导师获取正在活动数据", value);
+            if (value.data.data[0] != "无正在进行的课程") {
+                id = value.data.data[0].id;
+                wx.setStorageSync('orderid', value.data.tea_doing[0].id);
+                that.GetLocation(value.data.tea_doing[0].id);
             }
         })
     },
     //学生获取正在活动的数据
     ActiveStuDetail: function() {
         let user = wx.getStorageSync('user')
-        var that = this
-        var id = "",
-            courseid = 1;
-        wx.request({
-            url: that.globalData.url + 'WxSign/ActiveStuDetail',
-            data: {
-                id: user.id,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("学生获取正在活动数据");
-                console.log(res)
-                console.log(res.data.data[0])
-                if (res.data.data[0] == "无正在进行的课程") {
+        var that = this,
+            courseid = '';
+        ActiveStuDetail({
+            id: user.id,
+        }).then(value => {
+            console.log("学生获取正在活动数据", value.data.data[0]);
+            if (value.data.data[0] == "无正在进行的课程") {
 
-                } else {
-                    that.globalData.realTime = setInterval(function() {
-                        courseid = res.data.data[0].courseid;
-                        wx.request({
-                            url: that.globalData.url + 'WxOther/GpsAccept',
-                            data: {
-                                courseid: res.data.data[0].courseid,
-                                teacherid: res.data.data[0].teacherid,
-                            },
-                            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                            // header: {}, // 设置请求的 header
-                            success: function(res) {
-                                // success
-                                console.log("学生接收的请求是")
-                                console.log(res)
-                                if (res.data.data.code == 1) {
-                                    that.GetLocation(courseid);
-                                }
-                            },
-                            fail: function() {
-                                // fail
-                            },
-                            complete: function() {
-                                // complete
-                            }
-                        })
-                    }, 300000)
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+            } else {
+                that.globalData.orderid = value.data.data[0].id;
+                courseid = value.data.data[0].courseid;
+                wx.setStorageSync('orderid', that.globalData.orderid);
+                console.log("课程id：", value.data.data[0].courseid);
+                console.log("教师id：", value.data.data[0].teacherid);
+                that.globalData.realTime = setInterval(function() {
+                    GpsAccept({
+                        courseid: value.data.data[0].courseid,
+                        teacherid: value.data.data[0].teacherid,
+                    }).then(value => {
+                        console.log("学生接收的请求是", value);
+                        if (value.data.data.code == 1) {
+                            that.GetLocation(courseid);
+                        }
+                    }, reason => {
+                        console.log("学生无法接收到导师获取其位置的请求信息", reason);
+                    })
+                }, 300000)
             }
-        })
+        }, reason => {
+            console.log("获取学生获取正在活动数据失败", reason);
+        });
     },
 
-    onShow: function() {
-        let id_flag = wx.getStorageSync("id_flag");
-        let user = wx.getStorageSync('user')
-        console.log(id_flag)
-        console.log(user);
-        var that = this;
-        if (user != null && user != '') {
-            // that.globalData.realTime = setInterval(function() {
-            // 请求服务器数据
-
-            if (id_flag == "teacher") {
-                that.TeaNowCourse()
-
-            }
-            if (id_flag == 'student') {
-                that.ActiveStuDetail();
-            }
-
-            // }, 30000) //间隔时间
-
-            // 更新数据
-            // that.globalData.realTime = that.globalData.realTime; //实时数据对象(用于关闭实时刷新方法)
-
-        }
-        wx.request({
-            url: that.globalData.url + 'WxSign/isShow',
-            data: {},
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("收到的数据是");
-                console.log(res);
-                that.globalData.is_show = res.data.data.code;
-                console.log(that.globalData.is_show);
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
-    },
     //上传学生定位
     UpStuLocation: function(courseid, latitude, longitude) {
         let user = wx.getStorageSync('user');
         let that = this;
-        wx.request({
-            url: that.globalData.url + 'WxOther/UpGps',
-            data: {
-                userid: user.id,
-                courseid: courseid,
-                longitude: longitude,
-                latitude: latitude,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("成功上传学生位置");
-                console.log(res)
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+        UpGps({
+            userid: user.id,
+            courseid: courseid,
+            longitude: longitude,
+            latitude: latitude,
+        }).then(value => {
+            console.log("成功上传学生位置");
+            console.log(value)
+        }, reason => {
+            console.log("上传位置失败", reason);
         })
+
     },
     //上传导师定位
-    UpTeaLocation: function(id, latitude, longitude) {
+    UpTeaLocation: function(courseid, latitude, longitude) {
         let id_flag = wx.getStorageSync("id_flag");
         let user = wx.getStorageSync('user')
-        wx.request({
-            url: this.globalData.url + 'WxOther/TeaUpGps',
-            data: {
-                userid: user.id,
-                courseid: id,
-                longitude: longitude,
-                latitude: latitude,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("成功上传导师位置信息")
-                console.log(res)
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
+        TeaUpGps({
+            userid: user.id,
+            orderid: courseid,
+            longitude: longitude,
+            latitude: latitude,
+        }).then(value => {
+            console.log("成功上传导师位置信息")
+            console.log(value)
+        }, reason => {
+            console.log("上传导师位置信息失败")
+            console.log(reason);
+        });
     },
     // 获取定位
-    GetLocation: function(id) {
+    GetLocation: function(courseid) {
 
         let id_flag = wx.getStorageSync("id_flag");
         let user = wx.getStorageSync('user')
@@ -368,8 +273,8 @@ App({
                 console.log("导师或学生上传位置")
                 console.log(res.latitude);
                 console.log(res.longitude)
-                if (id_flag == 'teacher') { this.UpTeaLocation(id, this.globalData.latitude, this.globalData.longtitude) }
-                if (id_flag == 'student') { this.UpStuLocation(id, this.globalData.latitude, this.globalData.longtitude) }
+                if (id_flag == 'teacher') { this.UpTeaLocation(courseid, this.globalData.latitude, this.globalData.longtitude) }
+                if (id_flag == 'student') { this.UpStuLocation(courseid, this.globalData.latitude, this.globalData.longtitude) }
 
             },
             fail: (res) => {
@@ -383,14 +288,72 @@ App({
         })
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
+    onShow: function() {
+        console.log("进入小程序onShow()")
+        let id_flag = wx.getStorageSync("id_flag");
+        let user = wx.getStorageSync('user')
+        console.log(id_flag)
+        console.log(user);
+        var that = this;
+
+        if (user != null && user != '') {
+            // that.globalData.realTime = setInterval(function() {
+            // 请求服务器数据
+            if (id_flag == "teacher") {
+                that.TeaNowCourse()
+            }
+            if (id_flag == 'student') {
+                that.ActiveStuDetail();
+            }
+            // webSocket.connectSocket();
+
+        }
+        const p = isShow({});
+        p.then(value => {
+            console.log("收到的数据是", value);
+            that.globalData.is_show = value.data.data.code;
+            console.log(that.globalData.is_show);
+        }, reason => {
+            console.log("无法获取到数据", reason);
+        })
+    },
+
+    onLoad: function(options) {
+        const updateManager = wx.getUpdateManager();
+        updateManager.onCheckForUpdate(function(res) {
+            // 请求完新版本信息的回调
+            console.log(res.hasUpdate)
+        })
+
+        updateManager.onUpdateReady(function() {
+            wx.showModal({
+                title: '更新提示',
+                content: '新版本已经准备好，是否重启应用？',
+                success: function(res) {
+                    if (res.confirm) {
+                        // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+                        updateManager.applyUpdate()
+                    }
+                }
+            })
+        })
+
+        updateManager.onUpdateFailed(function() {
+            // 新版本下载失败
+        })
+
+    },
     onHide: function() {
-        /**
-         * 当页面隐藏时关闭定时器(关闭实时刷新)
-         * 切换到其他页面了
-         */
-        // clearInterval(this.globalData.realTime)
+        console.log("onHide");
+
+        // var data = { "type": "out" }
+        // webSocket.sendSocketMessage(data);
+    },
+    onUnload: function(options) {
+        // 页面销毁时关闭连接
+        // console.log("onUnload")
+        // var data = { "type": "out" }
+        // webSocket.sendSocketMessage(data);
+        // setTimeout(() => webSocket.closeSocket(), 10000);
     },
 })

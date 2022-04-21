@@ -1,7 +1,7 @@
 // pages/course/course.js
 const app = getApp();
 const areaList = require('../../utils/arealist.js');
-
+import { activitytype, CourseCheck } from '../../utils/apis.js';
 Page({
 
     /**
@@ -47,12 +47,8 @@ Page({
             '活动进行中': '0',
             '活动已结束': '0'
         },
-
         // 筛选的条件,在 filterCheck执行后赋值
         condition: [],
-        /** 
-         * 传服务端
-         */
         // 搜索的内容， 在searchTap执行后赋值
         seacher_word: "",
         // 筛选条件
@@ -92,9 +88,7 @@ Page({
     // 筛选栏弹出/折叠
     filterTap: function(e) {
         if (this.checkTap(e) || e.currentTarget.dataset.id == 'confirm') {
-            var filterCSS = this.data.filterClass;
             var filterHide = this.data.filterHide;
-            console.log("遮罩是。。。。。")
             console.log(filterHide)
             if (filterHide) {
                 console.log("筛选栏展开");
@@ -165,30 +159,18 @@ Page({
     //获取筛选数据
     getFilter: function() {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxOther/activitytype',
-            data: {},
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header2
-            success: function(res) {
-                // success
-                console.log("活动主题类型")
-                console.log(res)
-                for (var i = 0; i < res.data.data.length; i++) {
-                    var type = "filter[0].ctn[" + i + "]";
-                    that.setData({
-                        [type]: res.data.data[i].type
-                    })
-                }
-
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        const p = activitytype({});
+        p.then(value => {
+            console.log("活动主题类型", value);
+            for (var i = 0; i < value.data.data.length; i++) {
+                var type = "filter[0].ctn[" + i + "]";
+                that.setData({
+                    [type]: value.data.data[i].type
+                })
             }
-        })
+        }, reason => {
+            console.log("获取活动类型失败：", reason);
+        });
     },
     // 筛选框选中
     filterCheck: function(e) {
@@ -253,19 +235,21 @@ Page({
     toCourseDetail: function(e) {
         console.log("课程详情数据");
         console.log(e)
-        var fid = e.currentTarget.dataset.fid;
-        var isOnly = e.currentTarget.dataset.isonly;
-        console.log(this.data.id_flag);
-        if (isOnly && this.data.id_flag != 'teacher') {
-            this.setData({
-                isOnly: isOnly,
-                courseid: fid,
-                showModal: true,
-            })
-        } else {
-            wx.navigateTo({
-                url: '../detail/detail?id=' + fid,
-            });
+        let fid = e.currentTarget.dataset.fid;
+        console.log("课程id", fid);
+        let isOnly = e.currentTarget.dataset.isonly;
+        if (fid != undefined) {
+            if (isOnly && this.data.id_flag != 'teacher') {
+                this.setData({
+                    isOnly: isOnly,
+                    courseid: fid,
+                    showModal: true,
+                })
+            } else {
+                wx.navigateTo({
+                    url: '../detail/detail?id=' + fid,
+                });
+            }
         }
 
     },
@@ -274,41 +258,30 @@ Page({
     ok: function() {
         let that = this;
         if (that.data.pwd != '') {
-            wx.request({
-                url: app.globalData.url + 'WxCourse/CourseCheck',
-                data: {
-                    courseid: that.data.courseid,
-                    password: that.data.pwd,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("课程密码校验结果");
-                    console.log(res);
-                    if (res.data.data.msg == '密码正确') {
-                        that.setData({
-                            showModal: false,
-                        })
-                        wx.navigateTo({
-                            url: '../detail/detail?id=' + that.data.courseid,
-                        });
+            const p = CourseCheck({
+                courseid: that.data.courseid,
+                password: that.data.pwd,
+            });
+            p.then(value => {
+                console.log("课程密码校验结果");
+                console.log(value);
+                if (value.data.data.msg == '密码正确') {
+                    that.setData({
+                        showModal: false,
+                    })
+                    wx.navigateTo({
+                        url: '../detail/detail?id=' + that.data.courseid,
+                    });
 
-                    } else {
-                        wx.showToast({
-                            title: '课程密码有误', //提示的内容,
-                            duration: 800,
-                        })
-                    }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+                } else {
+                    wx.showToast({
+                        title: '课程密码有误', //提示的内容,
+                        duration: 800,
+                    })
                 }
-            })
-
+            }, reason => {
+                console.log("失败的数据", reason)
+            });
         } else {
             wx.showToast({
                 title: '请输入密码',
@@ -389,22 +362,20 @@ Page({
         if (that.data.reg_idx != null) {
             area = that.data.region;
         }
-        console.log("area: ", area);
-
         wx.request({
             url: app.globalData.url + 'WxCourse/GetMoreNews',
             data: {
-                'keyword': that.data.seacher_word,
+                keyword: that.data.seacher_word,
                 province: area[0],
                 city: area[1],
                 start_time: that.data.start,
                 end_time: that.data.end,
                 activeStatus: status,
                 duration: duration,
-                'type': para,
+                type: para,
             },
             success(res) {
-                console.log("成功获取课程数据")
+                console.log("成功获取课程数据22222")
                 console.log(res)
                 that.setData({
                     activity: res.data.data
@@ -421,7 +392,6 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-
         var that = this;
         this.getSearchData(0);
         // 自动获取注册时间
@@ -431,7 +401,6 @@ Page({
             date: date
         })
         that.InitArea();
-
     },
     timeFormat(param) {
         return param < 10 ? '0' + param : param;
@@ -453,8 +422,7 @@ Page({
         let id_flag = wx.getStorageSync('id_flag');
         this.setData({
             id_flag: id_flag,
-        })
-
+        });
     },
 
     /**
@@ -575,6 +543,8 @@ Page({
 
         } else if (tmp[1] == '天津市') {
             tmp[1] = '天津';
+        } else if (tmp[1] == '上海市') {
+            tmp[1] = '上海';
         }
         console.log("选中的是：", tmp)
         this.setData({

@@ -1,4 +1,7 @@
 {
-  "usingComponents": {},
-  "navigationBarTitleText": "注册(学生端)"
+    "usingComponents": {},
+    "navigationBarTitleText": "注册(学生端)",
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black"
+
 }

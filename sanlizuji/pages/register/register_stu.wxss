@@ -3,8 +3,54 @@
 @import '../template/agree_protocol/agree_protocol.wxss';
 @import '../dev/cut.wxss';
 @import '../template/course_check/course_check.wxss';
+@import '../../resource/css/base.wxss';
+.top {
+    display: block;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 30rpx;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: #333;
+    z-index: 99;
+}
+
+.head {
+    display: flex;
+}
+
+.btn-arrowhead {
+    display: inline-block;
+    width: 25rpx;
+    height: 25rpx;
+    margin: 20rpx 0;
+    border-top: 4rpx solid #000;
+    border-right: 4rpx solid #000;
+    transform: rotate(-135deg);
+    line-height: 1;
+}
+
+.float {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 30rpx;
+    margin: 16rpx 0;
+}
+
 view {
     position: relative;
+}
+
+.title {
+    display: inline-block;
+    width: 100%;
+    margin: 16rpx 0;
+    line-height: 1;
+    text-align: center;
 }
 
 .primary {
@@ -13,7 +59,7 @@ view {
     text-align: center;
     align-items: center;
     width: 80%;
-    margin: 10% 10% 0 10%;
+    margin: 13% 10%;
     padding: 5%;
     line-height: 2rem;
 }
@@ -32,15 +78,16 @@ view {
 /* 注册盒子 */
 
 .ctnBox {
-    display: block;
+    /* display: block; */
     box-sizing: border-box;
     align-items: center;
     width: 90%;
     padding: 5%;
-    margin: 5%;
+    margin: 0 auto;
     background-color: #fafafa;
     border-radius: 1rem;
     line-height: 2rem;
+    margin-bottom: 1.2rem;
 }
 
 .desc {
@@ -111,7 +158,8 @@ input {
     /* padding: 4% 2.5%; */
     border-radius: 0.5rem;
     color: white;
-    background-color: #6177ff;
+    /* background-color: #6177ff; */
+    background-image: linear-gradient(to right, #2cbef8, #6177ff);
 }
 
 
@@ -134,4 +182,30 @@ radio .wx-radio-input.wx-radio-input-checked::before {
     background: rgb(33, 163, 50);
     transform: translate(-50%, -50%) scale(1);
     -webkit-transform: translate(-50%, -50%) scale(1);
+}
+
+
+/* 显示学校 */
+
+.school {
+    position: relative;
+}
+
+.show-school {
+    position: absolute;
+    display: block;
+    left: 0;
+    width: 70%;
+    padding: 20rpx 25rpx;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 1rpx 10rpx rgba(0, 0, 0, 0.3);
+    /* 文字溢出换行 */
+    word-wrap: break-word;
+    z-index: 9;
+}
+
+.one-school {
+    height: 1.6rem;
+    border-bottom: 1px #cac8c8 solid;
+    font-size: 1.09rem;
 }

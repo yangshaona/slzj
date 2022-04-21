@@ -11,25 +11,13 @@
     text-align: center;
     align-items: center;
     width: 80%;
-    margin: 20% 10%;
-    padding: 20% 10%;
+    margin: 10%;
+    padding: 15% 10%;
     line-height: 5rem;
 }
 
 
 /* 注册盒子 */
-
-.ctnBox {
-    display: block;
-    box-sizing: border-box;
-    align-items: center;
-    width: 90%;
-    padding: 5%;
-    margin: 5%;
-    background-color: #fafafa;
-    border-radius: 1rem;
-    line-height: 2rem;
-}
 
 .desc {
     line-height: 3rem;
@@ -85,7 +73,8 @@ input {
     /* padding: 4% 2.5%; */
     border-radius: 0.5rem;
     color: white;
-    background-color: #6177ff;
+    /* background-image: linear-gradient(to right #8090f8, #6177ff); */
+    background-image: linear-gradient(to right, #2cbef8, #6177ff);
 }
 
 

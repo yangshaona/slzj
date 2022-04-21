@@ -11,7 +11,7 @@
         <view class="line"></view>
         <view class="info-bar">
             <desc class="info-bar-desc" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
-            <view class="info-bar-view" bindtap="Bind" data-trigger="birthday">></view>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="birthday"></view>
         </view>
         <view class="line"></view>
         <view class="info-bar">
@@ -49,7 +49,8 @@
         <view class="info-bar">
             <desc class="info-bar-desc" inner-text="地址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
             <view class="info-bar-view">
-                <picker mode="multiSelector" name="region" id="region" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}}">
+                <view bindtap="changeAddress" wx:if="{{showpicker=='off-picker'}}">></view>
+                <picker mode="multiSelector" name="region" id="region" range="{{multiArray}}" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="{{reg_idx == null ? 'default' : ''}} {{showpicker}}">
                     >
                 </picker>
             </view>
@@ -90,10 +91,10 @@
                 <text class='userTitle'>监护人信息</text>
             </view>
             <view class='wishName'>监护人姓名：
-                <input bindinput='nameInput' placeholder='请输入监护人姓名' class='wish_put'></input>
+                <input type="text" bindinput='nameInput' bindblur="checkInputName" placeholder='请输入监护人姓名' class='wish_put'></input>
             </view>
             <view class='wishName'>监护人手机号：
-                <input bindinput='phoneInput' placeholder='请输入监护人手机号' class='wish_put'></input>
+                <input type="number" bindinput='phoneInput' bindblur="checkPhone" placeholder='请输入监护人手机号' class='wish_put'></input>
             </view>
         </view>
 
@@ -104,7 +105,7 @@
                 <text class=''>修改姓名</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuName' placeholder='请输入姓名' value="{{user.name}}"></input>
+                <input type='text' class="input" bindblur='stuName' bindblur="checkInputName" placeholder='请输入姓名' value="{{user.name}}" auto-focus="true"></input>
             </view>
         </view>
 
@@ -112,10 +113,10 @@
         <view wx:if="{{trigger=='idnum'}}" class="info">
 
             <view class='change-name'>
-                <text class=''>查看身份证</text>
+                <text class=''>更改身份证</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuIdNum' placeholder='请输入身份证' value="{{user.idnum}}" disabled="true"></input>
+                <input type='idcard' class="input" bindinput='stuIdNum' bindblur="checkIdNum" placeholder='请输入身份证' value="{{user.idnum}}" auto-focus="true"></input>
             </view>
         </view>
 
@@ -126,7 +127,7 @@
                 <text class=''>修改手机号</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuPhone' value="{{user.phone}}"></input>
+                <input type='number' class="input" bindinput='stuPhone' bindblur="checkPhone" value="{{user.phone}}" auto-focus="true"></input>
             </view>
         </view>
         <!-- 学校的修改 -->
@@ -136,7 +137,8 @@
                 <text class=''>修改学校</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuSchool' placeholder='请输入学校' value="{{user.schoolname}}"></input>
+                <input type='text' class="input" bindinput='stuSchool' placeholder='请输入学校' value="{{user.schoolname}}" auto-focus="true"></input>
+
             </view>
         </view>
 
@@ -147,7 +149,7 @@
                 <text class=''>修改年级</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuGrade' placeholder='请输入年级' value="{{user.grade}}"></input>
+                <input type='number' class="input" bindinput='stuGrade' placeholder='请输入年级' value="{{user.grade}}" auto-focus="true"></input>
             </view>
         </view>
         <!-- 备注的修改 -->
@@ -157,7 +159,7 @@
                 <text class=''>备注信息</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindinput='stuMark' placeholder='请输入备注信息' value="{{user.aller}}"></input>
+                <input type='text' class="input" bindblur='stuMark' placeholder='请输入备注信息' value="{{user.aller}}" auto-focus="true"></input>
             </view>
         </view>
 
@@ -165,16 +167,9 @@
             <view class='cancel-btn' style='color:rgba(7,17,27,0.6)' bindtap='back'>取消</view>
             <view class='confirm-btn' style='color:#1677ff;' bindtap='ok'>确定</view>
         </view>
-
     </view>
-
-
-    <!-- <view wx:if="{{trigger=='education'}}"> -->
 
     <!-- 学历的修改 -->
     <view wx:if="{{trigger=='education'}}" class="info">
-
-
     </view>
-    <!-- </view> -->
 </view>

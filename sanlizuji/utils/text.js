@@ -66,7 +66,6 @@ function checkName(name) {
     var reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,6}$/;
     if (name.match(reg)) {
         console.log("111");
-        // that.setData({ allow_name: true });
         wx.setStorageSync("name", name);
         return true;
     } else {
@@ -221,9 +220,9 @@ function UpdateOrder(id, payState, status) {
 function checkPhone(phNum) {
     var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
     if (phNum.length != 11 || !reg.test(phNum)) {
-        wx.showModal({
-            content: '手机号输入有误', //提示的内容,
-            showCancel: false, //是否显示取消按钮,
+        wx.showToast({
+            title: '手机号输入有误', //提示的内容,
+            duration: 800,
         });
         return false;
     } else {
@@ -292,6 +291,59 @@ function formatTime(number, format) {
     }
     return format;
 }
+// 解绑openid
+function Unbound(id, modelName) {
+    let that = this;
+    wx.request({
+        url: app.globalData.url + 'WxUser/unbond',
+        data: {
+            id: id,
+            modelName: modelName,
+        },
+        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+        // header: {}, // 设置请求的 header
+        success: function(res) {
+            // success
+            console.log("解绑结果");
+            console.log(res);
+        },
+        fail: function() {
+            // fail
+        },
+        complete: function() {
+            // complete
+        }
+    })
+}
+
+/*
+ * fn [function] 需要防抖的函数
+ * delay [number] 毫秒，防抖期限值
+ */
+function debounce(fn, delay) {
+    let timer = null //借助闭包
+    console.log("防抖", fn, delay);
+    console.log(timer);
+    return function(...args) {
+        if (timer) {
+            console.log("多次操作")
+            wx.showToast({
+                title: "操作频繁，请稍后再试",
+                icon: 'none',
+                duration: 500,
+            })
+            clearTimeout(timer) //进入该分支语句，说明当前正在一个计时过程中，并且又触发了相同事件。所以要取消当前的计时，重新开始计时
+        }
+        // timer = setTimeout(fn, delay) // 进入该分支说明当前并没有在计时，那么就开始一个计时
+
+        timer = setTimeout(() => { // 重新定时
+            fn.apply(this, args);
+        }, delay);
+    }
+}
+
+// 模糊搜索获取学校
+
 
 // 这个属性是将方法名暴露出来，否则需要引用的页面取不到
 module.exports = {
@@ -302,7 +354,8 @@ module.exports = {
     checkPhone,
     checkName,
     getLocation,
-
-    formatTime: formatTime // 时间戳转换
-
+    checkName,
+    Unbound,
+    formatTime: formatTime, // 时间戳转换
+    debounce,
 }

@@ -1,4 +1,5 @@
 // pages/myApply/comment.js
+import { UpdateStuComment, UpdateBaseClubComment, GetBaseClub } from '../../utils/apis.js';
 const app = getApp();
 Page({
 
@@ -161,7 +162,6 @@ Page({
             }
         }
         if (service && course && dorm && food && teacher && cmt_service && cmt_course && cmt_dorm && cmt_food && cmt_teacher) {
-
             this.setData({
                 cmt_service: cmt_service,
                 cmt_course: cmt_course,
@@ -171,94 +171,81 @@ Page({
                 cmt_display: false
             });
             let user = wx.getStorageSync('user');
-            wx.request({
-                    url: app.globalData.url + 'WxCourse/UpdateStuComment',
-                    data: {
-                        orderid: that.data.orderid,
-                        stuid: user.id,
-                        foods: food,
-                        foodm: cmt_food,
-                        services: service,
-                        servicem: cmt_service,
-                        stays: dorm,
-                        staym: cmt_dorm,
-                        courses: course,
-                        coursem: cmt_food,
-                        teachers: teacher,
-                        teacherm: cmt_teacher,
+            const p = UpdateStuComment({
+                orderid: that.data.orderid,
+                stuid: user.id,
+                foods: food,
+                foodm: cmt_food,
+                services: service,
+                servicem: cmt_service,
+                stays: dorm,
+                staym: cmt_dorm,
+                courses: course,
+                coursem: cmt_food,
+                teachers: teacher,
+                teacherm: cmt_teacher,
+            });
+            p.then(value => {
+                console.log("评价内容");
+                console.log(value)
+                if (value.data.data.msg == '更新评价成功') {
+                    wx.showToast({
+                        title: '提交成功',
+                        icon: 'success',
+                        duration: 800
+                    })
 
-                    },
-                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                    // header: {}, // 设置请求的 header
-                    success: function(res) {
-                        // success
-                        console.log("评价内容");
-                        console.log(res)
-                        if (res.data.data.msg == '更新评价成功') {
-                            wx.showToast({
-                                title: '提交成功',
-                                icon: 'success',
-                                duration: 800
-                            })
-
-                        } else {
-                            wx.showToast({
-                                title: '提交失败',
-                                icon: 'success',
-                                duration: 800
-                            })
-                        }
-                    },
-                    fail: function() {
-                        // fail
-                    },
-                    complete: function() {
-                        // complete
-                    }
-                })
-                // 提交对研学基地的评价
-            wx.request({
-                url: app.globalData.url + 'WxCourse/UpdateBaseClubComment',
-                data: {
-                    orderid: that.data.orderid,
-                    comment: that.data.comment,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("上传研学基地评价");
-                    console.log(res);
-                    if (res.data.data.msg != '更新评价成功') {
-                        wx.showToast({
-                            title: '提交成功',
-                            icon: 'success',
-                            duration: 800
-                        })
-
-                    } else {
-                        wx.showToast({
-                            title: '提交失败',
-                            icon: 'success',
-                            duration: 800
-                        })
-                    }
-
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+                } else {
+                    wx.showToast({
+                        title: '提交失败',
+                        icon: 'success',
+                        duration: 800
+                    })
                 }
-            })
+            }, reason => {
+                wx.showToast({
+                    title: '提交失败',
+                    icon: 'success',
+                    duration: 800
+                });
+                console.log("评价内容数据提交失败", reason);
+            });
+            const p2 = UpdateBaseClubComment({
+                orderid: that.data.orderid,
+                comment: that.data.comment,
+            });
+            p2.then(value => {
+                console.log("上传研学基地评价");
+                console.log(value);
+                if (value.data.data.msg == '更新评价成功') {
+                    wx.showToast({
+                        title: '提交成功',
+                        icon: 'success',
+                        duration: 800
+                    })
+
+                } else {
+                    wx.showToast({
+                        title: '提交失败',
+                        icon: 'success',
+                        duration: 800
+                    })
+                }
+            }, reason => {
+                wx.showToast({
+                    title: '提交失败',
+                    icon: 'success',
+                    duration: 800
+                });
+                console.log("评价内容数据提交失败", reason);
+            });
             setTimeout(function() {
                 wx.navigateBack({
                     delta: 0,
                 })
             }, 800)
         } else {
-            console.log("fail");
+            console.log("提交失败");
             wx.showToast({
                 title: '请完整填写',
                 icon: 'none',
@@ -283,10 +270,9 @@ Page({
             ];
         }
         console.log(rate_data);
-
         this.setData({
             rate_data: rate_data,
-        })
+        });
     },
     /**
      * 生命周期函数--监听页面加载
@@ -305,41 +291,28 @@ Page({
     // 获取研学基地
     GetBaseClub: function(options) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxCourse/GetBaseClub',
-            data: {
-                orderid: that.options.orderid,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("研学基地信息");
-                console.log(res);
-                if (res.data.data.length > 0) {
-                    that.setData({
-                        base_club: res.data.data
-                    });
-                    for (var item of res.data.data) {
-                        console.log("基地");
-                        console.log(item);
-                        let base_club_comment = { 'baseclubid': '', 'baseclub': '', 'score': "", 'comment': "" };
-                        base_club_comment['baseclubid'] = item.id;
-                        base_club_comment['baseclub'] = item.club_name;
-                        that.data.comment.push(base_club_comment);
-
-                    }
-                    that.Init();
-                    console.log(that.data.comment);
+        const p = GetBaseClub({
+            orderid: that.options.orderid,
+        });
+        p.then(value => {
+            console.log("研学基地信息", value);
+            if (value.data.data.length > 0) {
+                that.setData({
+                    base_club: value.data.data
+                });
+                for (var item of value.data.data) {
+                    console.log("基地数据", item);
+                    let base_club_comment = { 'baseclubid': '', 'baseclub': '', 'score': "", 'comment': "" };
+                    base_club_comment['baseclubid'] = item.id;
+                    base_club_comment['baseclub'] = item.club_name;
+                    that.data.comment.push(base_club_comment);
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+                that.Init();
+                console.log(that.data.comment);
             }
-        })
+        }, reason => {
+            console.log("获取研学基地数据失败", reason);
+        });
     },
     /**
      * 生命周期函数--监听页面初次渲染完成

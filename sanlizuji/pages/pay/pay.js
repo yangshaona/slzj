@@ -1,8 +1,12 @@
 // pages/pay/pay.js
+import { GetOrderDetail, tgPay, orderFind } from '../../utils/apis.js';
 let app = getApp();
 let user = wx.getStorageSync('user');
+var isSubmit = true; //表示是否点击支付按钮
 import {
-    UpdateOrder
+    UpdateOrder,
+    debounce,
+    Test
 } from '../../utils/text.js'
 Page({
     /**
@@ -25,12 +29,10 @@ Page({
         // 活动课程
         order: '',
         price: '',
-
         // 倒计时
         startTime: '',
         endTime: '',
         time: '',
-
         // 订单信息
         listData: [],
         // 剩余时间
@@ -52,46 +54,31 @@ Page({
         })
         this.getCourse(options.orderid);
         user = wx.getStorageSync('user');
-
-
     },
     // 获取报名的课程接口
     getCourse: function(orderid) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxSign/GetOrderDetail',
-            data: {
-                id: orderid,
-                modelName: 'SignList',
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("订单详情")
-                console.log(res)
-                that.setData({
-                    order: res.data.data[0],
-                });
-                var listData = [];
-                listData.push(that.data.order);
-                that.setData({
-                    listData: listData,
-                })
-                if (that.data.order.status == 2) {
-                    // that.setCountDown();
-                    // that.setTimeCount();
-                    that.getTime();
-
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        const p = GetOrderDetail({
+            id: orderid,
+            modelName: 'SignList',
+        });
+        p.then(value => {
+            // success
+            console.log("订单详情", value)
+            that.setData({
+                order: value.data.data[0],
+            });
+            var listData = [];
+            listData.push(that.data.order);
+            that.setData({
+                listData: listData,
+            })
+            if (that.data.order.status == 2) {
+                that.getTime();
             }
-        })
+        }, reason => {
+            console.log("获取订单详情数据失败", reason);
+        });
     },
     // 订单支付倒计时
     getTime: async function(e) {
@@ -109,36 +96,23 @@ Page({
         // 计时结束回调函数
         if (typeof(callback) === 'function') {
             // 后台销毁订单
-            wx.request({
-                url: app.globalData.url + 'WxSign/GetOrderDetail',
-                data: {
-                    id: orderid,
-                    modelName: 'SignList',
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("订单详情")
-                    console.log(res)
-                    that.setData({
-                        order: res.data.data[0],
-                    });
-                    listData = that.data.order;
-                    if (listData.isshow) {
-                        console.log("计时结束时回调函数")
-
-                        UpdateOrder(listData.id, '支付失败', 1);
-                    }
-
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+            const p = GetOrderDetail({
+                id: orderid,
+                modelName: 'SignList',
+            });
+            p.then(value => {
+                console.log("订单详情", value);
+                that.setData({
+                    order: value.data.data[0],
+                });
+                listData = that.data.order;
+                if (listData.isshow) {
+                    console.log("计时结束时回调函数");
+                    UpdateOrder(listData.id, '支付失败', 1);
                 }
-            })
+            }, reason => {
+                console.log("获取订单数据失败", reason);
+            });
             return -1;
         }
         // 每过1000ms计算一次
@@ -186,8 +160,7 @@ Page({
      * 倒计时
      */
     setCountDown: async function(e, callback) {
-        let time = 1000,
-            that = this;
+        let that = this;
         let listData = that.data.order;
         // 计时结束回调函数
         if (typeof(callback) === 'function') {
@@ -198,10 +171,8 @@ Page({
                 duration: 1000,
             })
             UpdateOrder(listData.id, '支付失败', 1);
-
             return -1;
         }
-
         let st = setInterval(async function() {
             var now = new Date;
             var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
@@ -258,25 +229,26 @@ Page({
         let that = this;
         console.log(that.data.order)
         let price = that.data.price;
+        user = wx.getStorageSync('user');
+        console.log(that.options.key == '');
         if (that.options.key != "") {
             price = (that.data.price - that.options.coupons).toFixed(2);
         }
-        wx.request({
-            url: app.globalData.url + "WxSign/tgPay",
-            data: {
-                lowOrderId: that.data.order.id, //后台雪花算法生成的订单号
-                payMoney: price, //支付金额
+        console.log("用户信息", user);
+        console.log("价格", price);
+        if (isSubmit && price != "NaN") {
+            isSubmit = false;
+            const p = tgPay({
+                lowOrderId: that.data.order.id, //后台雪花算法生成的下游订单号
+                payMoney: 0.01, //支付金额
                 body: that.data.order.coursename, //商品描述
                 notifyUrl: app.globalData.url + "WxSign/AccepttgPay", //回调地址
                 isMinipg: 1, //是否是小程序
                 openId: user.openid, //openId
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                console.log(res);
-                console.log(res.data.pay_info);
-                var pay_res = JSON.parse(res.data.pay_info);
+            }).then(value => {
+                console.log("返回的是：", value);
+                let pay_res = JSON.parse(value.data.pay_info);
+                let upOrderId = value.data.upOrderId;
                 wx.requestPayment({
                     timeStamp: pay_res.timeStamp.toString(),
                     nonceStr: pay_res.nonceStr,
@@ -285,28 +257,21 @@ Page({
                     paySign: pay_res.paySign,
                     success(res) {
                         console.log(res);
-                        wx.request({                            
-                            url:  app.globalData.url  +  "WxSign/orderFind",
-                            data: {
-                                lowOrderId: that.options.orderid,
-                                   //后台雪花算法生成的订单号
-                                 status: "SUCCESS",
-                                key: that.options.key,
-                            },
-                                method: 'GET',
-                                success: function(res) {  
-                                console.log("支付成功");                              
-                                console.log(res);                                
-                                wx.showToast({
-                                    title: '支付成功',
-                                    icon: 'success',
-                                    duration: 800,
-                                })                            
-
-                            }                                             
-                        })
-
-
+                        orderFind({
+                            lowOrderId: that.options.orderid,
+                             status: "SUCCESS",
+                            key: that.options.key,
+                            upOrderId: upOrderId, //后台雪花算法生成的上游订单号
+                        }).then(value => {  
+                            console.log("支付成功返回的数据", value);                                
+                            wx.showToast({
+                                title: '支付成功',
+                                icon: 'success',
+                                duration: 800,
+                            })
+                        }, reason => {
+                            console.log("支付失败", reason);
+                        });
                         setTimeout(function() {
                             wx.redirectTo({
                                 url: '../myApply/myApply',
@@ -320,16 +285,22 @@ Page({
                             icon: 'none',
                             duration: 800,
                         });
-
                         wx.redirectTo({
                             url: './waiting_pay?id=' + that.data.order.courseid + "&orderid=" + that.options.orderid + '&userid=' + that.data.order.userid,
-
                         })
                     }
                 })
-
-            }
-        })
+            }, reason => {
+                console.log("调用支付接口失败", reason);
+            });
+            setTimeout(() => isSubmit = true, 3000);
+        } else {
+            wx.showToast({
+                title: "操作频繁，请稍后再试",
+                icon: "none",
+                duration: 800,
+            })
+        }
     },
     // 取消订单
     Cancel: function(e) {
@@ -392,6 +363,4 @@ Page({
     onShareAppMessage: function() {
 
     },
-
-
 })

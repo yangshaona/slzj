@@ -1,7 +1,9 @@
 // pages/person_info/teacher_info.js
+import { GetUserInfo2 } from '../../utils/apis.js';
 import {
     SaveInfo,
     checkPhone,
+    Unbound
 } from '../../utils/text.js';
 const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
@@ -30,6 +32,8 @@ Page({
     },
     //退出登录
     logout: function() {
+        let user = wx.getStorageSync('user');
+        Unbound(user.id, 'Teacher');
         wx.setStorageSync('user', null);
         wx.setStorageSync('id_flag', null);
         wx.setStorageSync('avator', null);
@@ -112,19 +116,14 @@ Page({
         this.setData({
             tmp: e.detail.value
         })
-        console.log("修改姓名");
-        console.log(this.data.tmp);
-
+        console.log("修改姓名", this.data.tmp);
     },
     // 身份证信息的修改
     teaIdNum: function(e) {
         this.setData({
             tmp: e.detail.value,
         })
-        console.log("身份证信息");
-        console.log(this.data.tmp);
-
-
+        console.log("身份证信息", this.data.tmp);
     },
     // 检查身份证号是否输入正确
     checkID: function(idnum) {
@@ -149,20 +148,16 @@ Page({
             }
             wx.setStorageSync('user', _user);
             user = wx.getStorageSync('user');
-            console.log("身份证信息");
-            console.log(this.data.tmp);
+            console.log("身份证信息", this.data.tmp);
             return true;
         }
-
     },
     // 手机号信息的修改
     teaPhone: function(e) {
         this.setData({
             tmp: e.detail.value,
         })
-        console.log("手机号信息");
-        console.log(this.data.tmp);
-
+        console.log("手机号信息", this.data.tmp);
     },
     // 工作类型选择器改变
     typeChange: function(e) {
@@ -186,7 +181,6 @@ Page({
         });
         console.log("点击哪里");
         console.log(e)
-
     },
     /**
      * 点击返回按钮隐藏
@@ -211,7 +205,6 @@ Page({
                 _user["city"] = that.data.tmp[1];
                 _user["district"] = that.data.tmp[2];
             } else _user[trigger] = that.data.tmp;
-
             wx.setStorageSync('user', _user);
             var modelName = "Teacher";
             var modelData = {
@@ -235,9 +228,7 @@ Page({
                 showModal: false,
                 tmp: '',
                 user: user,
-
             })
-
         }
     },
     ok: function() {
@@ -250,7 +241,6 @@ Page({
             var flag = check_idnum.checkName(this.data.tmp);
             if (flag) {
                 that.checkInfo(trigger);
-
             }
         } else if (trigger == 'idnum') {
             if (that.checkID(this.data.tmp)) {
@@ -261,7 +251,6 @@ Page({
                 that.checkInfo(trigger);
             }
         }
-
         that.setData({
             user: user
         })
@@ -348,6 +337,8 @@ Page({
 
         } else if (tmp[1] == '天津市') {
             tmp[1] = '天津';
+        } else if (tmp[1] == '上海市') {
+            tmp[1] = '上海';
         }
         console.log("选中的是：", tmp)
         this.setData({
@@ -387,9 +378,6 @@ Page({
     UpResume: function(e) {
         let that = this;
         console.log(e);
-        let resume = e.currentTarget.dataset.resume;
-        // if (resume != '') {
-
         wx.showModal({
             content: "上传后将会覆盖掉原有的简历",
             success(res) {
@@ -401,60 +389,66 @@ Page({
                 }
             }
         })
-
-        // }
     },
     // 选择上传的简历文件
     chooseFiles() {
         let that = this;
         wx.chooseMessageFile({
             count: 1,
-            type: "all",
+            type: "file",
             success: (res) => {
                 console.log("上传文件返回的结果");
                 console.log(res);
                 let files = res.tempFiles[0];
-                console.log(files)
-                wx.uploadFile({
-                    //请求后台的路径
-                    url: app.globalData.url + 'WxUser/SaveImg',
-                    //小程序本地的路径
-                    filePath: files.path,
-                    name: 'file',
-                    formData: {
-                        newName: user.openid + "of resume",
-                        id: user.id,
-                        modelName: 'Teacher',
-                        file_type: 'pdf',
-                    },
-                    success(res) {
-                        console.log(res);
-                        if (res.statusCode == 200) {
-                            console.log("成功上传简历");
-                            wx.showToast({
-                                title: "上传成功",
-                                icon: 'success',
-                                duration: 800,
-                            });
-                            that.getUserInfo();
-                        } else {
-                            wx.showToast({
-                                title: "上传失败",
-                                icon: 'success',
-                                duration: 800,
-                            });
+                console.log(files);
+                var fileExtension = files['name'].substring(files['name'].lastIndexOf('.') + 1);
+                console.log("文件后缀名", fileExtension);
+                if (fileExtension != "pdf") {
+                    wx.showModal({
+                        title: '上传失败',
+                        content: "请上传pdf文件",
+                        showCancel: false,
+                    });
+                } else {
+                    wx.uploadFile({
+                        //请求后台的路径
+                        url: app.globalData.url + 'WxUser/SaveImg',
+                        //小程序本地的路径
+                        filePath: files.path,
+                        name: 'file',
+                        formData: {
+                            newName: user.openid + "of resume",
+                            id: user.id,
+                            modelName: 'Teacher',
+                            file_type: 'pdf',
+                        },
+                        success(res) {
+                            console.log(res);
+                            if (res.statusCode == 200) {
+                                console.log("成功上传简历");
+                                wx.showToast({
+                                    title: "上传成功",
+                                    icon: 'success',
+                                    duration: 800,
+                                });
+                                that.getUserInfo();
+                            } else {
+                                wx.showToast({
+                                    title: "上传失败",
+                                    icon: 'success',
+                                    duration: 800,
+                                });
+                            }
+                        },
+                        fail(res) {
+                            wx.showModal({
+                                title: '提示',
+                                content: '上传失败',
+                                showCancel: false
+                            })
                         }
-
-                    },
-                    fail(res) {
-                        wx.showModal({
-                            title: '提示',
-                            content: '上传失败',
-                            showCancel: false
-                        })
-                    }
-                })
-
+                    })
+                }
             },
             fail: (res) => {
                 console.log(res);
@@ -469,21 +463,15 @@ Page({
 
     // 上传简历后重新获取用户信息
     getUserInfo: function(e) {
-        wx.request({
-            url: app.globalData.url + 'WxUser/GetUserInfo2',
-            data: {
-                openid: user.openid,
-                id_flag: 'teacher',
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("获取成功");
-                console.log(res);
-                wx.setStorageSync('user', res.data.data);
-                user = wx.getStorageSync('user');
-            }
+        const p = GetUserInfo2({
+            openid: user.openid,
+            id_flag: 'teacher',
+        }).then(value => {
+            console.log("获取成功", value);
+            wx.setStorageSync('user', value.data.data);
+            user = wx.getStorageSync('user');
+        }, reason => {
+            console.log("获取个人信息失败", reason);
         })
     },
 

@@ -1,20 +1,6 @@
 <!--pages/myApply/comment.wxml-->
 <view class="infoBox">
     <form bindsubmit="cmt_submit">
-        <!-- <block wx:for="{{rate_data}}" wx:for-index="key" wx:for-item="item"> -->
-        <!-- <view wx:for="{{item}}" > -->
-        <!-- <view class="rating">
-            <view class="ttl">服务：</view>
-            <block wx:for="{{rate_data['course_rate']}}" wx:key="id">
-                <image src="{{item.icon}}" mode="widthFix" class="star" data-value="{{item.rate}}">
-                    <view class="star_half_1" data-name="{{key}}" data-id="{{item.id}}" data-half="1" catchtap="rateTap"></view>
-                    <view class="star_half_2" data-name="{{key}}" data-id="{{item.id}}" data-half="2" catchtap="rateTap"></view>
-                </image>
-            </block>
-        </view> -->
-        <!-- </view> -->
-        <!-- <input type="text" name="service" placeholder="评价一下" /> -->
-        <!-- </block> -->
         <view class="rating">
             <view class="ttl">服务：</view>
             <block wx:for="{{rate_data['service']}}" wx:key="id">

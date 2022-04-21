@@ -37,9 +37,8 @@
 
 .resume {
     line-height: 3rem;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    text-align: left;
+    margin-left: 6%;
     color: #6177ff;
 }
 

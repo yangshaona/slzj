@@ -1,7 +1,8 @@
 // pages/course/doing/doing_stu&prt.js
 const app = getApp();
 let user = wx.getStorageSync('user')
-let id_flag = wx.getStorageSync('id_flag')
+let id_flag = wx.getStorageSync('id_flag');
+import { UpGps, GetTeaUpGps, ActiveStuDetail } from '../../utils/apis.js';
 Page({
 
     /**
@@ -41,7 +42,6 @@ Page({
         tea_location: {
             latitude: 0,
             longitude: 0,
-
         },
         //学生位置
         stu_location: {
@@ -102,29 +102,18 @@ Page({
                 console.log("获取用户位置成功");
                 console.log(this.data.location);
                 console.log(this.data.mark);
-                wx.request({
-                    url: app.globalData.url + 'WxOther/UpGps',
-                    data: {
-                        userid: user.id,
-                        courseid: that.data.course.courseid,
-                        longitude: res.longitude,
-                        latitude: res.latitude,
-                    },
-                    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                    // header: {}, // 设置请求的 header
-                    success: function(res) {
-                        // success
-                        console.log("成功上传学生位置");
-                        console.log(res)
-                    },
-                    fail: function() {
-                        // fail
-                    },
-                    complete: function() {
-                        // complete
-                    }
-                })
-
+                const p = UpGps({
+                    userid: user.id,
+                    courseid: that.data.course.courseid,
+                    longitude: res.longitude,
+                    latitude: res.latitude,
+                });
+                p.then(value => {
+                    console.log("成功上传学生位置");
+                    console.log(value)
+                }, reason => {
+                    console.log("上传学生位置失败", reason);
+                });
             },
             fail: (res) => {
                 wx.showToast({
@@ -138,37 +127,25 @@ Page({
     },
 
     //获取导师位置
-    getTeacherLocation: function() {
+    getTeacherLocation: function(teaOrderId) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxOther/GetTeaUpGps',
-            data: {
-                courseid: that.data.course.courseid,
-                teacherid: that.data.course.teacherid,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            success: function(res) {
-                // success
-                console.log("成功获取导师位置");
-                console.log(res);
-                if (res.data.data.length != 0) {
-
-                    var latitude = "tea_location.latitude",
-                        longitude = "tea_location.longitude";
-                    that.setData({
-                        [latitude]: res.data.data[0].latitude,
-                        [longitude]: res.data.data[0].longitude,
-                    });
-                    that.getLocation();
-                }
-
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        const p = GetTeaUpGps({
+            teaOrderId: teaOrderId,
+        });
+        p.then(value => {
+            console.log("成功获取导师位置");
+            console.log(value);
+            if (value.data.data.length != 0) {
+                var latitude = "tea_location.latitude",
+                    longitude = "tea_location.longitude";
+                that.setData({
+                    [latitude]: value.data.data[0].latitude,
+                    [longitude]: value.data.data[0].longitude,
+                });
+                that.getLocation();
             }
+        }, reason => {
+            console.log("获取导师位置失败", reason);
         })
     },
 
@@ -195,43 +172,37 @@ Page({
         if (id_flag != 'parent') {
             userid = user.id;
         }
-
-        wx.request({
-            url: app.globalData.url + 'WxSign/ActiveStuDetail&id=' + userid,
-            data: {},
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("是否有正在活动信息")
-                console.log(res)
-                if (res.data.data[0] == "无正在进行的课程") {
-                    that.setData({
-                        doing: res.data.data[0],
-                    })
-                } else if (res.data.data[0] == "该活动暂未分配老师") {
-                    that.setData({
-                        doing: res.data.data[0],
-                    })
-                } else {
-                    that.setData({
-                        doing: res.data.data[0],
-                        teacher: res.data.teacher[0],
-                        course: res.data.data[0]
-                    });
-                    //获取导师位置
-                    that.getTeacherLocation();
-                    that.getData();
-
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+        const p = ActiveStuDetail({
+            id: userid,
         });
+        p.then(value => {
+            console.log("是否有正在活动信息111111111")
+            console.log(value)
+            if (value.data.data[0] == "无正在进行的课程") {
+                that.setData({
+                    doing: value.data.data[0],
+                })
+            } else if (value.data.data[0] == "该活动暂未分配老师") {
+                that.setData({
+                    doing: value.data.data[0],
+                })
+            } else {
+                that.setData({
+                    doing: value.data.data[0],
+                    teacher: value.data.teacher[0],
+                    course: value.data.data[0]
+                });
+                console.log(value.data.data[0].teacherOrderId);
+                wx.setStorageSync('teaOrderId', value.data.data[0].teacherOrderId);
+                wx.setStorageSync('teaOrderId', value.data.data[0].teacherOrderId);
+                //获取导师位置
+                that.getTeacherLocation(value.data.data[0].teacherOrderId);
+                that.getData();
 
+            }
+        }, reason => {
+            console.log("获取正在活动数据失败", reason);
+        });
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -255,15 +226,13 @@ Page({
             this.data.realTime = setInterval(function() {
 
                     // 请求服务器数据
-                    console.log('请求接口：刷新数据')
-                    that.getTeacherLocation();
-
+                    console.log('请求接口：刷新数据');
+                    let teaOrderId = wx.getStorageSync('teaOrderId');
+                    that.getTeacherLocation(teaOrderId);
                 }, 30000) //间隔时间
-
-            // 更新数据
+                // 更新数据
             this.setData({
                 realTime: this.data.realTime, //实时数据对象(用于关闭实时刷新方法)
-
             })
         }
     },
@@ -276,7 +245,7 @@ Page({
          * 当页面隐藏时关闭定时器(关闭实时刷新)
          * 切换到其他页面了
          */
-        // clearInterval(this.data.realTime)
+        clearInterval(this.data.realTime)
     },
 
     /**

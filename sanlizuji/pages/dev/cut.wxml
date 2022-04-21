@@ -4,7 +4,7 @@
     <template is="we-cropper" data="{{...cropperOpt}}" />
 
     <view class="button-box" style="top: {{windowHeight}}px;">
-        <button bindtap="uploadTap" class="btn-left">重新选择</button>
+        <button bindtap="uploadTap" class="btn-left">重新选择1</button>
         <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
     </view>
 </view>

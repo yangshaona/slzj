@@ -2,8 +2,10 @@
 import {
     SaveInfo,
     checkPhone,
-    checkName
-} from '../../utils/text.js'
+    checkName,
+    Unbound
+} from '../../utils/text.js';
+import { KidBindParent, SearchParent, GetParentList } from '../../utils/apis.js';
 const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
 let user = wx.getStorageSync('user');
@@ -32,6 +34,10 @@ Page({
         multiArray: [],
         multiIndex: [0, 0, 0],
         province: [],
+        showpicker: "off-picker",
+        birthday: "",
+        sex: '',
+        sexid: 0,
     },
 
 
@@ -145,6 +151,25 @@ Page({
             parent_phone: e.detail.value
         })
     },
+    checkInputName: function(e) {
+        this.setData({
+            tmp: e.detail.value
+        })
+        console.log("输入的数据是：", e.detail.value);
+        // check_idnum.checkName(e.detail.value);
+    },
+    // 检查手机号是否输入正确
+    checkPhone: function(e) {
+        this.setData({
+                tmp: e.detail.value,
+            })
+            // checkPhone(e.detail.value);
+    },
+    checkIdNum: function(e) {
+        this.setData({
+            tmp: e.detail.value,
+        })
+    },
     // 修改姓名
     stuName: function(e) {
         this.setData({
@@ -160,12 +185,6 @@ Page({
             tmp: e.detail.value,
         })
 
-    },
-    // 手机号信息的修改
-    stuPhone: function(e) {
-        this.setData({
-            tmp: e.detail.value,
-        })
     },
     // 学校信息的修改
     stuSchool: function(e) {
@@ -219,6 +238,11 @@ Page({
                 _user["province"] = that.data.tmp[0];
                 _user["city"] = that.data.tmp[1];
                 _user["district"] = that.data.tmp[2];
+            } else if (trigger == 'idnum') {
+                _user[trigger] = that.data.tmp;
+                _user["birthday"] = that.data.birthday;
+                _user["sex"] = that.data.sex;
+                _user["sexid"] = that.data.sexid;
             } else _user[trigger] = that.data.tmp;
 
             wx.setStorageSync('user', _user);
@@ -265,55 +289,57 @@ Page({
         console.log("trigger", trigger);
         // 绑定事件
         if (trigger == 'bind') {
-            wx.request({
-                url: app.globalData.url + 'WxUser/SearchParent',
-                data: {
-                    name: that.data.parent_name,
-                    phone: that.data.parent_phone,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("父母信息");
-                    console.log(res)
-                    if (res.data.data.msg == "请输入姓名和电话") {
+            const p = SearchParent({
+                name: that.data.parent_name,
+                phone: that.data.parent_phone,
+            }).then(value => {
+                console.log("父母信息", value)
+                if (value.data.data.msg == "请输入姓名和电话") {
+                    wx.showModal({
+                        content: value.data.data.msg,
+                        showCancel: false,
+                    })
+                } else {
+                    if (value.data.data.length == 0) {
                         wx.showModal({
-                            content: res.data.data.msg,
+                            content: "监护人未注册",
                             showCancel: false,
                         })
-
                     } else {
-                        if (res.data.data.length == 0) {
-                            wx.showModal({
-                                content: "监护人未注册",
-                                showCancel: false,
-                            })
-                        } else {
-                            that.kidBindParent(res.data.data[0].id);
-
-                        }
+                        that.kidBindParent(value.data.data[0].id);
                     }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
                 }
-            })
-        } else if (trigger == 'idnum') {
-            that.setData({
-                showModal: false,
-            })
+            }, reason => {
+                console.log("获取父母信息数据失败", reason);
+            });
         }
         // 修改信息事件 
         // else if (trigger == 'name' || trigger == 'phone' || trigger == 'schoolname' || trigger == 'grade' || trigger == 'aller') {
-        else if (trigger == 'name' || trigger == 'phone' || trigger == 'schoolname' || trigger == 'grade' || trigger == 'aller') {
+        else if (trigger == 'name' || trigger == 'idnum' || trigger == 'phone' || trigger == 'schoolname' || trigger == 'grade' || trigger == 'aller') {
             if (trigger == 'name') {
                 var flag = check_idnum.checkName(this.data.tmp);
                 if (flag) {
                     that.checkInfo(trigger);
+                }
+            } else if (trigger == 'idnum') {
+                var data = check_idnum.checkIdCard(this.data.tmp);
+                console.log(data.idCardFlag);
+                if (!data.idCardFlag) {
+                    wx.showToast({
+                        title: '身份证号有误',
+                        icon: 'error',
+                        duration: 800
+                    })
+                    return false;
+                } else {
+                    var sexid = data.sex == '男' ? 1 : 2;
+                    this.setData({
+                        birthday: data.birth,
+                        sex: data.sex,
+                        sexid: sexid,
+                    })
+                    that.checkInfo(trigger);
+                    return true;
                 }
             } else if (trigger == 'phone') {
                 if (checkPhone(this.data.tmp)) {
@@ -360,6 +386,8 @@ Page({
 
     //退出登录
     logout: function() {
+        let user = wx.getStorageSync('user');
+        Unbound(user.id, 'Userinfo');
         wx.setStorageSync('user', null);
         wx.setStorageSync('id_flag', null);
         wx.setStorageSync('avator', null);
@@ -374,108 +402,82 @@ Page({
     //孩子绑定父母
     kidBindParent: function(pid) {
         let that = this;
-        console.log("父母id", pid)
-        wx.request({
-            url: app.globalData.url + "WxUser/KidBindParent",
-            data: {
-                id: user.id,
-                pid: pid,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("绑定数据")
-                console.log(res)
-                console.log(res.data.code)
-                that.setData({
-                    showModal: false
+        console.log("父母id", pid);
+        const p = KidBindParent({
+            id: user.id,
+            pid: pid,
+        }).then(value => {
+            console.log("绑定数据", value);
+            that.setData({
+                showModal: false
+            })
+            if (value.data.code == 200) {
+                that.SaveInfo();
+                wx.showToast({
+                    title: "绑定成功",
+                    icon: "success",
+                    duration: 1000,
                 })
-                if (res.data.code == 200) {
-                    that.SaveInfo();
-                    wx.showToast({
-                        title: "绑定成功",
-                        icon: "success",
-                        duration: 1000,
-                    })
-                } else {
-                    wx.showToast({
-                        title: "绑定失败",
-                        icon: "success",
-                        duration: 1000,
-                    })
-                }
-
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+            } else {
+                wx.showToast({
+                    title: "绑定失败",
+                    icon: "success",
+                    duration: 1000,
+                })
             }
-        })
+        }, reason => {
+            console.log("绑定父母失败", reason);
+        });
     },
     //获取已绑定的家长信息
     GetParentsList: function() {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/GetParentList',
-            data: {
-                id: user.id,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("成功获取绑定的家长信息11");
-                console.log(res)
-                var pname_list = [],
-                    phone_list = [];
-                if (res.data.msg == "获取列表信息成功") {
-                    for (var key of res.data.data) {
-                        pname_list.push(key.name);
-                        phone_list.push(key.phone);
-                    }
-                    user.parents = pname_list.join(',');
-                    user.p_phone = phone_list.join(',');
-
-                } else {
-                    user.parents = "未绑定监护人信息";
-                    user.p_phone = "";
+        const p = GetParentList({
+            id: user.id,
+        }).then(value => {
+            console.log("成功获取绑定的家长信息", value);
+            var pname_list = [],
+                phone_list = [];
+            if (value.data.msg == "获取列表信息成功") {
+                for (var key of value.data.data) {
+                    pname_list.push(key.name);
+                    phone_list.push(key.phone);
                 }
-                that.setData({
-                    user: user
-                })
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+                user.parents = pname_list.join(',');
+                user.p_phone = phone_list.join(',');
+
+            } else {
+                user.parents = "未绑定监护人信息";
+                user.p_phone = "";
             }
+            that.setData({
+                user: user
+            })
+        }, reason => {
+            console.log("绑定家长数据失败", reason);
+        });
+    },
+
+    // 提示不要随便修改地址
+    changeAddress: function() {
+        wx.showModal({
+            title: "警告",
+            content: "请不要随意更改地址！",
+            confirmText: "知道了",
+            showCancel: false,
+        })
+        this.setData({
+            showpicker: "show-picker",
         })
     },
-    //手机号码输入检查
-    checkPhone: function(phNum, id) {
-        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
-        if (phNum.length != 11 || !reg.test(phNum)) {
-            wx.showModal({
-                content: id + '输入有误', //提示的内容,
-                showCancel: false, //是否显示取消按钮,
-            });
-            return false;
-        } else {
-            console.log("手机号填写格式正确");
-            return true;
-        }
-    },
-
     //获取地区
     bindMultiPickerChange: function(e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
         this.setData({
             multiIndex: e.detail.value,
-            reg_idx: 1
+            reg_idx: 1,
+            showpicker: "off-picker",
+
         })
     },
     bindMultiPickerColumnChange: function(e) {
@@ -552,6 +554,8 @@ Page({
 
         } else if (tmp[1] == '天津市') {
             tmp[1] = '天津';
+        } else if (tmp[1] == '上海市') {
+            tmp[1] = '上海';
         }
         console.log("选中的是：", tmp)
         this.setData({

@@ -2,13 +2,13 @@
 
 <import src="../template/not_found/not_found.wxml" />
 <view class="top">
-    <image class="actImg" src="{{service_club.pic=='https://sanli-tracks.com/sanli/uploads/temp/'?'/icon/no_pic2.png':service_club.pic}}" mode="widthFix"></image>
+    <image class="actImg" src="{{service_club.pic==imgPrefix?'/icon/not_found_pic.png':service_club.pic}}" mode="widthFix"></image>
 </view>
 
 <!-- 学校名称logo -->
 <view class="infoBox">
     <view class="flexBox">
-        <image class="logo" src="{{service_club.pic=='https://sanli-tracks.com/sanli/uploads/temp/'?'/icon/no_pic.png':service_club.pic}}" mode="widthFix"></image>
+        <image class="logo" src="{{service_club.pic==imgPrefix?'/icon/unload.png':service_club.pic}}" mode="aspectFill"></image>
         <view>{{service_club.club_name}}</view>
     </view>
 </view>
@@ -16,11 +16,10 @@
 <!-- 小标题 -->
 <view class="infoTtl">服务商简介</view>
 
-<!-- 学校介绍 -->
+<!-- 学校或服务商介绍 -->
 <view class="infoBox">
     <view class="desc">
         <view style='margin-left:.3em;margin-right:.15em;'>
-            <!-- <rich-text nodes="{{service_club.introduce==''?'暂无简介':service_club.introduce}}"></rich-text> -->
             <mp-html content="{{service_club.introduce==''?'暂无简介':service_club.introduce}}"></mp-html>
 
         </view>

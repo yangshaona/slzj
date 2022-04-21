@@ -2,6 +2,7 @@
 const app = getApp();
 const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
 const areaList = require('../../utils/arealist.js');
+const { Register, GetUserInfo2, getOpenId } = require('../../utils/apis.js');
 Page({
 
     /**
@@ -9,6 +10,10 @@ Page({
      */
 
     data: {
+        statusHeight: app.globalData.statusHeight,
+        //标题高度
+        top_width: 0,
+        top_height: 0,
         filepath: '',
         // 能否获得用户微信昵称
         cangetUserInfo: false,
@@ -212,30 +217,36 @@ Page({
         console.log("上传文件");
         wx.chooseMessageFile({
             count: 1,
-            type: "all",
+            type: "file",
             success: (res) => {
-                wx.showToast({
-                    title: '上传成功',
-                    icon: 'success',
-                    duration: 800
-                });
+
                 console.log("上传文件返回的结果");
+
                 console.log(res);
                 var files = res.tempFiles;
-                this.setData({
-                    filepath: files,
-                })
-                console.log(files[0].path);
-                wx.setStorageSync('exp', files[0].path);
-                var exp = [];
-                for (var idx in files) {
-                    exp.push(files[idx].path);
+                var fileExtension = files[0]['name'].substring(files[0]['name'].lastIndexOf('.') + 1);
+                console.log("文件后缀名", fileExtension);
+                if (fileExtension != "pdf") {
+                    wx.showModal({
+                        title: '上传失败',
+                        content: "请上传pdf文件",
+                        showCancel: false,
+                    });
+                } else {
+                    this.setData({
+                        filepath: files,
+                    })
+                    console.log(files[0].path);
+                    wx.setStorageSync('exp', files[0].path);
+                    var exp = [];
+                    for (var idx in files) {
+                        exp.push(files[idx].path);
+                    }
+                    console.log(exp);
+                    this.setData({
+                        exp: exp
+                    })
                 }
-                console.log(exp);
-                this.setData({
-                    exp: exp
-                })
-
             },
             fail: (res) => {
                 console.log(res);
@@ -298,24 +309,34 @@ Page({
             }
         })
     },
+    // 查看上传的简历文件
+    View: function(e) {
+        console.log("文件预览", e);
+        let url = e.currentTarget.dataset.file_path[0];
+        wx.downloadFile({
+            // 示例 url，并非真实存在
+            url: url,
+            success: function(res) {
+                const filePath = res.tempFilePath
+                wx.openDocument({
+                    filePath: filePath,
+                    success: function(res) {
+                        console.log('打开文档成功')
+                    }
+                })
+            }
+        })
+    },
     // 获取用户信息
     getUserInfo: function(e) {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/GetUserInfo2',
-            data: {
-                openid: app.globalData.openid,
-                id_flag: 'teacher',
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("获取成功");
-                console.log(res);
-                that.upLoadFiles(res.data.data);
-            }
-        })
+        const p = GetUserInfo2({
+            openid: app.globalData.openid,
+            id_flag: 'teacher',
+        }).then(value => {
+            console.log("获取成功");
+            console.log(value);
+        });
     },
 
     // 注册表单提交
@@ -376,82 +397,61 @@ Page({
                     // success
                     console.log("获取openid")
                     console.log(res)
-                    wx.request({
-                        url: app.globalData.url + "WxUser/getOpenId",
-                        data: {
-                            code: res.code
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log(res)
-                            that.setData({
-                                openid: res.data.openid
-                            });
-                            var type = parseInt(data.type) + 1;
-                            console.log(type)
-                            app.globalData.openid = res.data.openid;
-                            wx.request({
-                                url: app.globalData.url + 'WxUser/Register&modelName=Teacher',
-                                data: {
-                                    Teacher: {
-                                        header: that.data.header,
-                                        openid: res.data.openid,
-                                        birthday: data.birth,
-                                        idnum: data.idNum,
-                                        resume: data.exp,
-                                        name: data.name,
-                                        sex: data.sex,
-                                        sexid: that.data.sexid,
-                                        type: parseInt(data.type) + 1,
-                                        phone: data.phone,
-                                        province: that.data.reg[0],
-                                        city: that.data.reg[1],
-                                        district: that.data.reg[2],
-                                    }
-                                },
-                                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                                // header: {}, // 设置请求的 header
-                                success: function(res) {
-                                    // success
-                                    console.log("表单检查成功");
-                                    that.getUserInfo();
-                                    console.log(res)
-                                    if (res.data.data.msg == "该微信已注册") {
-                                        wx.showModal({
-                                            content: '该微信已注册',
-                                            showCancel: false,
-                                        })
-                                    } else if (res.data.data.msg == "该手机号已注册") {
-                                        wx.showModal({
-                                            content: '该手机号已注册',
-                                            showCancel: false,
-                                        })
-                                    } else {
-                                        wx.showModal({
-                                            content: '成功添加个人信息',
-                                            showCancel: false,
-                                        })
-                                        console.log("表单检查成功");
-                                        setTimeout(function() {
-                                            wx.navigateTo({
-                                                url: '../login/login?id=teacher'
-                                            })
-                                        }, 800);
-
-                                    }
-                                },
-                                fail: function() {
-                                    // fail
-                                },
-                                complete: function() {
-                                    // complete
-                                }
-                            })
-                        },
-                    })
-
+                    const p = getOpenId({
+                        code: res.code
+                    }).then(value => {
+                        console.log(value)
+                        that.setData({
+                            openid: value.data.openid
+                        });
+                        var type = parseInt(data.type) + 1;
+                        console.log(type)
+                        app.globalData.openid = value.data.openid;
+                        Register({
+                            modelName: "Teacher",
+                            Teacher: {
+                                header: that.data.header,
+                                openid: value.data.openid,
+                                birthday: data.birth,
+                                idnum: data.idNum,
+                                resume: data.exp,
+                                name: data.name,
+                                sex: data.sex,
+                                sexid: that.data.sexid,
+                                type: parseInt(data.type) + 1,
+                                phone: data.phone,
+                                province: that.data.reg[0],
+                                city: that.data.reg[1],
+                                district: that.data.reg[2],
+                            }
+                        }).then(value => {
+                            console.log("表单检查成功");
+                            that.getUserInfo();
+                            console.log(value)
+                            if (value.data.data.msg == "该微信已注册") {
+                                wx.showModal({
+                                    content: '该微信已注册',
+                                    showCancel: false,
+                                })
+                            } else if (value.data.data.msg == "该手机号已注册") {
+                                wx.showModal({
+                                    content: '该手机号已注册',
+                                    showCancel: false,
+                                })
+                            } else {
+                                wx.showModal({
+                                    content: '成功添加个人信息',
+                                    showCancel: false,
+                                })
+                                console.log("表单检查成功");
+                                setTimeout(function() {
+                                    wx.navigateTo({
+                                        url: '../login/login?id=teacher'
+                                    })
+                                }, 800);
+                            }
+                        })
+                    }).catch(err => { console.log("无法注册", err) });
                 },
                 fail: function() {
                     // fail
@@ -561,17 +561,31 @@ Page({
 
         } else if (tmp[1] == '天津市') {
             tmp[1] = '天津';
+        } else if (tmp[1] == '上海市') {
+            tmp[1] = '上海';
         }
         console.log("选中的是：", tmp)
         this.setData({
             reg: tmp,
         })
     },
+    // 获取标题栏高度
+    getTopHeight: function() {
+        let that = this;
+        wx.createSelectorQuery().selectAll('#top').boundingClientRect(function(rect) {
+            that.setData({
+                top_height: rect[0].height,
+                top_width: rect[0].width,
+            });
+            console.log("高度是：", that.data.top_height);
+        }).exec();
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-
+        let that = this;
+        that.getTopHeight();
         var now = new Date;
         var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
         this.setData({
@@ -653,5 +667,19 @@ Page({
      */
     onShareAppMessage: function() {
 
+    },
+    Return: function() {
+        wx.navigateBack({
+            delta: 1, // 回退前 delta(默认为1) 页面
+            success: function(res) {
+                // success
+            },
+            fail: function() {
+                // fail
+            },
+            complete: function() {
+                // complete
+            }
+        })
     }
 })

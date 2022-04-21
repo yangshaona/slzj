@@ -1,18 +1,32 @@
 <!--pages/register/register_stu.wxml-->
 <import src="../template/course_check/course_check.wxml" />
-
+<!-- 背景图 -->
+<view>
+    <image class="bg-image" mode="scaleToFill" src="/img/bg2.png"></image>
+</view>
+<view>
+    <image class="top-bg-image" mode="scaleToFill" src="/img/bg2.png" style="clip: rect(0, {{top_width}}px,{{top_height-12}}px, 0)"></image>
+</view>
+<view id='top' class="top" style="padding-top: {{statusHeight+10}}px;">
+    <view class="head">
+        <view class="btn-arrowhead" bindtap="Return"></view>
+        <view class="title"> 注册(学生端)</view>
+    </view>
+</view>
+<view class="float" style="padding-top: {{statusHeight+16}}px;">
+</view>
 <block wx:if="{{showCut}}">
     <import src="../dev/we-cropper.wxml" />
 
     <view class="cropper-wrapper">
         <template is="we-cropper" data="{{...cropperOpt}}" />
-        <view class="button-box" style="top: {{windowHeight-20}}px;">
+        <view class="button-box">
             <button bindtap="uploadTap" class="btn-left">重新选择</button>
             <button bindtap="getCropperImage" class="btn-right">确认剪裁</button>
         </view>
     </view>
 </block>
-
+<!-- <view class="content clearfix" wx:else> -->
 <block wx:else>
     <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
         <include src="../template/agree_protocol/agree_protocol"></include>
@@ -20,7 +34,7 @@
 
     <!-- 注册框 -->
     <block wx:if="{{!cangetUserInfo}}">
-        <view class="primary">
+        <view class="primary clearfix">
             <button wx:if="{{is_show}}" class="submit" bindtap="getNickName">注册</button>
             <button class="submit" bindtap="login">登录</button>
             <view class="change" bindtap="changeToTeacher" id="teacher">切换教师端</view>
@@ -28,7 +42,7 @@
         </view>
     </block>
     <block wx:if="{{cangetUserInfo}}">
-        <view class="ctnBox">
+        <view class="ctnBox clearfix">
             <form bindsubmit="submit">
                 <!-- 获取用户头像 -->
                 <view style="height: auto;">
@@ -78,15 +92,20 @@
                     <view class="desc">手机号
                         <image mode="widthFix" src="/icon/phone.png"></image>
                     </view>
-                    <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
+                    <input name="phone" id="phone" type="number" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
                 </view>
                 <!-- 学生学校信息 -->
                 <view wx:if="{{school_tag!=0}}">
-                    <view>
+                    <view class="school">
                         <view class="desc">学校名称
                             <image mode="widthFix" src="/icon/school.png"></image>
                         </view>
-                        <input type="text" name="schoolname" id="schoolname" placeholder="输入学校全称" />
+                        <input type="text" name="schoolname" id="schoolname" placeholder="输入学校全称" value="{{school_name}}" bindinput="InputSchool" bindblur="SchoolBlur" />
+                        <view class="show-school" wx:if="{{schoollist.length!=0}}">
+                            <view wx:for="{{schoollist}}">
+                                <view class="one-school" data-school="{{item.club_name}}" catchtap="getSchool">{{item.club_name}}</view>
+                            </view>
+                        </view>
                     </view>
                     <view>
                         <view class="desc">在读学历
@@ -130,5 +149,5 @@
         </view>
     </block>
 </block>
-
+<!-- </view> -->
 <template is="course_check" data="{{showModal,title}}" />

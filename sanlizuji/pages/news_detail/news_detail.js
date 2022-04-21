@@ -1,8 +1,6 @@
 // pages/news_detail/news_detail.js
 const app = getApp();
-import {
-    formatRichText
-} from '../../utils/text.js'
+import { GetDetail } from '../../utils/apis.js'
 Page({
 
     /**
@@ -21,25 +19,17 @@ Page({
         let that = this
         console.log("详情页面数据")
         console.log(options)
-
-        wx.request({
-            url: app.globalData.url + 'WxOther/GetDetail',
-            data: {
-                id: options.id
-            },
-            success(res) {
-                console.log("发布文章详情")
-                console.log(res.data.data)
-                    //formatRichText 调用方法    
-                    //解决rich-text放入图片时富文本无法换行的问题  
-                var content = "";
-                // content = formatRichText(res.data.data[0].content);
-                // res.data.data[0].content = content;
-                that.setData({
-                    course_detail: res.data.data[0],
-
-                });
-            }
+        const p = GetDetail({
+            id: options.id
+        });
+        p.then(value => {
+            console.log("发布文章详情")
+            console.log(value.data.data)
+            that.setData({
+                course_detail: value.data.data[0],
+            });
+        }, reason => {
+            console.log("获取发布文章详情数据失败", reason);
         })
     },
 

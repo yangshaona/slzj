@@ -532,6 +532,7 @@ button::after {
 }
 
 .confirm {
+    font-size: 1.1rem;
     border-radius: 30rpx;
     margin: 5% 4%;
     color: #fff;

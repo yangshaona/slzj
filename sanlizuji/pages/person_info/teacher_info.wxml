@@ -10,7 +10,7 @@
         <view class="line"></view>
         <view class="info-bar">
             <desc class="info-bar-desc" inner-text="生日：{{user.birthday}}" icon="/icon/birthday.png"></desc>
-            <view class="info-bar-view" bindtap="Bind" data-trigger="birthday">></view>
+            <view class="info-bar-view" bindtap="Bind" data-trigger="birthday"></view>
         </view>
         <view class="line"></view>
         <view class="info-bar">
@@ -55,57 +55,46 @@
         </view>
         <view class="line"></view>
         <view class="info-bar">
-
-
-
             <desc class="info-resume-desc" inner-text="简历（上传pdf文件）" icon="/icon/resume.png"></desc>
             <button data-resume="{{user.resume}}" class="info-resume" bindtap="UpResume">上传</button>
         </view>
     </view>
-    <view class="resume" bindtap="DownloadResume" data-resume="{{user.resume}}">{{user.resume}}</view>
+    <view class="resume" bindtap="DownloadResume" data-resume="{{user.resume}}">点击预览简历</view>
     <button class="logout" bindtap="logout" type="button">退出登录</button>
 </view>
-
-
 <view wx:if="{{trigger=='name'||trigger=='idnum'||trigger=='phone'}}">
     <view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'></view>
     <view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
 
         <!-- 姓名的修改 -->
         <view wx:if="{{trigger=='name'}}" class="info">
-
             <view class='change-name'>
                 <text class=''>修改姓名</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindblur='teaName' placeholder='请输入姓名' value="{{user.name}}"></input>
+                <input type='text' class="input" bindblur='teaName' placeholder='请输入姓名' value="{{user.name}}" auto-focus="true"></input>
             </view>
         </view>
 
         <!-- 身份证的修改 -->
         <view wx:if="{{trigger=='idnum'}}" class="info">
-
             <view class='change-name'>
                 <text class=''>查看身份证</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindblur='teaIdNum' value="{{user.idnum}}" disabled="true"></input>
+                <input type='idcard' class="input" bindblur='teaIdNum' value="{{user.idnum}}" auto-focus="true"></input>
             </view>
         </view>
 
         <!-- 手机号的修改 -->
         <view wx:if="{{trigger=='phone'}}" class="info">
-
             <view class='change-name'>
                 <text class=''>修改手机号</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindblur='teaPhone' placeholder='请输入手机号' value="{{user.phone}}"></input>
+                <input type='number' class="input" bindblur='teaPhone' placeholder='请输入手机号' value="{{user.phone}}" auto-focus="true"></input>
             </view>
         </view>
-
-
-
         <view class='modal-btn-wrapper'>
             <view class='cancel-btn' style='color:rgba(7,17,27,0.6)' bindtap='back'>取消</view>
             <view class='confirm-btn' style='color:#1677ff' bindtap='ok'>确定</view>

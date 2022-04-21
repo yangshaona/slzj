@@ -12,7 +12,7 @@
         <!-- <rich-text nodes="{{course_detail.content}}"></rich-text> -->
         <mp-html content="{{course_detail.content}}"></mp-html>
     </view>
-    <view class="date">发布时间：{{course_detail.uDate}}</view>
+    <!-- <view class="date">发布时间：{{course_detail.uDate}}</view> -->
     <!-- <view class="view">
       <view>{{view}}</view>
       <image src="/icon/view.png" mode="widthFix"></image>

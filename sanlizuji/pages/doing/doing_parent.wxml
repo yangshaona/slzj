@@ -19,7 +19,7 @@
                     <view class="coursename">{{item.coursename}}</view>
                     <view class="card2">
                         <view class="avator">
-                            <image src="{{item[0].header==''?'/icon/用户头像.png':item[0].header}}" mode="aspectFill"></image>
+                            <image src="{{item.photo==''?'/icon/unload.png':item.photo}}" mode="aspectFill"></image>
                         </view>
                         <view class="infoBox">
 

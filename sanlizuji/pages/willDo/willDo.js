@@ -1,5 +1,6 @@
 // pages/course/course.js
 const app = getApp();
+import { GetTeaAct } from '../../utils/apis.js';
 let user = wx.getStorageSync('user');
 Page({
 
@@ -47,40 +48,29 @@ Page({
             user: user
         })
         if (user != null && user != '') {
-            wx.request({
-                url: app.globalData.url + 'WxOther/GetTeaAct',
-                data: {
-                    id: user.id,
-                    openid: user.openid,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("将要进行的活动")
-                    console.log(res)
+            const p = GetTeaAct({
+                id: user.id,
+                openid: user.openid,
+            });
+            p.then(value => {
+                console.log("将要进行的活动", value);
 
-                    function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                        if (arr1.length == 0) {
-                            return [];
-                        }
-                        let arr3 = [];
-                        arr1.map((item, index) => {
-                            arr3.push(Object.assign(item, arr2[index]));
-                        })
-                        return arr3;
+                function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
+                    if (arr1.length == 0) {
+                        return [];
                     }
-                    that.setData({
-                        activity: mergeArr(res.data.data1, res.data.data2)
+                    let arr3 = [];
+                    arr1.map((item, index) => {
+                        arr3.push(Object.assign(item, arr2[index]));
                     })
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+                    return arr3;
                 }
-            })
+                that.setData({
+                    activity: mergeArr(value.data.data1, value.data.data2)
+                })
+            }, reason => {
+                console.log("获取将要进行的活动数据失败", reason);
+            });
         }
     },
     //登录查看更多

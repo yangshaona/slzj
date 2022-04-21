@@ -1,4 +1,5 @@
 // pages/journey/journey.js
+import { DailyDetail, GetKidsDailyDetail } from '../../utils/apis.js';
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
@@ -10,19 +11,10 @@ Page({
     data: {
         //活动
         activity: {},
-        //行程
-        journey: {},
         // 状态栏高度
         statusHeight: getApp().globalData.statusHeight,
         // 屏幕高度
         height: getApp().globalData.height,
-        // 活动缩略图
-        actImg: 'https://s3.bmp.ovh/imgs/2022/01/6ab7032e3f6c3bde.jpg',
-        // 活动名称
-        actName: '勇士 VS 湖人',
-        // 起止日期
-        start: '2022-01-21',
-        end: '2022-02-22',
         // 活动
         journey: [],
         user: user,
@@ -47,82 +39,58 @@ Page({
             user: user
         })
         var modelName = "";
-        var activity = [],
-            journey = [];
+        var journey = [];
         if (id_flag == 'student' || id_flag == 'teacher') {
             if (id_flag == 'student') {
                 modelName = "SignList";
             } else if (id_flag == 'teacher') {
                 modelName = "teaSignList"
             }
-            console.log(modelName)
-            wx.request({
-                url: app.globalData.url + 'WxSign/DailyDetail&modelName=' + modelName,
-                data: {
-                    userid: user.id,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("当前活动行程")
-                    console.log(res)
-                    var journey = [];
-                    if (res.data.data[0] == "无正在进行的活动行程" || res.data.data.length == 0) {
-                        that.setData({
-                            journey: "无正在进行的活动行程"
-                        })
-                    } else {
-                        journey.push(res.data.data)
-                        that.setData({
-                            journey: journey
-                        })
-
-                        console.log(that.data.activity)
-                        console.log(journey)
-
-                    }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+            console.log(modelName);
+            let p = DailyDetail({
+                modelName: modelName,
+                userid: user.id,
+            });
+            p.then(value => {
+                console.log("当前活动行程", value);
+                var journey = [];
+                if (value.data.data[0] == "无正在进行的活动行程" || value.data.data.length == 0) {
+                    that.setData({
+                        journey: "无正在进行的活动行程"
+                    })
+                } else {
+                    journey.push(value.data.data)
+                    that.setData({
+                        journey: journey
+                    })
+                    console.log(that.data.activity)
+                    console.log(journey)
                 }
+            }, reason => {
+                console.log("获取当前活动数据失败", reason);
             });
         } else if (id_flag == "parent") {
-            wx.request({
-                url: app.globalData.url + 'WxSign/GetKidsDailyDetail',
-                data: {
-                    modelName: "SignList",
-                    pid: user.id,
-                },
-                method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                // header: {}, // 设置请求的 header
-                success: function(res) {
-                    // success
-                    console.log("成功获取孩子当前活动信息");
-                    console.log(res)
-                    if (res.data.data.data.length == 0 || res.data.data.data[0].data.length == 0) {
-                        that.setData({
-                            journey: "无正在进行的活动行程",
-                        })
-                    } else {
-                        for (var i of res.data.data.data[0].data) {
-                            journey.push(i);
-                        }
-                        that.setData({
-                            journey: journey,
-                        })
+            let p = GetKidsDailyDetail({
+                modelName: "SignList",
+                pid: user.id,
+            });
+            p.then(value => {
+                console.log("成功获取孩子当前活动信息", value);
+                if (value.data.data.data.length == 0 || value.data.data.data[0].data.length == 0) {
+                    that.setData({
+                        journey: "无正在进行的活动行程",
+                    })
+                } else {
+                    for (var i of value.data.data.data[0].data) {
+                        journey.push(i);
                     }
-                },
-                fail: function() {
-                    // fail
-                },
-                complete: function() {
-                    // complete
+                    that.setData({
+                        journey: journey,
+                    })
                 }
-            })
+            }, reason => {
+                console.log("获取孩子当前活动信息失败", reason);
+            });
         }
     },
     //跳转到课程详情

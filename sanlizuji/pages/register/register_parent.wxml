@@ -1,6 +1,20 @@
 <!--pages/register/register_parent.wxml-->
-<!-- 照片上传还没搞 -->
+<!-- 背景图 -->
+<view>
+    <image class="bg-image" mode="scaleToFill" src="/img/bg2.png"></image>
+</view>
+<view>
+    <image class="top-bg-image" mode="scaleToFill" src="/img/bg2.png" style="clip: rect(0, {{top_width}}px,{{top_height-12}}px, 0)"></image>
+</view>
 <!-- 注册框 -->
+<view id="top" class="top" style="padding-top: {{statusHeight+10}}px;">
+    <view class="head">
+        <view class="btn-arrowhead" bindtap="Return"></view>
+        <view class="title">注册(家长端)</view>
+    </view>
+</view>
+<view class="float" style="padding-top: {{statusHeight+16}}px;">
+</view>
 <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
     <include src="../template/agree_protocol/agree_protocol"></include>
 </view>
@@ -20,14 +34,22 @@
                 <input type="text" name="name" id="name" placeholder="姓名" bindblur="InputName" />
             </view>
             <view>
+                <view class="desc">身份证号
+                    <image mode="widthFix" src="/icon/id.png"></image>
+                </view>
+                <input type="idcard" name="idnum" id="idNum" placeholder="身份证号" maxlength="18" bindblur="InputIdNum" />
+            </view>
+            <view>
                 <view class="desc">性别
                     <image mode="widthFix" src="/icon/sex.png"></image>
                 </view>
                 <radio-group name="sex" id="sex" class="box" style="display: flex;">
-                    <label style="width: 50%;display: block;"><radio value="男">男</radio></label>
-                    <label style="width: 50%;display: block;"><radio value="女">女</radio></label>
+                    <label style="width: 50%;display: block;"><radio disabled='true' value="男"  checked="{{sex=='男'?true:false}}">男</radio></label>
+                    <label style="width: 50%;display: block;"><radio disabled='true'  value="女" checked="{{sex=='女'?true:false}}">女</radio></label>
                 </radio-group>
             </view>
+
+
             <view>
                 <view class="desc">昵称(微信授权获取)</view>
                 <input type="text" name="nickName" disabled="true" value="{{nickName}}" />
@@ -36,7 +58,7 @@
                 <view class="desc">手机号
                     <image mode="widthFix" src="/icon/phone.png"></image>
                 </view>
-                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
+                <input name="phone" id="phone" type="number" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
             </view>
             <view>
                 <view class="desc">地区

@@ -1,1 +1,2 @@
 <button bindtap="savePicture1">下载</button>
+<view>Hello World</view>

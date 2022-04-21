@@ -13,7 +13,7 @@
         <view class="type">
             <view class="title">News</view>
         </view>
-        <view class="select-wrap" wx:if="{{news!=''}}">
+        <view class="select-wrap">
             <view class="news-type">文章类型：</view>
             <select id="select" prop-array="{{options}}" bind:select="select"></select>
 
@@ -33,7 +33,7 @@
                         <text class="actTitle">{{item.name}}</text>
                         <view class="descBox">
                             <!-- 时间 -->
-                            <view class="ddl">发布时间: <text style="color: #6177ff;">{{item.uDate}}</text></view>
+                            <!-- <view class="ddl">发布时间: <text style="color: #6177ff;">{{item.uDate}}</text></view> -->
                             <!-- 发布单位 -->
                             <view class="numBox">
                                 <view>{{item.news_club_name}}</view>

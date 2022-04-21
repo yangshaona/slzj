@@ -1,6 +1,21 @@
 <!--pages/register/register_teacher.wxml-->
-<!-- 照片上传还没搞 -->
+<!-- 背景图 -->
+<view>
+    <image class="bg-image" mode="scaleToFill" src="/img/bg2.png"></image>
+</view>
+<view>
+    <image class="top-bg-image" mode="scaleToFill" src="/img/bg2.png" style="clip: rect(0, {{top_width}}px,{{top_height-12}}px, 0)"></image>
+</view>
 <!-- 注册框 -->
+<view id="top" class="top" style="padding-top: {{statusHeight+10}}px;">
+
+    <view class="head">
+        <view class="btn-arrowhead" bindtap="Return"></view>
+        <view class="title">注册(教师端)</view>
+    </view>
+</view>
+<view class="float" style="padding-top: {{statusHeight+16}}px;">
+</view>
 <view class="payWay-container {{isTipTrue?'isTipShow':'isTipHide'}}">
     <include src="../template/agree_protocol/agree_protocol"></include>
 </view>
@@ -23,7 +38,7 @@
                 <view class="desc">身份证号
                     <image mode="widthFix" src="/icon/id.png"></image>
                 </view>
-                <input name="idNum" id="idNum" placeholder="身份证号" maxlength="18" bindblur="InputIdNum" />
+                <input type="idcard" name="idNum" id="idNum" placeholder="身份证号" maxlength="18" bindblur="InputIdNum" />
             </view>
             <view>
                 <view class="desc">生日
@@ -56,7 +71,7 @@
                 <view class="desc">手机号
                     <image mode="widthFix" src="/icon/phone.png"></image>
                 </view>
-                <input name="phone" id="phone" type="text" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
+                <input name="phone" id="phone" type="number" maxlength="11" placeholder="手机号" bindblur="InputPhone" />
             </view>
 
             <view>
@@ -75,7 +90,7 @@
                 <!-- 只支持上传聊天文件 -->
                 <button class="choose" bindtap="chooseFiles">选择文件</button>
 
-                <input name="exp" id="exp" type="text" disabled="true" value="{{exp}}" hidden="{{exp==''?true:false}}" />
+                <view bindtap="View" data-file_path="{{exp}}" hidden="{{exp==''?true:false}}" style="color: blue;margin-top: 5rpx;">{{exp!=''?'上传成功，点击预览':''}}</view>
 
             </view>
 

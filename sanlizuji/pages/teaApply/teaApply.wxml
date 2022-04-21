@@ -34,7 +34,7 @@
                         <!-- <button class="blue" wx:if="{{item.status==2}}" catchtap="applyTap1" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}"></button> -->
                         <button class="blue" catchtap="applyTap2" wx:if="{{item.status==3&&!item.endTime}}" data-id="{{item.courseid}}">继续报名</button>
                         <button class="border" wx:if="{{item.status==3}}" data-id="{{item.courseid}}" catchtap="commentTap">评价</button>
-                        <button class="border" data-id="{{item.courseid}}" data-starttime="{{item.startTime}}" catchtap="teacherTap">查看导师</button>
+                        <!-- <button class="border" data-id="{{item.courseid}}" data-starttime="{{item.startTime}}" catchtap="teacherTap">查看导师</button> -->
                         <button class="border" wx:if="{{item.status!=3}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">取消报名</button>
                     </view>
                     <view wx:if="{{item.status==1}}" class="status">报名失败</view>

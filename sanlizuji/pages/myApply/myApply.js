@@ -2,15 +2,13 @@
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
-import {
-    UpdateOrder
-} from '../../utils/text.js'
+import { UpdateOrder } from '../../utils/text.js';
+import { orderisshow, GetMyApply, GetKidsList, tgReverse } from '../../utils/apis.js';
 Page({
 
     /**
      * 页面的初始数据
      */
-
     data: {
         // 状态栏高度
         statusHeight: app.globalData.statusHeight,
@@ -72,17 +70,13 @@ Page({
         var price = e.currentTarget.dataset.price;
         wx.navigateTo({
             url: '../pay/pay?orderid=' + id + '&price=' + price,
-
         })
     },
     // 删除一条订单记录
     DeleteOneOrder: function(e) {
-
-        console.log("删除订单")
-        console.log(e)
+        console.log("删除订单", e);
         let orderid = e.currentTarget.dataset.id;
         let status = e.currentTarget.dataset.status;
-
         let that = this;
         if (status == 2) {
             UpdateOrder(orderid, '支付失败', 1);  
@@ -91,43 +85,29 @@ Page({
             content: "是否删除该记录",
             success(res) {
                 if (res.confirm) {
-                    wx.request({
-                        url: app.globalData.url + 'WxSign/orderisshow',
-                        data: {
-                            // modelName: modelName,
-                            id: orderid,
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log("删除结果");
-                            console.log(res);
-                            if (res.data.data == '删除失败') {
-                                wx.showToast({
-                                    title: "删除失败",
-                                    icon: 'cancel',
-                                    duration: 800,
-                                })
-
-
-                            } else {
-                                wx.showToast({
-                                    title: "删除成功",
-                                    icon: 'success',
-                                    duration: 800,
-                                });
-                                that.setFilter();
-                            }
-
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
-                        }
+                    const p = orderisshow({
+                        id: orderid,
                     })
+                    p.then(value => {
+                        console.log("删除结果");
+                        console.log(value);
+                        if (value.data.data == '删除失败') {
+                            wx.showToast({
+                                title: "删除失败",
+                                icon: 'cancel',
+                                duration: 800,
+                            })
+                        } else {
+                            wx.showToast({
+                                title: "删除成功",
+                                icon: 'success',
+                                duration: 800,
+                            });
+                            that.setFilter();
+                        }
+                    }, reason => {
+                        console.log("删除失败", reason);
+                    });
                 } else {
                     console.log("取消删除");
                 }
@@ -150,13 +130,11 @@ Page({
         var courseid = e.currentTarget.dataset.courseid;
         var orderid = e.currentTarget.dataset.orderid;
         var userid = e.currentTarget.dataset.userid;
-        var that = this;
         console.log("提交订单")
         console.log(courseid)
         console.log(orderid)
         wx.navigateTo({
             url: '../pay/waiting_pay?id=' + courseid + '&orderid=' + orderid + '&userid=' + userid,
-
         })
     },
     // 点击继续报名按钮
@@ -186,11 +164,9 @@ Page({
 
     // 筛选显示内容，这部分由服务端实现，这里只是测试一下样式
     setFilter: function() {
-
         let that = this;
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
-
         that.setData({
             flag_identity: app.globalData.flag_identity
         })
@@ -211,97 +187,83 @@ Page({
         let that = this;
         var select = this.data.select;
         var filter = [];
-        wx.request({
-            url: app.globalData.url + 'WxOther/GetMyApply&identity=' + identity,
-            data: {
-                id: id
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("我的报名", res);
-                var total = [],
-                    kid_apply = [],
-                    apply = [];
-                if (idflag == 'parent') {
-                    if (user.kids != '') {
-                        for (var i = 0; i < res.data.data.data.length; i++) {
-                            kid_apply = mergerArr(res.data.data.data[i].data1, res.data.data.data[i].data2);
-                            apply.push(kid_apply);
+        const p = GetMyApply({
+            identity: identity,
+            id: id
+        });
+        p.then(value => {
+            console.log("我的报名", value);
+            var total = [],
+                kid_apply = [],
+                apply = [];
+            if (idflag == 'parent') {
+                if (user.kids != '') {
+                    for (var i = 0; i < value.data.data.data.length; i++) {
+                        kid_apply = mergerArr(value.data.data.data[i].data1, value.data.data.data[i].data2);
+                        apply.push(kid_apply);
+                    }
+                    console.log("孩子报名数据", apply);
+                    for (var i = 0; i < apply.length; i++) {
+                        for (var j = 0; j < apply[i].length; j++) {
+                            total.push(apply[i][j]);
                         }
-                        console.log("孩子报名数据", apply);
-                        for (var i = 0; i < apply.length; i++) {
-                            for (var j = 0; j < apply[i].length; j++) {
-
-                                total.push(apply[i][j]);
-                            }
-                        }
-
-                        let result = total.sort(that.compare("id"));
-                        console.log(result);
                     }
-                } else {
-                    total = mergerArr(res.data.data1, res.data.data2)
+                    let result = total.sort(that.compare("id"));
+                    console.log(result);
                 }
-                var now = new Date;
-
-                var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-                that.setData({
-                    now: date
-                })
-                for (var idx in total) {
-                    var ctn = total[idx];
-                    var status = "";
-                    var endTime = new Date(ctn['endTime']);
-
-                    if (ctn['status'] == 1) {
-                        status = "报名失败";
-                    } else if (ctn['status'] == 2) {
-                        status = "待付款";
-                    } else if (ctn['status'] == 3 && endTime > now) {
-
-                        status = "报名成功";
-                        ctn['endTime'] = 'false';
-                    } else {
-                        status = "已完成"
-                    }
-                    if (select == status || select == "全部") {
-                        filter.push(ctn);
-                    }
-                }
-                that.setData({
-                    filter: filter
-                })
-                for (var i = 0; i < that.data.filter.length; i++) {
-                    var end_pay_time = new Date(that.data.filter[i].payendTime);
-                    if (that.data.filter[i].status == 2 && (end_pay_time < now || that.data.filter[i].endTime < now)) {
-                        UpdateOrder(that.data.filter[i].id, '支付失败', 1);
-                        that.setData({
-                            ["filter[" + i + "].status"]: 1,
-                        })
-                    }
-                }
-
-                function mergerArr(arr1, arr2) {
-                    if (arr1 == [] || arr1.length == 0) {
-                        return [];
-                    }
-                    let arr3 = [];
-                    arr1.map((item, index) => {
-                        arr3.push(Object.assign(item, arr2[index]));
-                    })
-                    return arr3;
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+            } else {
+                total = mergerArr(value.data.data1, value.data.data2)
             }
-        })
+            var now = new Date;
+            var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+            that.setData({
+                now: date
+            })
+            for (var idx in total) {
+                var ctn = total[idx];
+                var status = "";
+                var endTime = new Date(ctn['endTime']);
+                if (ctn['status'] == 1) {
+                    status = "报名失败";
+                } else if (ctn['status'] == 2) {
+                    status = "待付款";
+                } else if (ctn['status'] == 3 && endTime > now) {
 
+                    status = "报名成功";
+                    ctn['endTime'] = 'false';
+                } else {
+                    status = "已完成"
+                }
+                if (select == status || select == "全部") {
+                    filter.push(ctn);
+                }
+            }
+            that.setData({
+                filter: filter
+            })
+            for (var i = 0; i < that.data.filter.length; i++) {
+                var end_pay_time = new Date(that.data.filter[i].payendTime);
+                if (that.data.filter[i].status == 2 && (end_pay_time < now || that.data.filter[i].endTime < now)) {
+                    UpdateOrder(that.data.filter[i].id, '支付失败', 1);
+                    that.setData({
+                        ["filter[" + i + "].status"]: 1,
+                    })
+                }
+            }
+
+            function mergerArr(arr1, arr2) {
+                if (arr1 == [] || arr1.length == 0) {
+                    return [];
+                }
+                let arr3 = [];
+                arr1.map((item, index) => {
+                    arr3.push(Object.assign(item, arr2[index]));
+                })
+                return arr3;
+            }
+        }, reason => {
+            console.log("获取报名数据失败", reason);
+        });
     },
     // 当身份为监护人时对报名数据进行排序
     compare: function(property) {
@@ -321,11 +283,9 @@ Page({
     // 监护人绑定孩子
     _goBound: function() {
         id_flag = wx.getStorageSync('id_flag');
-
         wx.navigateTo({
             url: '../person_info/parent_info',
-        })
-
+        });
     },
     // 设置标题
     setTitle: function(tname) {
@@ -346,50 +306,37 @@ Page({
         if (user != null && user != '') {
             that.setFilter();
         }
-
     },
     // 获取孩子信息
     getKidsList: function() {
         let that = this;
-        wx.request({
-            url: app.globalData.url + 'WxUser/GetKidsList',
-            data: {
-                id: user.id
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("孩子信息", res);
-                if (res.data.data.length > 0) {
-                    var kids = [];
-                    kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
-                    for (var i = 0; i < res.data.data.length; i++) {
-                        var kid = { "id": "0" + (i + 2), "isActive": false, "value": res.data.data[i].name, "kid_id": res.data.data[i].id };
-                        kids.push(kid);
-                    }
-                    that.setData({
-                        kids_name: kids
-                    })
+        const p = GetKidsList({
+            id: user.id
+        });
+        p.then(value => {
+            console.log("孩子信息", value);
+            if (value.data.data.length > 0) {
+                var kids = [];
+                kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
+                for (var i = 0; i < value.data.data.length; i++) {
+                    var kid = { "id": "0" + (i + 2), "isActive": false, "value": value.data.data[i].name, "kid_id": value.data.data[i].id };
+                    kids.push(kid);
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+                that.setData({
+                    kids_name: kids
+                })
             }
-        })
+        }, reason => {
+            console.log("获取孩子信息失败", reason);
+        });
     },
     // 选中孩子
     select: function(e) {
-        console.log("选中的值是");
-        console.log(e.detail);
+        console.log("选中的值是", e.detail);
         var type = e.detail.value
         if (e.detail.value == "请选择") {
             type = "";
         }
-
         for (var i = 1; i < this.data.kids_name.length; i++) {
             var tmp = "kids_name[" + i + "].isActive"
             this.setData({
@@ -403,10 +350,8 @@ Page({
         }
         if (e.detail.kid_id == 0) {
             this.getApply(user.id, 'parent', 'parent');
-
         } else {
             this.getApply(e.detail.kid_id, 'student', 'student');
-
         }
     },
     // 退款
@@ -416,8 +361,7 @@ Page({
         that.actionSheetTap();
         that.setData({
             lowOrderId: e.currentTarget.dataset.id,
-        })
-
+        });
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -431,20 +375,18 @@ Page({
      */
     onShow: function() {
         let that = this;
-        user = wx.getStorageSync('user')
-        id_flag = wx.getStorageSync('id_flag')
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag');
         this.setData({
             user: user,
             id_flag: id_flag
-        })
+        });
         if (user != null && user != '') {
             that.setFilter();
             if (id_flag == 'parent') {
-                this.getKidsList()
+                this.getKidsList();
             }
-
         }
-
     },
 
     /**
@@ -494,38 +436,33 @@ Page({
         this.setData({
             actionSheetHidden: !this.data.actionSheetHidden
         });
-        wx.request({
-            url: app.globalData.url + 'WxSign/tgReverse',
-            data: {
-                lowOrderId: that.data.lowOrderId,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("申请退款");
-                console.log(res)
-                if (res.data.data.msg == "退款申请成功") {
-                    wx.showToast({
-                        title: "退款申请成功",
-                        icon: "success",
-                        duration: 1000,
-                    });
-                    that.setFilter();
-                } else {
-                    wx.showToast({
-                        title: "退款申请失败",
-                        icon: "success",
-                        duration: 1000,
-                    })
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
+        const p = tgReverse({
+            lowOrderId: that.data.lowOrderId,
         })
+        p.then(value => {
+            console.log("申请退款");
+            console.log(value)
+            if (value.data.data.msg == "退款申请成功") {
+                wx.showToast({
+                    title: "退款申请成功",
+                    icon: "success",
+                    duration: 1000,
+                });
+                that.setFilter();
+            } else {
+                wx.showToast({
+                    title: "退款申请失败",
+                    icon: "success",
+                    duration: 1000,
+                })
+            }
+        }, reason => {
+            wx.showToast({
+                title: "退款申请失败",
+                icon: "success",
+                duration: 1000,
+            });
+            console.log("申请退款失败", reason);
+        });
     },
 })

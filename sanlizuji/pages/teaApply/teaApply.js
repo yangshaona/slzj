@@ -1,7 +1,8 @@
 // pages/myApply/myApply.js
 const app = getApp();
 let user = wx.getStorageSync('user')
-let id_flag = wx.getStorageSync('id_flag')
+let id_flag = wx.getStorageSync('id_flag');
+import { DeleteOneOrderByPk, GetTeacher, GetMyApply } from '../../utils/apis.js';
 Page({
 
     /**
@@ -95,32 +96,19 @@ Page({
         console.log("点击导师按钮");
         console.log(courseid);
         // 获取导师信息
-        wx.request({
-            url: app.globalData.url + "WxOther/GetTeacher",
-            data: {
-                courseid: courseid,
-                starttime: starttime,
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log(res);
-                if (res.data.data1.length != 0) {
-                    teacherid = res.data.data1[0].userid;
-                }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+        GetTeacher({
+            courseid: courseid,
+            starttime: starttime,
+        }).then(value => {
+            console.log(value);
+            if (value.data.data1.length != 0) {
+                teacherid = value.data.data1[0].userid;
             }
-        })
+        }, reason => {
+            console.log("获取导师数据失败", reason);
+        });
         wx.navigateTo({
             url: '../detail/teacher?course_id=' + courseid + "&teacherid=" + teacherid,
-
-            // url: '../detail/teacher?course_id=' + id,
         })
     },
 
@@ -136,44 +124,28 @@ Page({
             content: "是否取消报名",
             success(res) {
                 if (res.confirm) {
-                    wx.request({
-                        url: app.globalData.url + 'WxSign/DeleteOneOrderByPk',
-                        data: {
-                            modelName: modelName,
-                            id: orderid,
-                        },
-                        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                        // header: {}, // 设置请求的 header
-                        success: function(res) {
-                            // success
-                            console.log("删除结果");
-                            console.log(res);
-                            if (res.data.data == '不存在该ID，删除失败') {
-                                wx.showToast({
-                                    title: "取消失败",
-                                    icon: 'cancel',
-                                    duration: 800,
-                                })
-
-
-                            } else {
-                                wx.showToast({
-                                    title: "取消成功",
-                                    icon: 'success',
-                                    duration: 800,
-                                });
-                                that.setFilter();
-                            }
-
-                        },
-                        fail: function() {
-                            // fail
-                        },
-                        complete: function() {
-                            // complete
+                    DeleteOneOrderByPk({
+                        modelName: modelName,
+                        id: orderid,
+                    }).then(value => {
+                        console.log("删除结果", value);
+                        if (value.data.data == '不存在该ID，删除失败') {
+                            wx.showToast({
+                                title: "取消失败",
+                                icon: 'cancel',
+                                duration: 800,
+                            })
+                        } else {
+                            wx.showToast({
+                                title: "取消成功",
+                                icon: 'success',
+                                duration: 800,
+                            });
+                            that.setFilter();
                         }
+                    }, reason => {
+                        console.log("删除数据失败", reason);
                     })
-
                 }
             }
         })
@@ -195,75 +167,57 @@ Page({
         that.setData({
             flag_identity: app.globalData.flag_identity
         })
+        GetMyApply({
+            identity: "teacher",
+            id: user.id
+        }).then(value => {
+            console.log("教师端我的报名", value)
+            var total = [];
+            total = mergerArr(value.data.data1, value.data.data2)
+            var now = new Date;
+            var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+            that.setData({
+                now: date
+            })
+            for (var idx in total) {
+                var ctn = total[idx];
+                var status = "";
+                var endTime = new Date(ctn['endTime']);
 
-        // console.log(identity)
-        wx.request({
-            url: app.globalData.url + 'WxOther/GetMyApply&identity=' + 'teacher',
-            data: {
-                id: user.id
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("我的报名")
-                console.log(res)
-                var total = [];
-
-                total = mergerArr(res.data.data1, res.data.data2)
-
-                var now = new Date;
-
-                var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-                that.setData({
-                    now: date
-                })
-                for (var idx in total) {
-                    var ctn = total[idx];
-                    var status = "";
-                    var endTime = new Date(ctn['endTime']);
-
-                    if (ctn['status'] == 1) {
-                        status = "报名失败";
-                    } else if (ctn['status'] == 2) {
-                        status = "待审核";
-                    } else if (ctn['status'] == 3 && endTime > now) {
-                        status = "报名成功";
-                        ctn['endTime'] = 'false';
-                    } else {
-                        status = "已完成"
-                    }
-                    if (select == status || select == "全部") {
-                        filter.push(ctn);
-                    }
+                if (ctn['status'] == 1) {
+                    status = "报名失败";
+                } else if (ctn['status'] == 2) {
+                    status = "待审核";
+                } else if (ctn['status'] == 3 && endTime > now) {
+                    status = "报名成功";
+                    ctn['endTime'] = 'false';
+                } else {
+                    status = "已完成"
                 }
-                that.setData({
-                    filter: filter
-                })
-                console.log("所有报名数据")
-                console.log(that.data.filter)
-
-                function mergerArr(arr1, arr2) {
-                    if (arr1 == [] || arr1.length == 0) {
-                        return [];
-                    }
-                    let arr3 = [];
-                    arr1.map((item, index) => {
-                        arr3.push(Object.assign(item, arr2[index]));
-                    })
-                    return arr3;
+                if (select == status || select == "全部") {
+                    filter.push(ctn);
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
             }
+            that.setData({
+                filter: filter
+            })
+            console.log("所有报名数据")
+            console.log(that.data.filter)
+
+            function mergerArr(arr1, arr2) {
+                if (arr1 == [] || arr1.length == 0) {
+                    return [];
+                }
+                let arr3 = [];
+                arr1.map((item, index) => {
+                    arr3.push(Object.assign(item, arr2[index]));
+                })
+                return arr3;
+            }
+
+        }, reason => {
+            console.log("获取教师的报名数据失败", reason);
         })
-
-
-
     },
     //登录查看更多
     _goLogin: function() {

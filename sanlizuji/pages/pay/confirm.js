@@ -1,3 +1,4 @@
+import { CouponCheck, GetActDetail, GetKidsList } from '../../utils/apis.js';
 // pages/pay/confirm.js
 const app = getApp();
 let user = wx.getStorageSync('user');
@@ -12,7 +13,6 @@ Page({
         title: '',
         // 起始日期
         date: '',
-        // 价格
         // 学员选择器，需要后端初始化
         stu_arr: [],
         idx: -1,
@@ -38,49 +38,35 @@ Page({
         let that = this;
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
-
-        wx.request({
-            url: app.globalData.url + 'WxUser/GetKidsList',
-            data: {
-                id: user.id
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("孩子信息");
-                console.log(res);
-                if (res.data.data.length > 0) {
-                    var kid = [];
-                    for (var item of res.data.data) {
-                        kid.push(item);
-                        if (that.options.userid == item.id) {
-                            that.setData({
-                                stuinfo: item,
-                                userinfo: item,
-                            })
-                            console.log("选中的孩子信息");
-                            console.log(item);
-                            console.log(that.data.stuinfo);
-
-                        }
-
+        const p = GetKidsList({
+            id: user.id
+        });
+        p.then(value => {
+            console.log("孩子信息");
+            console.log(value);
+            if (value.data.data.length > 0) {
+                var kid = [];
+                for (var item of value.data.data) {
+                    kid.push(item);
+                    if (that.options.userid == item.id) {
+                        that.setData({
+                            stuinfo: item,
+                            userinfo: item,
+                        })
+                        console.log("选中的孩子信息");
+                        console.log(item);
+                        console.log(that.data.stuinfo);
                     }
-                    console.log(kid)
-                    that.setData({
-                        stu_arr: kid
-                    })
-                    console.log(that.data.stu_arr)
                 }
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
+                console.log(kid)
+                that.setData({
+                    stu_arr: kid
+                })
+                console.log(that.data.stu_arr)
             }
-        })
-
+        }, reason => {
+            console.log("获取孩子信息数据失败", reason);
+        });
     },
 
     // 学员选择器改变
@@ -101,7 +87,6 @@ Page({
         var id = e.currentTarget.dataset.id
         wx.navigateTo({
             url: '../detail/detail?id=' + id,
-
         })
     },
     // 点击确认订单先浅检查一下有没有填学员
@@ -112,10 +97,7 @@ Page({
         var id = e.currentTarget.dataset.id;
         wx.redirectTo({
             url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.order.price + "&key=" + that.data.coupons + "&coupons=" + that.data.price,
-
-        })
-
-
+        });
     },
 
     // 获取设备信息
@@ -145,31 +127,20 @@ Page({
             stuinfo: user,
         });
         console.log("学员信息");
-        console.log(that.data.userinfo)
-        wx.request({
-            url: app.globalData.url + 'WxCourse/GetDetail',
-            data: {
-                id: options.id,
-                modelName: "ClubNews",
-            },
-            method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            // header: {}, // 设置请求的 header
-            success: function(res) {
-                // success
-                console.log("订单详情")
-                console.log(res)
-                console.log(res.data.data[0])
-                that.setData({
-                    order: res.data.data[0],
-                })
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
-        })
+        console.log(that.data.userinfo);
+        const p = GetActDetail({
+            id: options.id,
+            modelName: "ClubNews",
+        });
+        p.then(value => {
+            console.log("订单详情", value);
+            console.log(value.data.data[0])
+            that.setData({
+                order: value.data.data[0],
+            })
+        }, reason => {
+            console.log("获取订单详情数据失败", reason);
+        });
     },
 
     /**
@@ -232,42 +203,37 @@ Page({
         console.log(e);
         this.setData({
             coupons: e.detail.value,
-        })
-
+        });
     },
     //   查找获取是否有优惠券
     getCoupons: function(e) {
         let that = this;
-
-        wx.request({
-            url: app.globalData.url + 'WxSign/CouponCheck',
-            data: {
-                key: that.data.coupons,
-                courseid: that.options.id,
-            },
-            success(res) {
-                console.log("优惠券信息");
-                console.log(res);
-                var data = ["未找到匹配优惠券", '优惠券已使用', '未到生效时间', '优惠券已过期', '非对应课程'];
-                if (data.indexOf(res.data.data[0]) != -1) {
-                    wx.showToast({
-                        title: res.data.data[0],
-                        icon: "none",
-                        duration: 800,
-                    })
-                } else {
-                    wx.showToast({
-                        title: '已搜索到优惠券',
-                        icon: "none",
-                        duration: 800,
-                    })
-                    that.setData({
-                        price: res.data.data.money,
-                    })
-                    console.log(that.data.price);
-                }
-
+        const p = CouponCheck({
+            key: that.data.coupons,
+            courseid: that.options.id,
+        });
+        p.then(value => {
+            console.log("优惠券信息", value);
+            var data = ["未找到匹配优惠券", '优惠券已使用', '未到生效时间', '优惠券已过期', '非对应课程'];
+            if (data.indexOf(value.data.data[0]) != -1) {
+                wx.showToast({
+                    title: value.data.data[0],
+                    icon: "none",
+                    duration: 800,
+                })
+            } else {
+                wx.showToast({
+                    title: '已搜索到优惠券',
+                    icon: "none",
+                    duration: 800,
+                })
+                that.setData({
+                    price: value.data.data.money,
+                })
+                console.log(that.data.price);
             }
-        })
+        }, reason => {
+            console.log("获取优惠券数据失败", reason);
+        });
     },
 })
