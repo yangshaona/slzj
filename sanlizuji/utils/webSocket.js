@@ -1,5 +1,5 @@
 import { getLocation } from './location.js';
-
+const app = getApp();
 // socket已经连接成功
 var socketOpen = false
     // socket已经调用关闭function
@@ -20,6 +20,8 @@ var isFirst = false;
 let id_flag = wx.getStorageSync('id_flag');
 // 用户正在活动的orderid
 var orderid = wx.getStorageSync('orderid');
+
+let timer;
 // var webSocket = new WebSocket("wss://sanli-tracks.com/wss");
 var currentLocation = {
     getCurrentLocation: function() {
@@ -198,6 +200,7 @@ var webSocket = {
             success: function(res) {
                 console.log('socket心跳成功', res);
                 if (heart) {
+                    clearTimeout(heartBeatTimeOut);
                     heartBeatTimeOut = setTimeout(() => {
                         self.heartBeat();
                     }, 60000);
@@ -210,6 +213,7 @@ var webSocket = {
                     self.connectSocket();
                 }
                 if (heart) {
+                    clearTimeout(heartBeatTimeOut);
                     heartBeatTimeOut = setTimeout(() => {
                         self.heartBeat();
                     }, 60000);
@@ -240,7 +244,8 @@ wx.onSocketMessage(function(res) {
             }, reason => {
                 console.log(reason);
             })
-            setTimeout(() => webSocket.startHeartBeat(), 5000);
+            clearTimeout(timer);
+            timer = setTimeout(() => webSocket.startHeartBeat(), 5000);
         } else {
             switch (objdata.type) {
                 case 'getgps':
@@ -265,7 +270,6 @@ wx.onSocketMessage(function(res) {
                 case 'handshake':
                     console.log("握手成功");
                     break;
-
                 case 'gpsstatus':
                     console.log("位置上传成功");
                     break;
@@ -280,19 +284,37 @@ wx.onSocketMessage(function(res) {
 let that = this;
 wx.onSocketError(function(res) {
     console.log('WebSocket连接打开失败，请检查！', res);
+
     // webSocket.connectSocket();
 })
 
 // 监听WebSocket关闭。
 wx.onSocketClose(function(res) {
-    console.log('WebSocket 已关闭');
+    console.log('WebSocket 已关闭！');
+    let app = getApp();
+    wx.request({
+        url: app.globalData.url + 'WxOther/WebSocket',
+        data: {},
+        method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+        // header: {}, // 设置请求的 header
+        success: function(res) {
+            // success
+            console.log("启动WebSocket成功", res)
+        },
+        fail: function() {
+            // fail
+        },
+        complete: function() {
+            // complete
+        }
+    })
     console.log("socketClose", socketClose)
-        // if (!socketClose) {
-        //     clearTimeout(connectSocketTimeOut);
-        //     connectSocketTimeOut = setTimeout(() => {
-        //         webSocket.connectSocket();
-        //     }, 60000);
-        // }
+    if (!socketClose) {
+        clearTimeout(connectSocketTimeOut);
+        connectSocketTimeOut = setTimeout(() => {
+            webSocket.connectSocket();
+        }, 60000);
+    }
 })
 
 module.exports = webSocket;

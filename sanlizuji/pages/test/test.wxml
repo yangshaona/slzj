@@ -1,2 +1,7 @@
-<button bindtap="savePicture1">下载</button>
-<view>Hello World</view>
+<view class="stock_jiajian">
+    <view class="stockBox" bindtap="reduce">-</view>
+    <view class="stockBox nums">
+        <input class="stockinnum" bindconfirm="search" value="{{num}}" bindinput="setValue"></input>
+    </view>
+    <view class="stockBox" bindtap="add">+</view>
+</view>

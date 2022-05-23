@@ -79,7 +79,7 @@
 
 .tips {
     display: block;
-    margin: 10% 2.5%;
+    margin: 5% 2.5% 30%;
     font-size: 0.75rem;
 }
 
@@ -92,6 +92,8 @@
     height: 50px;
     box-shadow: 0 0 5px #d3d3d3;
     position: fixed;
+    z-index: 99;
+    background-color: white;
 }
 
 .bottom_desc {

@@ -14,7 +14,17 @@
         </view>
 
         <!-- 内容 -->
-        <!-- 缺省 -->
+        <view wx:if="{{id_flag=='parent'}}" class="select-wrap">
+            <view class="news-type">孩子：</view>
+            <select id="select" prop-array="{{stus_name}}" bind:select="selectStu"></select>
+        </view>
+        <view wx:if="{{id_flag=='teacher'}}" class="select-wrap">
+            <view class="news-type">课程：</view>
+            <select id="select" prop-array="{{courses}}" bind:select="selectCourse"></select>
+            <view class="news-type">学生：</view>
+            <select id="select" prop-array="{{stus_name}}" bind:select="selectStu"></select>
+
+        </view>
         <block wx:if="{{filter.length == 0}}">
             <view class="empty">
                 <image src="/icon/empty.png" mode="widthFix"></image>
@@ -25,10 +35,6 @@
 
         <!-- 有内容 -->
         <block wx:if="{{filter.length != 0}}">
-            <view wx:if="{{id_flag=='parent'}}" class="select-wrap">
-                <view class="news-type">选择孩子：</view>
-                <select id="select" prop-array="{{kids_name}}" bind:select="select"></select>
-            </view>
             <block wx:for="{{filter}}" wx:key="id">
                 <view class="ctnBox" style="height: 50%;" data-courseid="{{item.id}}" data-price="{{item.price}}" bindtap="goToOrderDetail">
                     <view class="title">{{item.coursename}}</view>
@@ -52,6 +58,8 @@
                     <view wx:else class="status">已完成</view>
 
                     <view class="price">￥{{item.price}}</view>
+                    <view wx:if="{{id_flag=='teacher'||id_flag=='parent'}}" class="price name">学生：{{item.name}}</view>
+                    <view class="price order-number" style="vertical-align:middle;">数量：x{{item.order_num}}</view>
                 </view>
             </block>
         </block>

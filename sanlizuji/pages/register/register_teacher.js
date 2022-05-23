@@ -1,8 +1,10 @@
 // pages/register/register_teacher.js
 const app = getApp();
-const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+const check_idnum = require('../../utils/function.js'); //路径根据自己的文件目录来
 const areaList = require('../../utils/arealist.js');
-const { Register, GetUserInfo2, getOpenId } = require('../../utils/apis.js');
+import { Register, GetUserInfo2, getOpenId } from '../../utils/apis.js';
+import { areaColumnChange, initArea, checkPhone } from '../../utils/function.js';
+
 Page({
 
     /**
@@ -142,45 +144,22 @@ Page({
         })
     },
 
-    //手机号码输入检查
-    checkPhone: function(phNum) {
-        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
-
-        if (phNum.length != 11 || !reg.test(phNum)) {
-            wx.showToast({
-                title: '手机号有误',
-                icon: 'error',
-                duration: 800,
-            })
-            return false;
-        } else {
-            console.log("手机号填写格式正确");
-            return true;
-        }
-    },
     // 身份证号输入验证
     checkID: function(id) {
-        console.log("检查结果");
         var data = check_idnum.checkIdCard(id);
-        console.log(data.idCardFlag);
+        console.log("检查结果", data);
         if (!data.idCardFlag) {
             wx.showToast({
                 title: '身份证号有误',
                 icon: 'error',
                 duration: 800
-
             })
             return false;
         } else {
-            // wx.showToast({
-            //     title: '通过了',
-            // })
             this.setData({
                 birth: data.birth,
                 sex: data.sex,
             })
-            console.log(data);
-            console.log(data.sex);
             return true;
         }
     },
@@ -190,39 +169,20 @@ Page({
     },
     // 检查姓名是否正确
     InputName: function(e) {
-        var that = this;
-        console.log(e);
-        var name = e.detail.value
-        var reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,6}$/;
-
-        if (name.match(reg)) {
-            console.log("111");
-            // that.setData({ allow_name: true });
-            wx.setStorageSync("name", name)
-        } else {
-            wx.showToast({
-                title: "姓名有误",
-                icon: 'error',
-                duration: 800
-            })
-        }
-        console.log(name)
+        check_idnum.checkName(e.detail.value);
     },
     // 检查手机号是否输入正确
     InputPhone: function(e) {
-        this.checkPhone(e.detail.value);
+        checkPhone(e.detail.value);
     },
-
+    // 选择简历文件
     chooseFiles: function(e) {
         console.log("上传文件");
         wx.chooseMessageFile({
             count: 1,
             type: "file",
             success: (res) => {
-
-                console.log("上传文件返回的结果");
-
-                console.log(res);
+                console.log("上传文件返回的结果", res);
                 var files = res.tempFiles;
                 var fileExtension = files[0]['name'].substring(files[0]['name'].lastIndexOf('.') + 1);
                 console.log("文件后缀名", fileExtension);
@@ -281,16 +241,13 @@ Page({
             },
             success(res) {
                 console.log(res);
-                console.log(res.statusCode);
                 if (res.statusCode == 200) {
                     console.log("成功上传简历");
-
                     wx.showToast({
                         title: "文件保存成功",
                         icon: 'success',
                         duration: 800,
                     });
-
                 } else {
                     wx.showToast({
                         title: "文件保存失败",
@@ -298,7 +255,6 @@ Page({
                         duration: 800,
                     });
                 }
-
             },
             fail(res) {
                 wx.showModal({
@@ -330,12 +286,15 @@ Page({
     // 获取用户信息
     getUserInfo: function(e) {
         let that = this;
-        const p = GetUserInfo2({
+        //  'WxUser/GetUserInfo2'
+        GetUserInfo2({
             openid: app.globalData.openid,
             id_flag: 'teacher',
         }).then(value => {
-            console.log("获取成功");
-            console.log(value);
+            console.log("获取成功", value);
+            that.upLoadFiles(value.data.data);
+        }, reason => {
+            console.log("获取用户信息失败", reason);
         });
     },
 
@@ -347,8 +306,7 @@ Page({
         console.log(data);
         for (var i in data) {
             if (data[i] == null || data[i] == "") {
-                console.log(i);
-                console.log(data[i]);
+                console.log(i, data[i]);
                 console.log("表单有未填写部分");
                 wx.showToast({
                     title: '请填写' + this.data.formTitle[i],
@@ -360,7 +318,7 @@ Page({
         }
         // 全部已填写
         // 电话号码格式检查
-        if (this.checkPhone(data.phone)) {
+        if (checkPhone(data.phone)) {
             // 身份证号格式检查
             if (this.checkID(data.idNum)) {
                 wx.showToast({
@@ -395,18 +353,19 @@ Page({
             wx.login({
                 success: function(res) {
                     // success
-                    console.log("获取openid")
-                    console.log(res)
-                    const p = getOpenId({
-                        code: res.code
+                    console.log("获取openid", res);
+                    // WxUser/getOpenId
+                    getOpenId({
+                        code: res.code,
                     }).then(value => {
-                        console.log(value)
+                        console.log(value);
                         that.setData({
                             openid: value.data.openid
                         });
                         var type = parseInt(data.type) + 1;
                         console.log(type)
                         app.globalData.openid = value.data.openid;
+                        //  "WxUser/Register"
                         Register({
                             modelName: "Teacher",
                             Teacher: {
@@ -450,8 +409,12 @@ Page({
                                     })
                                 }, 800);
                             }
-                        })
-                    }).catch(err => { console.log("无法注册", err) });
+                        }, reason => {
+                            console.log("获取失败", reason);
+                        });
+                    }, reason => {
+                        console.log("获取信息失败", reason);
+                    });
                 },
                 fail: function() {
                     // fail
@@ -460,7 +423,6 @@ Page({
                     // complete
                 }
             })
-
         } else {
             console.log("手机号填写错误");
             return;
@@ -471,9 +433,6 @@ Page({
     // 绑定已有数据
     login: function(e) {
         app.globalData.flag_identity = [0, 1, 0];
-        console.log(app.globalData.flag_identity[0])
-        console.log(app.globalData.flag_identity[1])
-        console.log(app.globalData.flag_identity[2])
         console.log("数据")
         wx.navigateTo({
             url: '../login/login?id=teacher',
@@ -490,85 +449,19 @@ Page({
     bindMultiPickerColumnChange: function(e) {
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
         var data = {
-            multiArray: this.data.multiArray,
-            multiIndex: this.data.multiIndex
-        };
-        data.multiIndex[e.detail.column] = e.detail.value;
-        const provinceName = data.multiArray[0][data.multiIndex[0]];
-        let provinceId = "";
-        let province = this.data.province;
-        let quyuList = [],
-            cityList = [],
-            provinceList = [],
-            city = [],
-            area = [];
-        try {
-            province.forEach(item => {
-                if (item.name === provinceName) {
-                    provinceId = item.id;
-                    throw (new Error('find item'))
-                }
-            })
-        } catch (err) {}
-        city = areaList.filter(item => {
-            return item.pid == provinceId;
-        })
-        if (e.detail.column == 0) {
-            data.multiIndex = [e.detail.value, 0, 0];
-            try {
-                area = areaList.filter(item => {
-                    return item.pid == city[data.multiIndex[1]].id;
-                })
-            } catch (err) {}
-        } else if (e.detail.column == 1) {
-            data.multiIndex[2] = 0;
-            area = areaList.filter(item => {
-                return item.pid == city[e.detail.value].id;
-            })
-        } else {
-            const cityName = data.multiArray[1][data.multiIndex[1]];
-            let cityId = '';
-            try {
-                areaList.forEach(item => {
-                    if (item.name === cityName) {
-                        cityId = item.id;
-                        throw (new Error('find item'));
-                    }
-                })
-            } catch (err) {}
-            area = areaList.filter(item => {
-                return item.pid == cityId;
-            })
+            "multiArray": this.data.multiArray,
+            "multiIndex": this.data.multiIndex,
+            "province": this.data.province,
+            "e": e,
         }
-        provinceList = province.map(item => {
-            return item.name
-        })
-        cityList = city.map(item => {
-            return item.name;
-        })
-        quyuList = area.map(item => {
-            return item.name;
-        })
-        data.multiArray = [provinceList, cityList, quyuList],
-            this.setData(data);
-        var tmp = [];
-        for (var i = 0; i < 3; i++) {
-            tmp[i] = data.multiArray[i][data.multiIndex[i]];
-
-        }
-        if (tmp[1] == '北京市') {
-            tmp[1] = '北京';
-
-        } else if (tmp[1] == '天津市') {
-            tmp[1] = '天津';
-        } else if (tmp[1] == '上海市') {
-            tmp[1] = '上海';
-        }
-        console.log("选中的是：", tmp)
+        let res = areaColumnChange(data);
         this.setData({
-            reg: tmp,
-        })
+            reg: res.tmp,
+            multiArray: res.data.multiArray,
+            multiIndex: res.data.multiIndex
+        });
     },
+
     // 获取标题栏高度
     getTopHeight: function() {
         let that = this;
@@ -580,43 +473,22 @@ Page({
             console.log("高度是：", that.data.top_height);
         }).exec();
     },
+    Init: function() {
+        let that = this;
+        that.getTopHeight();
+        let data = initArea();
+        this.setData({
+            is_show: app.globalData.is_show,
+            multiArray: [data.provinceList, data.cityList, data.quyuList],
+            province: data.province,
+        });
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
         let that = this;
-        that.getTopHeight();
-        var now = new Date;
-        var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-        this.setData({
-            time: time,
-            is_show: app.globalData.is_show,
-        })
-        var province = [],
-            city = [],
-            area = [];
-        province = areaList.filter(item => {
-            return item.pid == 0;
-        })
-        city = areaList.filter(item => {
-            return item.pid == province[0].id;
-        })
-        area = areaList.filter(item => {
-            return item.pid == city[0].id;
-        })
-        var provinceList = province.map(item => {
-            return item.name
-        })
-        var cityList = city.map(item => {
-            return item.name;
-        })
-        var quyuList = area.map(item => {
-            return item.name;
-        })
-        this.setData({
-            multiArray: [provinceList, cityList, quyuList],
-            province
-        })
+        that.Init();
     },
 
     /**
@@ -630,8 +502,8 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
         app.globalData.flag_identity = [0, 1, 0];
+        this.Init();
     },
 
     /**
@@ -671,15 +543,6 @@ Page({
     Return: function() {
         wx.navigateBack({
             delta: 1, // 回退前 delta(默认为1) 页面
-            success: function(res) {
-                // success
-            },
-            fail: function() {
-                // fail
-            },
-            complete: function() {
-                // complete
-            }
         })
     }
 })

@@ -13,8 +13,6 @@
             </block>
         </view>
 
-        <!-- 内容 -->
-        <!-- 缺省 -->
         <block wx:if="{{filter.length == 0}}">
             <view class="empty">
                 <image src="/icon/empty.png" mode="widthFix"></image>
@@ -31,18 +29,15 @@
                     <image src="{{item.imagesurl}}" mode="widthFix" class="ctnImg"></image>
                     <view class="ctnLine"></view>
                     <view class="ctnButton">
-                        <!-- <button class="blue" wx:if="{{item.status==2}}" catchtap="applyTap1" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}"></button> -->
                         <button class="blue" catchtap="applyTap2" wx:if="{{item.status==3&&!item.endTime}}" data-id="{{item.courseid}}">继续报名</button>
                         <button class="border" wx:if="{{item.status==3}}" data-id="{{item.courseid}}" catchtap="commentTap">评价</button>
-                        <!-- <button class="border" data-id="{{item.courseid}}" data-starttime="{{item.startTime}}" catchtap="teacherTap">查看导师</button> -->
-                        <button class="border" wx:if="{{item.status!=3}}" data-id="{{item.id}}" catchtap="DeleteOneOrder">取消报名</button>
+                        <button class="border" wx:if="{{item.status==2}}" data-id="{{item.id}}" catchtap="cancelRegistration">取消报名</button>
+                        <button class="blue" wx:if="{{item.status!=2&&item.status!=3&&item.endTime!='false'}}" catchtap="DeleteOneOrder" data-orderid="{{item.id}}" data-courseid="{{item.courseid}}" data-userid="{{item.userid}}">删除</button>
                     </view>
                     <view wx:if="{{item.status==1}}" class="status">报名失败</view>
                     <view wx:elif="{{item.status==2}}" class="status">待审核</view>
                     <view wx:elif="{{item.status==3&&item.endTime=='false'}}" class="status">报名成功</view>
                     <view wx:else class="status">已完成</view>
-
-                    <!-- <view class="price">￥{{item.price}}</view> -->
                 </view>
             </block>
         </block>

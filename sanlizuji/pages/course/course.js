@@ -2,16 +2,14 @@
 const app = getApp();
 const areaList = require('../../utils/arealist.js');
 import { activitytype, CourseCheck } from '../../utils/apis.js';
+import { initArea, areaColumnChange } from '../../utils/function.js';
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-        id_flag: "",
         width: app.globalData.width,
-        // 今日日期
-        date: "",
         // 设备状态栏高度
         statusHeight: app.globalData.statusHeight,
         // 设备高度
@@ -19,6 +17,7 @@ Page({
         // 内容透明度
         ctnOpacity: "100%",
         isSearch: 0, //判断是否点击搜索
+        id_flag: "",
         // 筛选栏
         filterClass: "filterHide",
         filter: [{
@@ -123,15 +122,12 @@ Page({
                     duration: duration,
                     status: status
                 });
-
                 this.getSearchData();
             }
         }
-
     },
     // 重置筛选条件
     reset: function() {
-        console.log("nihao")
         this.setData({
             theme: [],
             duration: "",
@@ -156,22 +152,6 @@ Page({
         })
     },
 
-    //获取筛选数据
-    getFilter: function() {
-        let that = this;
-        const p = activitytype({});
-        p.then(value => {
-            console.log("活动主题类型", value);
-            for (var i = 0; i < value.data.data.length; i++) {
-                var type = "filter[0].ctn[" + i + "]";
-                that.setData({
-                    [type]: value.data.data[i].type
-                })
-            }
-        }, reason => {
-            console.log("获取活动类型失败：", reason);
-        });
-    },
     // 筛选框选中
     filterCheck: function(e) {
         var id = e.currentTarget.dataset.id;
@@ -203,7 +183,6 @@ Page({
                 condition: condition
             })
         } else {
-            console.log("释放")
             var filter = this.data.filterID;
             filter[key] = 0;
             Array.prototype.indexOf
@@ -214,15 +193,13 @@ Page({
                 condition: condition
             })
         }
-        console.log("选中条件")
-        console.log(this.data.condition)
+        console.log("选中条件", this.data.condition);
     },
 
     // 时间选择器改变
     startChange: function(e) {
         this.setData({
             start: e.detail.value,
-
         })
     },
     endChange: function(e) {
@@ -233,28 +210,23 @@ Page({
 
     //跳转到课程详情
     toCourseDetail: function(e) {
-        console.log("课程详情数据");
-        console.log(e)
+        console.log("点击进入课程详情", e)
         let fid = e.currentTarget.dataset.fid;
         console.log("课程id", fid);
         let isOnly = e.currentTarget.dataset.isonly;
-        if (fid != undefined) {
-            if (isOnly && this.data.id_flag != 'teacher') {
-                this.setData({
-                    isOnly: isOnly,
-                    courseid: fid,
-                    showModal: true,
-                })
-            } else {
-                wx.navigateTo({
-                    url: '../detail/detail?id=' + fid,
-                });
-            }
+        if (isOnly && this.data.id_flag != 'teacher') {
+            this.setData({
+                isOnly: isOnly,
+                courseid: fid,
+                showModal: true,
+            })
+        } else {
+            wx.navigateTo({
+                url: '../detail/detail?id=' + fid,
+            });
         }
-
     },
-    // 课程密码校验
-    // 点击确定按钮
+    // 对应学校的课程需要密码校验
     ok: function() {
         let that = this;
         if (that.data.pwd != '') {
@@ -263,8 +235,7 @@ Page({
                 password: that.data.pwd,
             });
             p.then(value => {
-                console.log("课程密码校验结果");
-                console.log(value);
+                console.log("课程密码校验结果", value);
                 if (value.data.data.msg == '密码正确') {
                     that.setData({
                         showModal: false,
@@ -272,7 +243,6 @@ Page({
                     wx.navigateTo({
                         url: '../detail/detail?id=' + that.data.courseid,
                     });
-
                 } else {
                     wx.showToast({
                         title: '课程密码有误', //提示的内容,
@@ -334,13 +304,8 @@ Page({
         para.push(app.globalData.viewMore);
         var status = '',
             duration = '';
-        if (that.data.status != '') {
-            status = that.data.status;
-        }
-        if (that.data.duration != '') {
-            duration = that.data.duration;
-        }
-
+        status = that.data.status != '' ? that.data.status : '';
+        duration = that.data.duration != '' ? that.data.duration : '';
         if (that.data.theme != '') {
             para = that.data.theme;
             this.setData({
@@ -356,12 +321,8 @@ Page({
                 title_name: app.globalData.viewMore,
             })
         }
-        if (para[0] == "") {
-            para = "";
-        }
-        if (that.data.reg_idx != null) {
-            area = that.data.region;
-        }
+        para = para[0] == "" ? "" : para;
+        area = that.data.reg_idx != null ? that.data.region : area;
         wx.request({
             url: app.globalData.url + 'WxCourse/GetMoreNews',
             data: {
@@ -375,8 +336,7 @@ Page({
                 type: para,
             },
             success(res) {
-                console.log("成功获取课程数据22222")
-                console.log(res)
+                console.log("成功获取课程数据", res);
                 that.setData({
                     activity: res.data.data
                 });
@@ -394,12 +354,6 @@ Page({
     onLoad: function(options) {
         var that = this;
         this.getSearchData(0);
-        // 自动获取注册时间
-        var now = new Date;
-        var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-        this.setData({
-            date: date
-        })
         that.InitArea();
     },
     timeFormat(param) {
@@ -468,114 +422,26 @@ Page({
         })
     },
     bindMultiPickerColumnChange: function(e) {
-        console.log('picker')
-        console.log(e)
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
         var data = {
-            multiArray: this.data.multiArray,
-            multiIndex: this.data.multiIndex
-        };
-        data.multiIndex[e.detail.column] = e.detail.value;
-        const provinceName = data.multiArray[0][data.multiIndex[0]];
-        let provinceId = "";
-        let province = this.data.province;
-        let quyuList = [],
-            cityList = [],
-            provinceList = [],
-            city = [],
-            area = [];
-        try {
-            province.forEach(item => {
-                if (item.name === provinceName) {
-                    provinceId = item.id;
-                    throw (new Error('find item'))
-                }
-            })
-        } catch (err) {}
-        city = areaList.filter(item => {
-            return item.pid == provinceId;
-        })
-        if (e.detail.column == 0) {
-            data.multiIndex = [e.detail.value, 0, 0];
-            try {
-                area = areaList.filter(item => {
-                    return item.pid == city[data.multiIndex[1]].id;
-                })
-            } catch (err) {}
-        } else if (e.detail.column == 1) {
-            data.multiIndex[2] = 0;
-            area = areaList.filter(item => {
-                return item.pid == city[e.detail.value].id;
-            })
-        } else {
-            const cityName = data.multiArray[1][data.multiIndex[1]];
-            let cityId = '';
-            try {
-                areaList.forEach(item => {
-                    if (item.name === cityName) {
-                        cityId = item.id;
-                        throw (new Error('find item'));
-                    }
-                })
-            } catch (err) {}
-            area = areaList.filter(item => {
-                return item.pid == cityId;
-            })
+            "multiArray": this.data.multiArray,
+            "multiIndex": this.data.multiIndex,
+            "province": this.data.province,
+            "e": e,
         }
-        provinceList = province.map(item => {
-            return item.name
-        })
-        cityList = city.map(item => {
-            return item.name;
-        })
-        quyuList = area.map(item => {
-            return item.name;
-        })
-        data.multiArray = [provinceList, cityList, quyuList],
-            this.setData(data);
-        var tmp = [];
-        for (var i = 0; i < 3; i++) {
-            tmp[i] = data.multiArray[i][data.multiIndex[i]];
-
-        }
-        if (tmp[1] == '北京市') {
-            tmp[1] = '北京';
-
-        } else if (tmp[1] == '天津市') {
-            tmp[1] = '天津';
-        } else if (tmp[1] == '上海市') {
-            tmp[1] = '上海';
-        }
-        console.log("选中的是：", tmp)
+        let res = areaColumnChange(data);
         this.setData({
-            region: tmp,
-        })
+            region: res.tmp,
+            multiArray: res.data.multiArray,
+            multiIndex: res.data.multiIndex
+        });
     },
+    //初始化地址信息
     InitArea: function() {
-        var province = [],
-            city = [],
-            area = [];
-        province = areaList.filter(item => {
-            return item.pid == 0;
-        })
-        city = areaList.filter(item => {
-            return item.pid == province[0].id;
-        })
-        area = areaList.filter(item => {
-            return item.pid == city[0].id;
-        })
-        var provinceList = province.map(item => {
-            return item.name
-        })
-        var cityList = city.map(item => {
-            return item.name;
-        })
-        var quyuList = area.map(item => {
-            return item.name;
-        })
+        let data = initArea();
         this.setData({
-            multiArray: [provinceList, cityList, quyuList],
-            province
+            multiArray: [data.provinceList, data.cityList, data.quyuList],
+            province: data.province,
         })
     }
 })

@@ -6,10 +6,13 @@ export function getParamsToUrl(param, url) {
     if (JSON.stringify(param) == '{}') {
         return url
     }
+
     for (let i in param) {
+        if (typeof param[i] === 'object') {
+            param[i] = JSON.stringify(param[i]);
+        }
         url += ('&' + i + '=' + param[i])
     }
-    // url = url.substring(0, url.length - 1); //除掉最后的&
     console.log('[tools.js-getParamsToUrl()]', url)
     return url
 }

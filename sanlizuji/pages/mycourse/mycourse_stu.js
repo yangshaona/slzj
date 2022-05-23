@@ -1,5 +1,6 @@
 // pages/course/course.js
 import { GetKidsActivity, GetKidsList, GetMyAct } from '../../utils/apis.js';
+import { mergeArr } from '../../utils/function.js';
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
@@ -61,17 +62,6 @@ Page({
             for (var item of value.data.data.data) {
                 activity.push(mergeArr(item.data1, item.data2));
             }
-
-            function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                if (arr1.length == 0) {
-                    return [];
-                }
-                let arr3 = [];
-                arr1.map((item, index) => {
-                    arr3.push(Object.assign(item, arr2[index]));
-                })
-                return arr3;
-            }
             that.setData({
                 activity: activity
             })
@@ -96,18 +86,7 @@ Page({
             var activity = mergeArr(value.data.data1, value.data.data2)
             that.setData({
                 activity: activity
-            })
-
-            function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                if (arr1.length == 0) {
-                    return [];
-                }
-                let arr3 = [];
-                arr1.map((item, index) => {
-                    arr3.push(Object.assign(item, arr2[index]));
-                })
-                return arr3;
-            }
+            });
         }, reason => {
             console.log("获取我的活动数据失败", reason);
         });

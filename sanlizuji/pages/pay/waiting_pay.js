@@ -1,5 +1,4 @@
-// pages/pay/confirm.js
-import { GetActDetail, GetKidsList, CouponCheck } from '../../utils/apis.js';
+import { GetActDetail, GetKidsList, CouponCheck, GetOrderDetail, changeOrderInfo } from '../../utils/apis.js';
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
@@ -26,55 +25,20 @@ Page({
         //用户信息
         userinfo: user,
         id_flag: id_flag,
-        coupons: "",
+        // 优惠券码
+        coupons_key: "",
+        // 优惠金额
         price: 0,
-    },
-    // 初始化学员选择器
-    loadStu: function(e) {
-        // 和后台拿东西setData
-        let that = this;
-        user = wx.getStorageSync('user');
-        id_flag = wx.getStorageSync('id_flag');
-        const p = GetKidsList({
-            id: user.id
-        })
-        p.then(value => {
-            console.log("孩子信息", value);
-            if (value.data.data.length > 0) {
-                var kid = [];
-                for (var item of value.data.data) {
-                    kid.push(item);
-                    if (that.options.userid == item.id) {
-                        that.setData({
-                            stuinfo: item,
-                            userinfo: item,
-                        })
-                        console.log("选中的孩子信息");
-                        console.log(item);
-                        console.log(that.data.stuinfo);
-                    }
-                }
-                that.setData({
-                    stu_arr: kid
-                })
-                console.log(that.data.stu_arr)
-            }
-        }, reason => {
-            console.log("获取孩子信息失败", reason);
-        });
+        // 需要支付的金额
+        payPrice: 0,
+        // 每个订单的价格
+        onePrice: 0,
+        // 购买数量记录
+        num: 1,
+        // 记录订单初始时的购买数量
+        order_num: 1,
     },
 
-    // 学员选择器改变
-    stuChange: function(e) {
-        var stu_arr = this.data.stu_arr;
-        var idx = e.detail.value;
-        this.setData({
-            idx: idx,
-            stu: stu_arr[e.detail.value]
-        });
-        console.log("学者的数据");
-        console.log(this.data.stu)
-    },
     //跳转进入购买须知
     toBuyInfo: function(e) {
         console.log("跳转到购买须知")
@@ -90,8 +54,18 @@ Page({
         console.log(that.options);
         var id = e.currentTarget.dataset.id;
         console.log("优惠券金额", that.data.price);
+        if (that.data.num != that.data.order_num) {
+            changeOrderInfo({
+                orderid: that.options.orderid,
+                order_num: that.data.num,
+            }).then(value => {
+                console.log("修改订单购买数量结果", value);
+            })
+        }
         wx.redirectTo({
-            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.order.price + "&key=" + that.data.coupons + "&coupons=" + that.data.price,
+            // url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.order.price + "&key=" + that.data.coupons_key + "&coupons=" + that.data.price + "&userinfo=" + that.options.userinfo,
+            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+
         })
     },
 
@@ -105,44 +79,49 @@ Page({
             },
         })
     },
+    Init: function() {
+        let that = this;
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag');
+        let userinfo = JSON.parse(that.options.userinfo);
+        that.setData({
+                userinfo: user,
+                id_flag: id_flag,
+                stuinfo: userinfo,
+            })
+            // 获取学生订单数据
+        GetOrderDetail({
+            id: that.options.orderid,
+            modelName: 'SignList',
+        }).then(value => {
+            const p = GetActDetail({
+                id: that.data.courseid,
+                modelName: 'ClubNews',
+            });
+            p.then(value2 => {
+                console.log("课程详情", value2)
+                that.setData({
+                    order: value2.data.data[0],
+                    payPrice: value2.data.data[0].price * value.data.data[0].order_num,
+                    onePrice: value2.data.data[0].price,
+                    num: value.data.data[0].order_num,
+                    order_num: value.data.data[0].order_num
+                })
+            }, reason => {
+                console.log("获取课程数据失败", reason);
+            });
+        })
+
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        // this.getSysInfo();
-
-        console.log("待付款订单");
-        console.log(options);
+        console.log("待付款订单页面", options);
         let that = this;
-        user = wx.getStorageSync('user');
-        id_flag = wx.getStorageSync('id_flag');
-        if (id_flag == 'parent') {
-            this.loadStu();
-        }
         that.setData({
-            userinfo: user,
-            id_flag: id_flag,
-            stuinfo: user,
+            courseid: options.id,
         })
-        const p = GetActDetail({
-            id: options.id,
-            modelName: 'ClubNews',
-        });
-        p.then(value => {
-            console.log("订单详情", value)
-            that.setData({
-                order: value.data.data[0],
-            })
-        }, reason => {
-            console.log("获取订单数据失败", reason);
-        });
-    },
-
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function() {
-
     },
 
     /**
@@ -150,52 +129,15 @@ Page({
      */
     onShow: function() {
         let that = this;
-        user = wx.getStorageSync('user');
-        id_flag = wx.getStorageSync('id_flag')
-        that.setData({
-            userinfo: user,
-            id_flag: id_flag
-        })
-    },
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
+        that.Init(that.data.courseid);
     },
 
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
-
-    },
     //   查找获取是否有优惠券
     getCoupons: function(e) {
         let that = this;
+        console.log("优惠券码", coupons_key);
         const p = CouponCheck({
-            key: that.data.coupons,
+            key: that.data.coupons_key,
             courseid: that.options.id,
         })
         p.then(value => {
@@ -213,8 +155,11 @@ Page({
                     icon: "none",
                     duration: 800,
                 });
+                let payPrice = that.data.payPrice;
+                console.log("应付金额", payPrice);
                 that.setData({
                     price: value.data.data.money,
+                    payPrice: payPrice - value.data.data.money,
                 });
                 console.log("优惠券金额", that.data.price);
             }
@@ -226,7 +171,42 @@ Page({
     searchCoupons: function(e) {
         console.log(e)
         this.setData({
-            coupons: e.detail.value,
+            coupons_key: e.detail.value,
         })
+    },
+    // 用于记录购买的数量，默认为1
+    setValue: function(e) {
+        this.setData({
+            num: e.detail.value
+        });
+        console.log(this.data.num);
+    },
+    add: function(e) {
+        var num, that = this;
+        this.data.num++;
+        num = that.data.num;
+        that.setData({
+            num: num,
+            payPrice: this.data.onePrice * that.data.num - that.data.price,
+        })
+    },
+    reduce: function(e) {
+        var num = 1,
+            that = this;
+        if (this.data.num <= 1) {
+            wx.showToast({
+                title: '数量不能为0哦！',
+                icon: "none",
+                duration: 500
+            })
+        } else {
+            this.data.num--;
+            num = this.data.num;
+            that.setData({
+                num: num,
+                payPrice: that.data.onePrice * that.data.num - that.data.price,
+            })
+        }
+        console.log(num)
     },
 })

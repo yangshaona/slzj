@@ -1,9 +1,9 @@
 // pages/register/register_stu.js
-import { checkPhone } from '../../utils/text.js';
-const formatTime = require('../../utils/text.js');
+import { checkPhone, areaColumnChange, initArea } from '../../utils/function.js';
+const formatTime = require('../../utils/function.js');
 import WeCropper from '../dev/we-cropper.js';
 import GlobalConfig from '../dev/config.js';
-import { Register, schoollist, CheckRole, GetUserInfo2, getOpenId } from '../../utils/apis.js';
+import { Register, schoollist, GetUserInfo2, getOpenId } from '../../utils/apis.js';
 const config = new GlobalConfig();
 config.init();
 const device = wx.getSystemInfoSync();
@@ -12,7 +12,7 @@ const height = device.windowHeight - 50;
 const windowHeight = device.windowHeight - 50;
 var app = getApp();
 const areaList = require('../../utils/arealist.js');
-const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+const check_idnum = require('../../utils/function.js'); //路径根据自己的文件目录来
 Page({
     /**
      * 页面的初始数据
@@ -235,87 +235,21 @@ Page({
             reg_idx: 1
         })
     },
+
     bindMultiPickerColumnChange: function(e) {
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
         var data = {
-            multiArray: this.data.multiArray,
-            multiIndex: this.data.multiIndex
-        };
-        data.multiIndex[e.detail.column] = e.detail.value;
-        const provinceName = data.multiArray[0][data.multiIndex[0]];
-        let provinceId = "";
-        let province = this.data.province;
-        let quyuList = [],
-            cityList = [],
-            provinceList = [],
-            city = [],
-            area = [];
-        try {
-            province.forEach(item => {
-                if (item.name === provinceName) {
-                    provinceId = item.id;
-                    throw (new Error('find item'))
-                }
-            })
-        } catch (err) {}
-        city = areaList.filter(item => {
-            return item.pid == provinceId;
-        })
-        if (e.detail.column == 0) {
-            data.multiIndex = [e.detail.value, 0, 0];
-            try {
-                area = areaList.filter(item => {
-                    return item.pid == city[data.multiIndex[1]].id;
-                })
-            } catch (err) {}
-        } else if (e.detail.column == 1) {
-            data.multiIndex[2] = 0;
-            area = areaList.filter(item => {
-                return item.pid == city[e.detail.value].id;
-            })
-        } else {
-            const cityName = data.multiArray[1][data.multiIndex[1]];
-            let cityId = '';
-            try {
-                areaList.forEach(item => {
-                    if (item.name === cityName) {
-                        cityId = item.id;
-                        throw (new Error('find item'));
-                    }
-                })
-            } catch (err) {}
-            area = areaList.filter(item => {
-                return item.pid == cityId;
-            })
+            "multiArray": this.data.multiArray,
+            "multiIndex": this.data.multiIndex,
+            "province": this.data.province,
+            "e": e,
         }
-        provinceList = province.map(item => {
-            return item.name
-        })
-        cityList = city.map(item => {
-            return item.name;
-        })
-        quyuList = area.map(item => {
-            return item.name;
-        })
-        data.multiArray = [provinceList, cityList, quyuList],
-            this.setData(data);
-        var tmp = [];
-        for (var i = 0; i < 3; i++) {
-
-            tmp[i] = data.multiArray[i][data.multiIndex[i]];
-        }
-        if (tmp[1] == '北京市') {
-            tmp[1] = '北京';
-
-        } else if (tmp[1] == '天津市') {
-            tmp[1] = '天津';
-        } else if (tmp[1] == '上海市') {
-            tmp[1] = '上海';
-        }
-        console.log("选中的是：", tmp)
+        let res = areaColumnChange(data);
         this.setData({
-            reg: tmp,
-        })
+            reg: res.tmp,
+            multiArray: res.data.multiArray,
+            multiIndex: res.data.multiIndex
+        });
     },
     // 同意协议
     tipAgree: function() {
@@ -409,32 +343,15 @@ Page({
             reg_idx: 1
         })
     },
-
-    //手机号码输入检查
-    checkPhone: function(phNum) {
-        var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
-        if (phNum.length != 11 || !reg.test(phNum)) {
-            wx.showModal({
-                content: '手机号输入有误', //提示的内容,
-                showCancel: false, //是否显示取消按钮,
-            });
-            return false;
-        } else {
-            console.log("手机号填写格式正确");
-            return true;
-        }
-    },
     // 身份证号输入验证
     checkID: function(id) {
-        console.log("检查结果");
         var data = check_idnum.checkIdCard(id);
-        console.log(data.idCardFlag);
+        console.log("检查结果", data);
         if (!data.idCardFlag) {
             wx.showToast({
                 title: '身份证号有误',
                 icon: 'error',
                 duration: 800
-
             })
             return false;
         } else {
@@ -443,8 +360,6 @@ Page({
                 [birthday]: data.birth,
                 sex: data.sex,
             })
-            console.log(data);
-            console.log(data.sex);
             return true;
         }
     },
@@ -460,7 +375,6 @@ Page({
     InputPhone: function(e) {
         checkPhone(e.detail.value);
     },
-
     // 注册表单提交
     submit: function(e) {
         // 留空检查
@@ -468,12 +382,8 @@ Page({
         console.log(data);
         let that = this;
         for (var i in data) {
-
-            console.log("地区")
-            console.log(data.region)
-            console.log(data.region[0])
+            console.log("地区", data.region);
             if (data[i] == null || data[i] == "") {
-                console.log(i);
                 console.log(data[i]);
                 console.log("表单有未填写部分");
                 wx.showToast({
@@ -490,10 +400,8 @@ Page({
         if (checkPhone(data.phone)) {
             // 身份证号格式检查
             if (that.checkID(data.idnum)) {
-
                 console.log("格式无误")
             } else {
-
                 console.log("身份证号填写有误");
                 return;
             }
@@ -504,8 +412,7 @@ Page({
             console.log("数据")
             console.log(data)
             var register_time = 'stu_info.time'
-
-            // 赋值
+                // 赋值
             that.setData({
                 stu_info: data,
                 [register_time]: time
@@ -631,7 +538,6 @@ Page({
             url: app.globalData.url + 'WxUser/SaveImg',
             //小程序本地的路径
             filePath: tempFilePaths,
-
             name: 'file',
             formData: {
                 //图片命名：用户id-商品id-1~9
@@ -641,9 +547,7 @@ Page({
                 file_type: '',
             },
             success(res) {
-                console.log("成功保存图片");
-                console.log(res);
-
+                console.log("成功保存图片", res);
             },
             fail(res) {
                 flag = false;
@@ -659,81 +563,19 @@ Page({
     },
     // 切换教师/家长端
     changeToTeacher: function(e) {
-        console.log("切换教师端");
-        console.log(e.currentTarget.id);
-        this.setData({
-            showModal: true,
-            user_group: 2,
-            register_role: e.currentTarget.id,
+        console.log("切换教师端", e.currentTarget.id);
+        wx.navigateTo({
+            url: './register_' + e.currentTarget.id,
         })
 
     },
     changeToParent: function(e) {
-        console.log("切换家长端");
-        console.log(e.currentTarget.id);
-        this.setData({
-            showModal: true,
-            user_group: 3,
-            register_role: e.currentTarget.id,
+        console.log("切换家长端", e.currentTarget.id);
+        wx.navigateTo({
+            url: './register_' + e.currentTarget.id,
         })
     },
-    // 身份切换密码校验
-    checkRole: function(user_group, register_role) {
-        let that = this;
-        CheckRole({
-            user_group: user_group,
-            password: that.data.pwd,
-        }).then(value => {
-            console.log("身份切换密码校验结果", value);
-            if (value.data.data == '验证成功') {
-                that.setData({
-                    showModal: false,
-                })
-                wx.navigateTo({
-                    url: './register_' + register_role,
-                })
-            } else {
-                wx.showToast({
-                    title: '密码有误', //提示的内容,
-                    duration: 800,
-                    image: '/icon/fail.svg',
-                    icon: "error",
-                })
-            }
-        }, reason => {
-            console.log("无法校验密码", reason);
-        });
-    },
-    // 课程密码校验
-    // 点击确定按钮
-    ok: function() {
-        let that = this;
-        if (that.data.pwd != '') {
-            that.checkRole(that.data.user_group, that.data.register_role);
-        } else {
-            wx.showToast({
-                title: '请输入密码',
-                duration: 500,
-                icon: "error",
-                image: '/icon/fail.svg',
-            })
-        }
-        that.setData({
-            pwd: "",
-        })
-    },
-    back: function() {
-        this.setData({
-            showModal: false,
-        })
 
-    },
-    InputPwd: function(e) {
-        console.log(e)
-        this.setData({
-            pwd: e.detail.value,
-        })
-    },
     // 绑定已有数据
     login: function(e) {
         app.globalData.flag_identity = [1, 0, 0];
@@ -751,44 +593,22 @@ Page({
             console.log("高度是：", that.data.top_height);
         }).exec();
     },
+    // 初始化数据
+    Init: function() {
+        let that = this;
+        that.getTopHeight();
+        let data = initArea();
+        this.setData({
+            is_show: app.globalData.is_show,
+            multiArray: [data.provinceList, data.cityList, data.quyuList],
+            province: data.province,
+        })
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
-        var now = new Date;
-        let that = this;
-        that.getTopHeight();
-        var time = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-        that.setData({
-            time: time,
-            isTipTrue: false,
-            is_show: app.globalData.is_show,
-        })
-        var province = [],
-            city = [],
-            area = [];
-        province = areaList.filter(item => {
-            return item.pid == 0;
-        })
-        city = areaList.filter(item => {
-            return item.pid == province[0].id;
-        })
-        area = areaList.filter(item => {
-            return item.pid == city[0].id;
-        })
-        var provinceList = province.map(item => {
-            return item.name
-        })
-        var cityList = city.map(item => {
-            return item.name;
-        })
-        var quyuList = area.map(item => {
-            return item.name;
-        })
-        this.setData({
-            multiArray: [provinceList, cityList, quyuList],
-            province
-        });
+        this.Init();
     },
 
     /**
@@ -803,6 +623,7 @@ Page({
      */
     onShow: function() {
         app.globalData.flag_identity = [1, 0, 0];
+        this.Init()
     },
 
     /**

@@ -1,4 +1,4 @@
-var host = "https://sanli-tracks.com/sanlia/index.php?r="
+var host = "https://sanli-tracks.com/sanli/index.php?r="
     // 
 let config = {
     host,

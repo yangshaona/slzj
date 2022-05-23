@@ -78,7 +78,7 @@
 
 .tips {
     display: block;
-    margin: 10% 2.5%;
+    margin: 5% 2.5% 30%;
     font-size: 0.85rem;
 }
 
@@ -91,6 +91,8 @@
     height: 50px;
     box-shadow: 0 0 5px #d3d3d3;
     position: fixed;
+    background-color: white;
+    z-index: 99;
 }
 
 .bottom_desc {
@@ -145,4 +147,62 @@
     background-color: #6177ff;
     color: white;
     line-height: 60rpx;
+}
+
+
+/* 数量变化 */
+
+.buy-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 70rpx;
+    font-size: 30rpx;
+}
+
+.buy-num {
+    display: flex;
+    line-height: 70rpx;
+    margin-top: 15rpx;
+    color: #333;
+}
+
+.buy-num .buy-view {
+    line-height: 60rpx;
+    margin-left: 25rpx;
+}
+
+.stock_jiajian {
+    width: 38%;
+    height: 70rpx;
+    float: left;
+    margin-left: 5rpx;
+}
+
+.stockBox {
+    width: 28%;
+    height: 80%;
+    float: left;
+    border: 1rpx solid #DDD9DA;
+    text-align: center;
+    line-height: 55rpx;
+    color: red;
+    font-size: 45rpx;
+}
+
+.nums {
+    width: 35%;
+    line-height: 65rpx;
+    color: #333;
+}
+
+.stockinnum {
+    width: 100%;
+    height: 100%;
+    line-height: 80rpx;
+    font-size: 30rpx;
+}
+
+.price {
+    flex: 1;
+    text-align: right;
 }

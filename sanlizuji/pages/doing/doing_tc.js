@@ -3,6 +3,7 @@ const app = getApp();
 let user = wx.getStorageSync('user')
 const webSocket = require('../../utils/webSocket.js');
 import { GetStuUpGps, TeaNowCourse, GpsRequest } from '../../utils/apis.js';
+var timeId = null;
 Page({
 
     /**
@@ -319,82 +320,35 @@ Page({
                     courseid: that.data.courseid,
                 });
                 p.then(value => {
-                        console.log("导师请求获取某个学生的位置信息");
-                        console.log(value)
-                        that.setData({
-                            request_code: value.data.data.code,
-                        })
-                        if (value.data.data.code == 1) {
-                            that.getStuGps(id);
-                        } else {
-                            wx.showToast({
-                                title: '请求失败',
-                                duration: 800,
-                            });
-                            that.data.realTime = setInterval(function() {
-                                    // 请求服务器数据
-                                    console.log('请求接口：刷新数据')
-                                    that.TeaNowCourse();
-                                    that.getLocation(id)
-
-                                }, 30000) //间隔时间
-
-                            // 更新数据
-                            that.setData({
-                                realTime: that.data.realTime, //实时数据对象(用于关闭实时刷新方法)
-
-                            })
-                        }
-                    }, reason => {
-                        console.log("获取学生位置数据失败", reason);
+                    console.log("导师请求获取某个学生的位置信息");
+                    console.log(value)
+                    that.setData({
+                        request_code: value.data.data.code,
                     })
-                    /*      wx.request({
-                             url: app.globalData.url + 'WxOther/GpsRequest',
-                             data: {
-                                 teacherid: user.id,
-                                 courseid: that.data.courseid,
-                             },
-                             method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-                             // header: {}, // 设置请求的 header
-                             success: function(res) {
-                                 // success
-                                 console.log("导师请求获取某个学生的位置信息");
-                                 console.log(res)
-                                 that.setData({
-                                     request_code: res.data.data.code,
-                                 })
-                                 if (res.data.data.code == 1) {
-                                     that.getStuGps(id);
-                                 } else {
-                                     wx.showToast({
-                                         title: '请求失败',
-                                         duration: 800,
-                                     });
-                                     that.data.realTime = setInterval(function() {
-                                             // 请求服务器数据
-                                             console.log('请求接口：刷新数据')
-                                             that.TeaNowCourse();
-                                             that.getLocation(id)
+                    if (value.data.data.code == 1) {
+                        that.getStuGps(id);
+                    } else {
+                        wx.showToast({
+                            title: '请求失败',
+                            duration: 800,
+                        });
+                        that.data.realTime = setInterval(function() {
+                                // 请求服务器数据
+                                console.log('请求接口：刷新数据')
+                                that.TeaNowCourse();
+                                that.getLocation(id)
+                            }, 30000) //间隔时间
 
-                                         }, 30000) //间隔时间
-
-                                     // 更新数据
-                                     that.setData({
-                                         realTime: that.data.realTime, //实时数据对象(用于关闭实时刷新方法)
-
-                                     })
-                                 }
-                             },
-                             fail: function() {
-                                 // fail
-                             },
-                             complete: function() {
-                                 // complete
-                             }
-                         }); */
+                        // 更新数据
+                        that.setData({
+                            realTime: that.data.realTime, //实时数据对象(用于关闭实时刷新方法)
+                        })
+                    }
+                }, reason => {
+                    console.log("获取学生位置数据失败", reason);
+                })
                 var longitude2 = "tea_location.longitude",
                     latitude2 = "tea_location.latitude";
-
                 this.setData({
                     [latitude2]: latitude,
                     [longitude2]: longtitude,
@@ -410,7 +364,6 @@ Page({
                     console.log(res);
                     wx.onLocationChange(_locationChangeFn);
                     resolve();
-
                 },
                 fail: (err) => {
                     console.log('获取当前位置失败', err)
@@ -433,9 +386,17 @@ Page({
         })
     },
     getGps: function() {
-        var data = { "type": "getgps" }
-        var time = setTimeout(() => {
+        var data = { "type": "getgps" };
+        if (timeId) {
+            wx.showToast({
+                title: "操作频繁，请稍后再试",
+                icon: "none",
+                duration: 800,
+            })
+        }
+        clearTimeout(timeId);
+        timeId = setTimeout(() => {
             webSocket.sendSocketMessage(data);
-        }, 1000);
+        }, 2000);
     }
 })

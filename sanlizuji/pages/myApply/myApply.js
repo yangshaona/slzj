@@ -2,8 +2,8 @@
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
-import { UpdateOrder } from '../../utils/text.js';
-import { orderisshow, GetMyApply, GetKidsList, tgReverse } from '../../utils/apis.js';
+import { UpdateOrder, mergeArr } from '../../utils/function.js';
+import { orderisshow, GetMyApply, GetKidsList, tgReverse, getStuInfo, getStuApplyList, getAllStus, getAllCourses } from '../../utils/apis.js';
 Page({
 
     /**
@@ -34,7 +34,7 @@ Page({
         id_flag: id_flag,
         user: user,
         now: "",
-        kids_name: "",
+        stus_name: "",
         lowOrderId: '',
         actionSheetHidden: true,
         actionSheetItems: [
@@ -42,6 +42,12 @@ Page({
             '活动开始前2天退款订单总额的50%',
             '活动开始前3天收取退款订单总额的70%'
         ],
+        // 教师端中课程信息下拉框
+        courses: [],
+        // 所有报名数据
+        totalApply: [],
+        // 下拉框选择的信息
+        selectedData: { "student": '', "course": '' },
     },
 
     // 筛选栏点击事件
@@ -87,6 +93,7 @@ Page({
                 if (res.confirm) {
                     const p = orderisshow({
                         id: orderid,
+                        modelName: "SignList",
                     })
                     p.then(value => {
                         console.log("删除结果");
@@ -130,12 +137,24 @@ Page({
         var courseid = e.currentTarget.dataset.courseid;
         var orderid = e.currentTarget.dataset.orderid;
         var userid = e.currentTarget.dataset.userid;
-        console.log("提交订单")
-        console.log(courseid)
-        console.log(orderid)
-        wx.navigateTo({
-            url: '../pay/waiting_pay?id=' + courseid + '&orderid=' + orderid + '&userid=' + userid,
+        console.log("点击提交订单按钮", "课程id：", courseid, "订单id：", orderid);
+        // 根据学生id获取学生数据
+        getStuInfo({
+            userid: userid,
+        }).then(value => {
+            console.log("获取到的学生数据是：", value);
+            wx.navigateTo({
+                url: '../pay/waiting_pay?id=' + courseid + '&orderid=' + orderid + '&userid=' + userid + '&userinfo=' + JSON.stringify(value.data.data),
+            })
+        }, reason => {
+            console.log("无法获取到对应的学生数据：", reason);
+            wx.showToast({
+                title: '获取数据失败',
+                icon: 'error',
+                duration: 800,
+            })
         })
+
     },
     // 点击继续报名按钮
     applyTap2: function(e) {
@@ -162,7 +181,7 @@ Page({
         })
     },
 
-    // 筛选显示内容，这部分由服务端实现，这里只是测试一下样式
+    // 报名数据类型筛选栏点击对应时显示对应内容
     setFilter: function() {
         let that = this;
         user = wx.getStorageSync('user');
@@ -170,100 +189,137 @@ Page({
         that.setData({
             flag_identity: app.globalData.flag_identity
         })
-        var identity;
-        if (id_flag == 'student') {
-            identity = "student";
-        } else if (id_flag == 'teacher') {
-            identity = "teacher";
-        } else if (id_flag == 'parent') {
-            identity = "parent";
+        if (id_flag == 'parent') {
             that.setTitle("孩子的报名")
+        } else if (id_flag == 'teacher') {
+            that.setTitle("学生的报名");
         }
-        that.getApply(user.id, identity, id_flag);
+        that.getApply(user.id, id_flag);
     },
 
     // 获取报名数据
-    getApply: function(id, identity, idflag) {
+    getApply: function(id, idflag) {
         let that = this;
-        var select = this.data.select;
-        var filter = [];
-        const p = GetMyApply({
-            identity: identity,
-            id: id
-        });
-        p.then(value => {
-            console.log("我的报名", value);
-            var total = [],
-                kid_apply = [],
-                apply = [];
-            if (idflag == 'parent') {
-                if (user.kids != '') {
-                    for (var i = 0; i < value.data.data.data.length; i++) {
-                        kid_apply = mergerArr(value.data.data.data[i].data1, value.data.data.data[i].data2);
-                        apply.push(kid_apply);
-                    }
-                    console.log("孩子报名数据", apply);
-                    for (var i = 0; i < apply.length; i++) {
-                        for (var j = 0; j < apply[i].length; j++) {
-                            total.push(apply[i][j]);
+        var total = [];
+        if (idflag == 'parent' || idflag == 'student') {
+            const p = GetMyApply({
+                identity: idflag,
+                id: id
+            });
+            p.then(value => {
+                console.log("我的报名", value);
+                var stu_apply = [],
+                    apply = [];
+                if (idflag == 'parent') {
+                    if (user.kids != '') {
+                        for (var i = 0; i < value.data.data.data.length; i++) {
+                            stu_apply = mergeArr(value.data.data.data[i].data1, value.data.data.data[i].data2);
+                            apply.push(stu_apply);
+                        }
+                        console.log("孩子报名数据", apply);
+                        for (var i = 0; i < apply.length; i++) {
+                            for (var j = 0; j < apply[i].length; j++) {
+                                total.push(apply[i][j]);
+                            }
                         }
                     }
-                    let result = total.sort(that.compare("id"));
-                    console.log(result);
+                } else if (idflag == 'student') {
+                    total = mergeArr(value.data.data1, value.data.data2);
+                    if (id_flag == 'teacher') {
+                        let _total = [];
+                        for (let i = 0; i < total.length; i++) {
+                            if (total[i].class == user.class && total[i].grade == user.grade) {
+                                _total.push(total[i]);
+                            }
+                        }
+                        total = _total;
+                    }
                 }
-            } else {
-                total = mergerArr(value.data.data1, value.data.data2)
-            }
-            var now = new Date;
-            var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
-            that.setData({
-                now: date
-            })
-            for (var idx in total) {
-                var ctn = total[idx];
-                var status = "";
-                var endTime = new Date(ctn['endTime']);
-                if (ctn['status'] == 1) {
-                    status = "报名失败";
-                } else if (ctn['status'] == 2) {
-                    status = "待付款";
-                } else if (ctn['status'] == 3 && endTime > now) {
-
-                    status = "报名成功";
-                    ctn['endTime'] = 'false';
-                } else {
-                    status = "已完成"
-                }
-                if (select == status || select == "全部") {
-                    filter.push(ctn);
-                }
-            }
-            that.setData({
-                filter: filter
-            })
-            for (var i = 0; i < that.data.filter.length; i++) {
-                var end_pay_time = new Date(that.data.filter[i].payendTime);
-                if (that.data.filter[i].status == 2 && (end_pay_time < now || that.data.filter[i].endTime < now)) {
-                    UpdateOrder(that.data.filter[i].id, '支付失败', 1);
-                    that.setData({
-                        ["filter[" + i + "].status"]: 1,
-                    })
-                }
-            }
-
-            function mergerArr(arr1, arr2) {
-                if (arr1 == [] || arr1.length == 0) {
-                    return [];
-                }
-                let arr3 = [];
-                arr1.map((item, index) => {
-                    arr3.push(Object.assign(item, arr2[index]));
+                that.setData({
+                    totalApply: total
                 })
-                return arr3;
+                that.setApplyFilter(total);
+            }, reason => {
+                console.log("获取报名数据失败", reason);
+            });
+        }
+        // 教师获取学生报名数据
+        else if (idflag == 'teacher' && user.type == 2) {
+            // 获取学生列表
+            getStuApplyList({
+                userid: user.id,
+            }).then(value => {
+                console.log("教师获取到班级学生的报名信息：", value);
+                total = mergeArr(value.data.data1, value.data.data2);
+                that.setApplyFilter(total);
+                that.setData({
+                    totalApply: total
+                })
+            }, reason => {
+                console.log("无法获取到班级学生的报名信息：", reason);
+            })
+        }
+    },
+
+    // 设置报名栏数据
+    setApplyFilter: function(total) {
+        let _total = [];
+        let stu = this.data.selectedData["student"];
+        let course = this.data.selectedData["course"];
+        console.log("选中的数据是：", this.data.selectedData);
+        if (stu != '' || course != '') {
+            for (let i = 0; i < total.length; i++) {
+                if (stu != '' && course != '') {
+                    if (total[i].userid == stu.kid_id && total[i].courseid == course.courseId) {
+                        _total.push(total[i]);
+                    }
+                } else if (stu != '') {
+                    if (total[i].userid == stu.kid_id) _total.push(total[i]);
+                } else if (course != '') {
+                    if (total[i].courseid == course.courseId) _total.push(total[i]);
+                }
             }
-        }, reason => {
-            console.log("获取报名数据失败", reason);
+            total = _total;
+        }
+        let that = this;
+        var now = new Date;
+        var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
+        that.setData({
+            now: date
         });
+        var filter = [];
+        var select = this.data.select;
+        console.log("所有报名数据", total);
+        for (var idx in total) {
+            var ctn = total[idx];
+            var status = "";
+            var endTime = new Date(ctn['endTime']);
+            if (ctn['status'] == 1) {
+                status = "报名失败";
+            } else if (ctn['status'] == 2) {
+                status = "待付款";
+            } else if (ctn['status'] == 3 && endTime > now) {
+                status = "报名成功";
+                ctn['endTime'] = 'false';
+            } else {
+                status = "已完成"
+            }
+            if (select == status || select == "全部") {
+                filter.push(ctn);
+            }
+        }
+        that.setData({
+            filter: filter
+        });
+        for (var i = 0; i < that.data.filter.length; i++) {
+            var end_pay_time = new Date(that.data.filter[i].payendTime);
+            if (that.data.filter[i].status == 2 && (end_pay_time < now || that.data.filter[i].endTime < now)) {
+                UpdateOrder(that.data.filter[i].id, '支付失败', 1);
+                that.setData({
+                    ["filter[" + i + "].status"]: 1,
+                })
+            }
+        }
     },
     // 当身份为监护人时对报名数据进行排序
     compare: function(property) {
@@ -296,8 +352,7 @@ Page({
      */
     onLoad: function(options) {
         let that = this;
-        console.log("返回的数据是")
-        console.log(options)
+        console.log("返回的数据是", options);
         user = wx.getStorageSync('user');
         this.setData({
             user: user,
@@ -307,53 +362,7 @@ Page({
             that.setFilter();
         }
     },
-    // 获取孩子信息
-    getKidsList: function() {
-        let that = this;
-        const p = GetKidsList({
-            id: user.id
-        });
-        p.then(value => {
-            console.log("孩子信息", value);
-            if (value.data.data.length > 0) {
-                var kids = [];
-                kids.push({ "id": "01", "isActive": false, "value": "请选择", "kid_id": 0 })
-                for (var i = 0; i < value.data.data.length; i++) {
-                    var kid = { "id": "0" + (i + 2), "isActive": false, "value": value.data.data[i].name, "kid_id": value.data.data[i].id };
-                    kids.push(kid);
-                }
-                that.setData({
-                    kids_name: kids
-                })
-            }
-        }, reason => {
-            console.log("获取孩子信息失败", reason);
-        });
-    },
-    // 选中孩子
-    select: function(e) {
-        console.log("选中的值是", e.detail);
-        var type = e.detail.value
-        if (e.detail.value == "请选择") {
-            type = "";
-        }
-        for (var i = 1; i < this.data.kids_name.length; i++) {
-            var tmp = "kids_name[" + i + "].isActive"
-            this.setData({
-                [tmp]: false,
-            })
-            if (e.detail.id == this.data.kids_name[i].id) {
-                this.setData({
-                    [tmp]: true
-                })
-            }
-        }
-        if (e.detail.kid_id == 0) {
-            this.getApply(user.id, 'parent', 'parent');
-        } else {
-            this.getApply(e.detail.kid_id, 'student', 'student');
-        }
-    },
+
     // 退款
     Refund: function(e) {
         console.log(e);
@@ -362,12 +371,6 @@ Page({
         that.setData({
             lowOrderId: e.currentTarget.dataset.id,
         });
-    },
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function() {
-
     },
 
     /**
@@ -385,47 +388,13 @@ Page({
             that.setFilter();
             if (id_flag == 'parent') {
                 this.getKidsList();
+            } else if (id_flag == 'teacher') {
+                this.getAllStus();
+                that.getAllCourses()
             }
         }
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
-
-    },
-    onShareAppMessage: function() {
-
-    },
     actionSheetTap: function() {
         this.setData({
             actionSheetHidden: !this.data.actionSheetHidden
@@ -464,5 +433,130 @@ Page({
             });
             console.log("申请退款失败", reason);
         });
+    },
+    // 教师获取班级所有学生信息
+    getAllStus: function() {
+        let that = this;
+        getAllStus({
+            userid: user.id,
+        }).then(value => {
+            console.log("获取到班级学生信息是：", value);
+            that.fillStuDropdown(value.data.data);
+        }, reason => {
+            console.log("无法获取到学生信息：", reason);
+        })
+    },
+
+    // 填充学生下拉框信息
+    fillStuDropdown: function(data) {
+        this.fillDropdown(data, 'name', 'kid_id', 'stus_name');
+    },
+
+    // 填充课程下拉框
+    fillCourseDropdown: function(data) {
+        this.fillDropdown(data, 'title', 'courseId', 'courses');
+    },
+    // 参数
+    // data：从后台获取的所有数据  
+    // name：用于赋值给下拉框显示的数据变量 可选值：name/title
+    // dataId：下拉框中选中的数据自带的数据id   可选值：kid_id/courseId
+    // obj：赋值给页面中的数据变量，用于页面数据的显示  可选值stus_name/courses
+    fillDropdown: function(data, name, dataId, obj) {
+        let that = this;
+        var tmpArr = [];
+        tmpArr.push({ "id": "01", "isActive": false, "value": "请选择", [dataId]: 0 })
+        for (var i = 0; i < data.length; i++) {
+            var tmp = { "id": "0" + (i + 2), "isActive": false, "value": data[i][name], [dataId]: data[i].id };
+            tmpArr.push(tmp);
+        }
+        that.setData({
+            [obj]: tmpArr
+        });
+    },
+
+    // 获取所有活动信息
+    getAllCourses: function() {
+        let that = this;
+        getAllCourses({}).then(value => {
+            console.log("所有的课程信息为：", value);
+            that.fillCourseDropdown(value.data.data);
+        }, reason => {
+            console.log("获取课程信息失败：", reason);
+        });
+    },
+    // 获取孩子信息
+    getKidsList: function() {
+        let that = this;
+        const p = GetKidsList({
+            id: user.id
+        });
+        p.then(value => {
+            console.log("孩子信息", value);
+            if (value.data.data.length > 0) {
+                this.fillStuDropdown(value.data.data);
+            }
+        }, reason => {
+            console.log("获取孩子信息失败", reason);
+        });
+    },
+    // 选中学生
+    selectStu: function(e) {
+        let that = this;
+        console.log("选中的值是", e.detail);
+        that.selectData(e.detail, that.data.stus_name, 'stus_name', 'selectedData.student', 'kid_id')
+        if (e.detail.kid_id == 0 && (id_flag == 'parent' || id_flag == 'teacher')) {
+            this.getApply(user.id, id_flag)
+        } else {
+            this.getApply(e.detail.kid_id, 'student');
+        }
+    },
+    // 选择的课程
+    selectCourse: function(e) {
+        let that = this;
+        that.selectData(e.detail, that.data.courses, 'courses', 'selectedData.course', 'courseId')
+        let _total = [];
+        if (e.detail.courseId == 0) {
+            _total = that.data.totalApply;
+        } else {
+            for (let i = 0; i < this.data.totalApply.length; i++) {
+                if (e.detail.courseId == this.data.totalApply[i].courseid) {
+                    _total.push(this.data.totalApply[i]);
+                }
+            }
+        }
+        this.setApplyFilter(_total);
+    },
+
+    // 参数
+    // detail：下拉框选中得值   //e.detail
+    // data：下拉框所有值   //可选值：this.data.courses/this.data.stus_name
+    // name：判断是课程还是学生     //可选值：courses/stus_name
+    // selectStr：选中的数据对应的变量字符串    //可选值："this.data.selectedData.course"/'this.data.selectedData.student'
+    //dataId：选中的数据中的数据id      //可选值：courseId/kid_id
+    selectData: function(detail, data, name, selectStr, dataId) {
+        let that = this;
+        console.log("选中的值是", detail);
+        if (detail[dataId] == 0) {
+            that.setData({
+                [selectStr]: '',
+            })
+        } else {
+            for (let i = 1; i < data.length; i++) {
+                var tmp = `$name[` + i + "].isActive";
+                this.setData({
+                    [tmp]: false,
+                })
+                if (detail.id == data[i].id) {
+                    this.setData({
+                        [tmp]: true
+                    });
+                    that.setData({
+                        [selectStr]: data[i],
+                    })
+
+                }
+            }
+        }
+
     },
 })

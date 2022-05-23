@@ -110,7 +110,7 @@ App({
         latitude: "",
         longtitude: "",
         realTime: null, //实时数据对象(用于关闭实时刷新方法)
-        imgUrl: 'https://sanli-tracks.com/sanlia/uploads/temp/WxImg/',
+        imgUrl: 'https://sanli-tracks.com/sanli/uploads/temp/WxImg/',
         // okayapiHost: "http://test_phalapi.com", // TODO: 配置成你所在的接口域名
         okayApiAppKey: "appkey", // TODO：改为你的APP_KEY 在http://open.yesapi.cn/?r=App/Mine寻找
         okayApiAppSecrect: "appsecret", // TODO：改为你的APP_SECRECT
@@ -118,7 +118,7 @@ App({
         socketTask: '',
         // 正在活动的orderid
         orderid: "",
-        imgPrefix: 'https://sanli-tracks.com/sanlia/uploads/temp/',
+        imgPrefix: 'https://sanli-tracks.com/sanli/uploads/temp/',
     },
 
     show_msg: function(msg) {
@@ -292,10 +292,7 @@ App({
         console.log("进入小程序onShow()")
         let id_flag = wx.getStorageSync("id_flag");
         let user = wx.getStorageSync('user')
-        console.log(id_flag)
-        console.log(user);
         var that = this;
-
         if (user != null && user != '') {
             // that.globalData.realTime = setInterval(function() {
             // 请求服务器数据
@@ -305,7 +302,7 @@ App({
             if (id_flag == 'student') {
                 that.ActiveStuDetail();
             }
-            // webSocket.connectSocket();
+            webSocket.connectSocket();
 
         }
         const p = isShow({});
@@ -344,16 +341,16 @@ App({
 
     },
     onHide: function() {
-        console.log("onHide");
-
+        console.log("onHide()");
         // var data = { "type": "out" }
         // webSocket.sendSocketMessage(data);
     },
     onUnload: function(options) {
         // 页面销毁时关闭连接
-        // console.log("onUnload")
-        // var data = { "type": "out" }
-        // webSocket.sendSocketMessage(data);
-        // setTimeout(() => webSocket.closeSocket(), 10000);
+        console.log("onUnload");
+        var data = { "type": "out" }
+        webSocket.sendSocketMessage(data);
+        setTimeout(() => webSocket.closeSocket(), 100);
+        clearInterval(this.globalData.realTime);
     },
 })

@@ -3,11 +3,7 @@ import { GetOrderDetail, tgPay, orderFind } from '../../utils/apis.js';
 let app = getApp();
 let user = wx.getStorageSync('user');
 var isSubmit = true; //表示是否点击支付按钮
-import {
-    UpdateOrder,
-    debounce,
-    Test
-} from '../../utils/text.js'
+import { UpdateOrder, debounce, Test } from '../../utils/function.js'
 Page({
     /**
      * 页面的初始数据
@@ -38,7 +34,9 @@ Page({
         // 剩余时间
         remain_time: 0,
         countDown: 0,
-        coupons: 0,
+        coupons: 0, //优惠券金额
+        // 设置支付按钮防抖
+        timeID: null,
     },
 
     /**
@@ -46,16 +44,15 @@ Page({
      */
     onLoad: function(options) {
         // 获取订单时间
-        console.log("确认支付");
-        console.log(options);
+        console.log("确认支付页面", options);
         this.setData({
             price: options.price,
-            coupons: options.coupons,
+            // coupons: options.coupons,
         })
         this.getCourse(options.orderid);
         user = wx.getStorageSync('user');
     },
-    // 获取报名的课程接口
+    // 获取报名的课程订单详情接口
     getCourse: function(orderid) {
         let that = this;
         const p = GetOrderDetail({
@@ -63,7 +60,6 @@ Page({
             modelName: 'SignList',
         });
         p.then(value => {
-            // success
             console.log("订单详情", value)
             that.setData({
                 order: value.data.data[0],
@@ -155,7 +151,6 @@ Page({
         setTimeout(this.setTimeCount, 1000);
     },
 
-
     /**
      * 倒计时
      */
@@ -227,20 +222,19 @@ Page({
     Submit: function() {
         console.log("正在获取MD5和account");
         let that = this;
-        console.log(that.data.order)
-        let price = that.data.price;
         user = wx.getStorageSync('user');
-        console.log(that.options.key == '');
-        if (that.options.key != "") {
-            price = (that.data.price - that.options.coupons).toFixed(2);
+        if (that.data.timeID) {
+            wx.showToast({
+                title: "操作频繁，请稍后再试",
+                icon: "none",
+                duration: 800,
+            })
         }
-        console.log("用户信息", user);
-        console.log("价格", price);
-        if (isSubmit && price != "NaN") {
-            isSubmit = false;
+        clearTimeout(that.data.timeID);
+        that.data.timeID = setTimeout(() => {
             const p = tgPay({
                 lowOrderId: that.data.order.id, //后台雪花算法生成的下游订单号
-                payMoney: 0.01, //支付金额
+                payMoney: that.data.price, //支付金额
                 body: that.data.order.coursename, //商品描述
                 notifyUrl: app.globalData.url + "WxSign/AccepttgPay", //回调地址
                 isMinipg: 1, //是否是小程序
@@ -286,21 +280,15 @@ Page({
                             duration: 800,
                         });
                         wx.redirectTo({
-                            url: './waiting_pay?id=' + that.data.order.courseid + "&orderid=" + that.options.orderid + '&userid=' + that.data.order.userid,
+                            url: './waiting_pay?id=' + that.data.order.courseid + "&orderid=" + that.options.orderid + '&userid=' + that.data.order.userid + "&userinfo=" + that.options.userinfo,
                         })
                     }
                 })
             }, reason => {
                 console.log("调用支付接口失败", reason);
             });
-            setTimeout(() => isSubmit = true, 3000);
-        } else {
-            wx.showToast({
-                title: "操作频繁，请稍后再试",
-                icon: "none",
-                duration: 800,
-            })
-        }
+        }, 1000);
+
     },
     // 取消订单
     Cancel: function(e) {
@@ -315,52 +303,8 @@ Page({
             })
         }, 1000)
     },
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function() {
 
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
     onShow: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
 
     },
 })

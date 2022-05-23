@@ -7,6 +7,7 @@
  * @param html
  * @returns {void|string|*}
  */
+const areaList = require('./arealist.js');
 const app = getApp();
 let user = wx.getStorageSync('user');
 
@@ -47,9 +48,10 @@ function SaveInfo(modelData, modelName) {
         // header: {}, // 设置请求的 header
         success: function(res) {
             // success
-            console.log("更改个人信息")
-            console.log(res)
-
+            console.log("更改个人信息成功", res);
+            return new Promise(function(resolve, reject) {
+                resolve("resolved");
+            });
         },
         fail: function() {
             // fail
@@ -210,12 +212,12 @@ function UpdateOrder(id, payState, status) {
         // header: {}, // 设置请求的 header
         success: function(res) {
             // success
-            console.log("修改结果");
-            console.log(res);
+            console.log("修改结果", res);
         },
 
     })
 }
+
 // 手机号码的验证
 function checkPhone(phNum) {
     var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(19[0-9]{1})|(16[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
@@ -324,38 +326,173 @@ function debounce(fn, delay) {
     let timer = null //借助闭包
     console.log("防抖", fn, delay);
     console.log(timer);
-    return function(...args) {
+    return function() {
         if (timer) {
-            console.log("多次操作")
-            wx.showToast({
-                title: "操作频繁，请稍后再试",
-                icon: 'none',
-                duration: 500,
-            })
+            console.log("多次操作");
             clearTimeout(timer) //进入该分支语句，说明当前正在一个计时过程中，并且又触发了相同事件。所以要取消当前的计时，重新开始计时
         }
-        // timer = setTimeout(fn, delay) // 进入该分支说明当前并没有在计时，那么就开始一个计时
-
         timer = setTimeout(() => { // 重新定时
-            fn.apply(this, args);
+            fn.apply(this, arguments);
+            timer = null;
         }, delay);
     }
 }
 
-// 模糊搜索获取学校
+//富文本显示部分数据
+function richTextFormat(value) {
+    value = value.replace(/<\/?.+?>/g, '')
+    value = value.replace(/\s+/g, '')
+    if (value.length > 30) {
+        return value.slice(0, 50) + "...";
+    }
+    return value;
+}
+//arr目标数组 arr1要合并的数组 return合并后的数组
+function mergeArr(arr1, arr2) {
+    if (arr1.length == 0) {
+        return [];
+    }
+    let arr3 = [];
+    arr1.map((item, index) => {
+        arr3.push(Object.assign(item, arr2[index]));
+    })
+    return arr3;
+}
 
+// 获取地区位置
+function areaColumnChange(res) {
+    console.log("数据是", res)
+    var data = {
+        multiArray: res.multiArray,
+        multiIndex: res.multiIndex
+    };
+    data.multiIndex[res.e.detail.column] = res.e.detail.value;
+    const provinceName = data.multiArray[0][data.multiIndex[0]];
+    let provinceId = "";
+    let province = res.province;
+    let quyuList = [],
+        cityList = [],
+        provinceList = [],
+        city = [],
+        area = [];
+    try {
+        province.forEach(item => {
+            if (item.name === provinceName) {
+                provinceId = item.id;
+                throw (new Error('find item'))
+            }
+        })
+    } catch (err) {
+        console.log("省份获取出错了", err);
+    }
+    city = areaList.filter(item => {
+        return item.pid == provinceId;
+    })
+    if (res.e.detail.column == 0) {
+        data.multiIndex = [res.e.detail.value, 0, 0];
+        try {
+            area = areaList.filter(item => {
+                return item.pid == city[data.multiIndex[1]].id;
+            })
+        } catch (err) {}
+    } else if (res.e.detail.column == 1) {
+        data.multiIndex[2] = 0;
+        area = areaList.filter(item => {
+            return item.pid == city[res.e.detail.value].id;
+        })
+    } else {
+        const cityName = data.multiArray[1][data.multiIndex[1]];
+        let cityId = '';
+        try {
+            areaList.forEach(item => {
+                if (item.name === cityName) {
+                    cityId = item.id;
+                    throw (new Error('find item'));
+                }
+            })
+        } catch (err) {}
+        area = areaList.filter(item => {
+            return item.pid == cityId;
+        })
+    }
+    provinceList = province.map(item => {
+        return item.name
+    })
+    cityList = city.map(item => {
+        return item.name;
+    })
+    quyuList = area.map(item => {
+        return item.name;
+    })
+    data.multiArray = [provinceList, cityList, quyuList];
+    var tmp = [];
+    for (var i = 0; i < 3; i++) {
+        tmp[i] = data.multiArray[i][data.multiIndex[i]];
 
+    }
+    if (tmp[1] == '北京市') {
+        tmp[1] = '北京';
+
+    } else if (tmp[1] == '天津市') {
+        tmp[1] = '天津';
+    } else if (tmp[1] == '上海市') {
+        tmp[1] = '上海';
+    }
+    console.log("选中的是：", tmp);
+    let result = {
+        data: data,
+        tmp: tmp,
+    }
+    return result;
+
+}
+
+function initArea() {
+    var province = [],
+        city = [],
+        area = [];
+    var data = {
+        province: [],
+        provinceList: "",
+        cityList: "",
+        quyuList: "",
+    }
+    province = areaList.filter(item => {
+        return item.pid == 0;
+    })
+    city = areaList.filter(item => {
+        return item.pid == province[0].id;
+    })
+    area = areaList.filter(item => {
+        return item.pid == city[0].id;
+    })
+    data.provinceList = province.map(item => {
+        return item.name
+    })
+    data.cityList = city.map(item => {
+        return item.name;
+    })
+    data.quyuList = area.map(item => {
+        return item.name;
+    })
+    data.province = province;
+    return data;
+
+}
 // 这个属性是将方法名暴露出来，否则需要引用的页面取不到
 module.exports = {
     formatRichText,
+    richTextFormat,
     SaveInfo,
     checkIdCard,
     UpdateOrder,
     checkPhone,
-    checkName,
     getLocation,
     checkName,
     Unbound,
     formatTime: formatTime, // 时间戳转换
     debounce,
+    mergeArr,
+    areaColumnChange,
+    initArea,
 }

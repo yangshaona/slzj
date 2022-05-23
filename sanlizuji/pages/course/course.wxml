@@ -77,11 +77,6 @@
                     <view class="descBox">
                         <!-- 报名时间 -->
                         <view class="ddl">报名截止: <text style="color: #6177ff;">{{item.end_time}}</text></view>
-                        <!-- 报名人数 -->
-                        <!-- <view class="numBox">
-                            <view>已报名：{{item.sign_num==''?0:item.sign_num}}</view>
-                            <image src="/icon/account.png" mode="widthFix"></image>
-                        </view> -->
                     </view>
                 </view>
             </view>

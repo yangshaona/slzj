@@ -1,13 +1,14 @@
 /* components/single-dropdown-select/index.wxss */
 
 .ms-content-box {
-    width: 150px;
+    margin-right: 15rpx;
 }
 
 .ms-content {
+    width: 85px;
     border: 1px solid #e2e2e2;
     background: white;
-    font-size: 18px;
+    font-size: 16px;
     position: relative;
     height: 30px;
     line-height: 30px;
@@ -17,13 +18,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding: 0 40px 0 6px;
-    font-size: 14px;
+    padding: 0 4px 0 5px;
+    font-size: 12px;
 }
 
 .ms-options {
     background: white;
-    width: inherit;
+    min-width: 85px;
     position: absolute;
     border: 1px solid #e2e2e2;
     border-top: none;

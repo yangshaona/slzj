@@ -200,13 +200,22 @@
     font-size: 1rem;
 }
 
+.name {
+    top: 40%;
+}
+
+.order-number {
+    top: 55%;
+    color: #555
+}
+
 .type {
     display: flex;
     flex-direction: row
 }
 
 .news-type {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: bold !important;
 }
 

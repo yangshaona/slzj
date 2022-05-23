@@ -360,6 +360,21 @@
 					"id": -1,
 					"name": "pages/person_info/teacher_info",
 					"pathName": "pages/person_info/teacher_info",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/register/register_parent",
+					"pathName": "pages/register/register_parent",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 43,
+					"name": "pages/pay/waiting_pay",
+					"pathName": "pages/pay/waiting_pay",
+					"query": "",
 					"scene": null
 				}
 			]

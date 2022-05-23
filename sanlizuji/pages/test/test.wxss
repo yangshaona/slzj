@@ -1,157 +1,29 @@
-.tips {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-}
-
-.tips .tips_box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 75%;
-    height: auto;
-    border-radius: 45rpx;
-    background: #fff;
-    overflow: hidden;
-}
-
-.tips .tips_box .hint_view {
-    display: flex;
-    align-items: center;
-}
-
-.tips .tips_box .hint_view .text {
-    display: flex;
-    flex-direction: column;
-    margin: 12rpx 24rpx;
-}
-
-.tips .tips_box .hint1 {
-    margin-top: 38rpx;
-    text-align: center;
-    font-size: 30rpx;
-    color: #1a1a1a;
-    line-height: 52rpx;
-    border-bottom: 1px solid;
-}
-
-.tips .tips_box .hint2 {
-    margin-top: 14rpx;
-    text-align: justify;
-    text-indent: 52rpx;
-    font-size: 26rpx;
-    color: #666;
-    line-height: 42rpx;
-}
-
-.tips .tips_box .login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 32rpx 0 32px;
-    width: 50%;
-    line-height: 64rpx;
-    border-radius: 80rpx;
-    font-size: 32rpx;
-    letter-spacing: 6rpx;
-    color: #fff;
-}
-
-.isTipShow {
-    display: block;
-}
-
-.isTipHide {
-    display: none;
-}
-
-.desc {
-    line-height: 3rem;
-    position: relative;
-    display: flex;
-    color: #6177ff;
-}
-
-page {
-    height: 100%;
-    background: #fff;
-    position: relative;
-}
-
-.item {
-    height: 4%;
-    background: #fff;
-    text-align: center;
-}
-
-.content {
-    border: 1px solid rgb(167, 159, 159);
-    background: #F6F8F8;
-    margin-bottom: 300rpx;
-    border-bottom: none;
-}
-
-.no {
-    text-align: center;
-    position: absolute;
-    top: 8%;
-    z-index: -11;
-}
-
-.tip {
-    position: relative;
-    background: #fff;
-    width: 100%;
-    height: 100rpx;
-    margin-bottom: 5rpx;
-    padding: 20rpx 0;
-    border-bottom: 1px solid gainsboro;
-}
-
-.isShow {
-    display: none;
-}
-
-.dis {
-    width: 100%;
-    font-size: 35rpx;
-    color: #009FE5;
-    box-sizing: border-box;
-}
-
-.dis_time {
-    width: 50%;
-}
-
-.term {
-    border-radius: 20rpx;
-}
-
-.cancel-term {
-    text-align: center;
-    font-size: 1.1rem;
-    padding: 2%;
-}
-
-.term-text {
-    font-size: 1rem;
-    background-color: rgb(230, 253, 235);
-    border-radius: 20rpx;
-    margin: 3% 10%;
-    padding: 2%;
-    align-items: center;
-}
-
-.confirm {
-    border-radius: 30rpx;
-    margin: 5% 4%;
-    color: #fff;
-    background-color: rgb(3, 193, 95);
-}
+ .stock_jiajian {
+     width: 38%;
+     height: 100%;
+     float: right;
+     margin-top: 7rpx;
+ }
+ 
+ .stockBox {
+     width: 28%;
+     height: 80%;
+     float: left;
+     border: 1rpx solid #DDD9DA;
+     text-align: center;
+     line-height: 55rpx;
+     color: #F54B6F;
+     font-size: 45rpx;
+ }
+ 
+ .nums {
+     width: 35%;
+     line-height: 65rpx;
+     color: #666;
+ }
+ 
+ .stockinnum {
+     width: 100%;
+     height: 100%;
+     font-size: 40rpx;
+ }

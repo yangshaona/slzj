@@ -3,7 +3,7 @@ import { GetUserInfo, getOpenId } from '../../utils/apis.js';
 import {
     SaveInfo,
     checkPhone
-} from '../../utils/text.js'
+} from '../../utils/function.js'
 // import { from } from 'form-data';
 const app = getApp();
 Page({
@@ -90,6 +90,7 @@ Page({
             const p = GetUserInfo({
                 name: data.name,
                 phone: data.phone,
+                idNum: data.idNum,
                 id_flag: that.data.id_flag,
             });
             p.then(value => {
@@ -159,7 +160,7 @@ Page({
                                     modelData = {
                                         name: user.name,
                                         header: user.header,
-                                        openid: res.data.openid,
+                                        openid: value.data.openid,
                                         idnum: user.idnum,
                                         birthday: user.birthday,
                                         sex: user.sex,
@@ -176,7 +177,7 @@ Page({
                                     modelData = {
                                         name: user.name,
                                         nikename: user.nickname,
-                                        openid: res.data.openid,
+                                        openid: value.data.openid,
                                         sex: user.sex,
                                         sexid: user.sexid,
                                         phone: user.phone,

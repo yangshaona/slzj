@@ -8,7 +8,6 @@
         </block>
     </swiper> -->
 </view>
-
 <view class="infoBox">
     <view class="theme">{{course_detail.title}}</view>
     <view class="price">
@@ -97,17 +96,16 @@
         </button>
     </view>
     <view class="bottomHalf1" bindtap="actionSheetTap">
-
         <image src="/icon/tiaokuan.png" mode="widthFix"></image>
         <view>取消条款</view>
-
     </view>
-
+    <!-- 报名按钮 -->
     <view class="bottomHalf2">
-        <button class="button1" id="teacher" bindtap="teacherSignUp" disabled="{{isOutDate||id_flag=='student'||id_flag=='parent'}}">教师报名</button>
-        <picker wx:if="{{id_flag=='parent'}}" disabled="{{isOutDate||id_flag=='teacher'}}" class="button2" mode="selector" range="{{stu_arr}}" range-key="name" value="{{idx}}" bindchange="stuChange">
-            <button class="button3" disabled="{{isOutDate||id_flag=='teacher'}}" bindtap="studentSignUp">学生报名</button>
-
+        <button class="button1" id="teacher" disabled="{{isOutDate||id_flag=='student'||id_flag=='parent'}}" bindtap="teacherSignUp">教师报名</button>
+        <!-- 教师和家长帮助学生报名 -->
+        <button wx:if="{{!showpicker}}" class="button2 button3" disabled="{{isOutDate||id_flag=='teacher'&&user.type!=2}}" bindtap="checkInfo">学生报名</button>
+        <picker wx:elif="{{id_flag=='parent'||showpicker&&id_flag=='teacher'&&user.type==2}}" disabled="{{isOutDate||id_flag=='teacher'&&user.type!=2}}" class="button2" mode="selector" range="{{stu_arr}}" range-key="name" value="{{idx}}" bindchange="stuChange">
+            <button class="button3" disabled="{{isOutDate||id_flag=='teacher'&&user.type!=2}}">学生报名</button>
         </picker>
         <button wx:else class="button2 button3" id="student" disabled="{{isOutDate||id_flag=='teacher'}}" bindtap="studentSignUp">学生报名</button>
 
@@ -117,17 +115,22 @@
 <view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'></view>
 <view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
     <!-- 报名信息的填写 -->
+    <!-- 教师点击教师报名按钮 -->
     <view class="info">
         <view class='change-name'>
-            <text class=''>报名信息</text>
+            <text class=''>学校相关信息</text>
+        </view>
+        <view class='input-info' wx:if="{{stuShowModal}}">
+            <view class='input-view'>学校</view>
+            <input type='text' class="input-name" bindinput='InputSchool' placeholder='请填写所在学校'></input>
         </view>
         <view class='input-info'>
             <view class='input-view'>年级</view>
-            <input type='text' class="input-name" bindinput='InputGrade' placeholder='请填写所教年级'></input>
+            <input type='number' class="input-name" bindinput='InputGrade' placeholder='请填写所教年级'></input>
         </view>
         <view class='input-info'>
             <view class='input-view'>班级</view>
-            <input type='text' class="input-name" bindinput='InputClass' placeholder='请填写所教班级'></input>
+            <input type='number' class="input-name" bindinput='InputClass' placeholder='请填写所教班级'></input>
         </view>
     </view>
     <view class='modal-btn-wrapper'>
@@ -135,6 +138,7 @@
         <view class='confirm-btn' style='color:#1677ff;' bindtap='ok'>确定</view>
     </view>
 </view>
+
 <!-- 取消条款说明 -->
 <action-sheet class="term" hidden="{{actionSheetHidden}}" bindchange="actionSheetbindchange">
     <view class="cancel-term">取消条款说明</view>

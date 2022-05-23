@@ -1,12 +1,8 @@
 // pages/person_info/teacher_info.js
 import { GetUserInfo2 } from '../../utils/apis.js';
-import {
-    SaveInfo,
-    checkPhone,
-    Unbound
-} from '../../utils/text.js';
+import { SaveInfo, checkPhone, Unbound, areaColumnChange, initArea } from '../../utils/function.js';
 const areaList = require('../../utils/arealist.js');
-const check_idnum = require('../../utils/text.js'); //路径根据自己的文件目录来
+const check_idnum = require('../../utils/function.js'); //路径根据自己的文件目录来
 let user = wx.getStorageSync('user');
 const app = getApp();
 Page({
@@ -236,20 +232,10 @@ Page({
         var trigger = that.data.trigger;
         console.log("trigger", trigger);
         // 修改信息事件 
-
-        if (trigger == 'name') {
-            var flag = check_idnum.checkName(this.data.tmp);
-            if (flag) {
-                that.checkInfo(trigger);
-            }
-        } else if (trigger == 'idnum') {
-            if (that.checkID(this.data.tmp)) {
-                that.checkInfo(trigger);
-            }
-        } else if (trigger == 'phone') {
-            if (checkPhone(this.data.tmp)) {
-                that.checkInfo(trigger);
-            }
+        let tmp = that.data.tmp;
+        let flag = trigger == 'name' && check_idnum.checkName(tmp) || trigger == 'idnum' && that.checkID(tmp) || trigger == 'phone' && checkPhone(tmp);
+        if (flag) {
+            that.checkInfo(trigger);
         }
         that.setData({
             user: user
@@ -266,112 +252,27 @@ Page({
     bindMultiPickerColumnChange: function(e) {
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
         var data = {
-            multiArray: this.data.multiArray,
-            multiIndex: this.data.multiIndex
-        };
-        data.multiIndex[e.detail.column] = e.detail.value;
-        const provinceName = data.multiArray[0][data.multiIndex[0]];
-        let provinceId = "";
-        let province = this.data.province;
-        let quyuList = [],
-            cityList = [],
-            provinceList = [],
-            city = [],
-            area = [];
-        try {
-            province.forEach(item => {
-                if (item.name === provinceName) {
-                    provinceId = item.id;
-                    throw (new Error('find item'))
-                }
-            })
-        } catch (err) {}
-        city = areaList.filter(item => {
-            return item.pid == provinceId;
-        })
-        if (e.detail.column == 0) {
-            data.multiIndex = [e.detail.value, 0, 0];
-            try {
-                area = areaList.filter(item => {
-                    return item.pid == city[data.multiIndex[1]].id;
-                })
-            } catch (err) {}
-        } else if (e.detail.column == 1) {
-            data.multiIndex[2] = 0;
-            area = areaList.filter(item => {
-                return item.pid == city[e.detail.value].id;
-            })
-        } else {
-            const cityName = data.multiArray[1][data.multiIndex[1]];
-            let cityId = '';
-            try {
-                areaList.forEach(item => {
-                    if (item.name === cityName) {
-                        cityId = item.id;
-                        throw (new Error('find item'));
-                    }
-                })
-            } catch (err) {}
-            area = areaList.filter(item => {
-                return item.pid == cityId;
-            })
+            "multiArray": this.data.multiArray,
+            "multiIndex": this.data.multiIndex,
+            "province": this.data.province,
+            "e": e,
         }
-        provinceList = province.map(item => {
-            return item.name
-        })
-        cityList = city.map(item => {
-            return item.name;
-        })
-        quyuList = area.map(item => {
-            return item.name;
-        })
-        data.multiArray = [provinceList, cityList, quyuList],
-            this.setData(data);
-        var tmp = [];
-        for (var i = 0; i < 3; i++) {
-
-            tmp[i] = data.multiArray[i][data.multiIndex[i]];
-        }
-        if (tmp[1] == '北京市') {
-            tmp[1] = '北京';
-
-        } else if (tmp[1] == '天津市') {
-            tmp[1] = '天津';
-        } else if (tmp[1] == '上海市') {
-            tmp[1] = '上海';
-        }
-        console.log("选中的是：", tmp)
+        let res = areaColumnChange(data);
         this.setData({
-            reg: tmp,
-            tmp: tmp,
-        })
+            reg: res.tmp,
+            tmp: res.tmp,
+            multiArray: res.data.multiArray,
+            multiIndex: res.data.multiIndex
+        });
         this.checkInfo("region");
+
     },
     getArea: function() {
-        var province = [],
-            city = [],
-            area = [];
-        province = areaList.filter(item => {
-            return item.pid == 0;
-        })
-        city = areaList.filter(item => {
-            return item.pid == province[0].id;
-        })
-        area = areaList.filter(item => {
-            return item.pid == city[0].id;
-        })
-        var provinceList = province.map(item => {
-            return item.name
-        })
-        var cityList = city.map(item => {
-            return item.name;
-        })
-        var quyuList = area.map(item => {
-            return item.name;
-        })
+
+        let data = initArea();
         this.setData({
-            multiArray: [provinceList, cityList, quyuList],
-            province
+            multiArray: [data.provinceList, data.cityList, data.quyuList],
+            province: data.province
         });
     },
     // 点击上传按钮上传简历
@@ -549,9 +450,7 @@ Page({
                     downloadproce: '资料下载'
                 })
             }
-
             console.log('下载进度', res.progress)
-            console.log('已经下载的数据长度', res.totalBytesWritten)
             console.log('预期需要下载的数据总长度', res.totalBytesExpectedToWrite)
         })
     },

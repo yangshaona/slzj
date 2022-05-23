@@ -6,7 +6,7 @@ export function getInterfaceRoute(name) {
 const ENV = {
     test: '',
     // 服务器地址前缀
-    develop: 'https://sanli-tracks.com/sanlia/index.php?r=',
+    develop: 'https://sanli-tracks.com/sanli/index.php?r=',
 }
 
 // 选择环境
@@ -69,8 +69,15 @@ const interfaceRoute = {
     GetTeaReviewAct: DOMAIN + 'WxOther/GetTeaReviewAct',
     GetTeacherDetail: DOMAIN + 'WxSign/GetTeacherDetail',
     TeaUpGps: DOMAIN + 'WxOther/TeaUpGps',
-    // GetOrderDetail: DOMAIN + 'WxSign/GetDetail',
-    // GetTeaReviewAct: DOMAIN + 'WxOther/GetTeaReviewAct',
-    // GetTeacherDetail: DOMAIN + 'WxSign/GetTeacherDetail',
+    CancelRegistration: DOMAIN + "WxSign/CancelRegistration",
+    getStuList: DOMAIN + 'WxSign/getStuList',
+    getStuInfo: DOMAIN + 'WxSign/getStuInfo',
+    getStuApplyList: DOMAIN + 'WxSign/getStuApplyList',
+    getAllStus: DOMAIN + 'WxSign/getAllStus',
+    getAllCourses: DOMAIN + 'WxCourse/GetMoreNews',
+    changeOrderInfo: DOMAIN + 'WxSign/changeOrderInfo',
+    // getStuInfo: DOMAIN + 'WxSign/getStuInfo',
+    // getStuInfo: DOMAIN + 'WxSign/getStuInfo',
+    // getStuInfo: DOMAIN + 'WxSign/getStuInfo',
 
 }

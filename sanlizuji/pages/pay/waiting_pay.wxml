@@ -6,8 +6,21 @@
     <view class="title">{{order.title}}</view>
     <!-- 起始日期 -->
     <desc inner-text="{{order.signIn_date_start}}~{{order.signIn_date_end}}" icon="/icon/time2.png"></desc>
-    <!-- 价格 -->
-    <view class="price">￥{{order.price}}</view>
+    <!-- 购买数量 -->
+    <view class="buy-wrapper">
+        <view class="buy-num" wx:if="{{order.type=='亲子活动'}}">
+            <view class="buy-view">购买数量：</view>
+            <view class="stock_jiajian">
+                <view class="stockBox" bindtap="reduce">-</view>
+                <view class="stockBox nums">
+                    <input class="stockinnum" bindconfirm="search" value="{{num}}" bindinput="setValue"></input>
+                </view>
+                <view class="stockBox" bindtap="add">+</view>
+            </view>
+        </view>
+        <!-- 价格 -->
+        <view class="price">￥{{order.price}}</view>
+    </view>
 </view>
 
 <!-- 学员信息 -->
@@ -19,11 +32,11 @@
     </view>
     <view class="stu_box">
         <view class="stu_desc">学校</view>
-        <view class="stu">{{userinfo.schoolname}}</view>
+        <view class="stu">{{stuinfo.schoolname}}</view>
     </view>
     <view class="stu_box">
         <view class="stu_desc">年级班级</view>
-        <view class="stu">{{userinfo.grade}}年级{{userinfo.class}}班</view>
+        <view class="stu">{{stuinfo.grade}}年级{{stuinfo.class}}班</view>
     </view>
 </view>
 <!-- 优惠券 -->
@@ -42,7 +55,7 @@
 <!-- 底部确认栏 -->
 <view class="bottom" style="bottom: 0px;">
     <view class="bottom_desc">
-        应付：<text style="color: #6177ff;">￥{{filters.toFix(order.price-price)}}</text>
+        应付：<text style="color: #6177ff;">￥{{payPrice}}</text>
     </view>
     <button class="submit" data-id="{{order.id}}" bindtap="checkSubmit">待付款</button>
 </view>

@@ -544,3 +544,65 @@ button::after {
     margin-left: .1em;
     margin-right: .3em;
 }
+
+
+/* 选择学生进行报名 */
+
+checkbox-group {
+    margin: 12rpx;
+}
+
+.checkbox {
+    margin: 12rpx;
+    border-radius: 50%;
+}
+
+
+/*checkbox 选项框大小  */
+
+checkbox .wx-checkbox-input {
+    width: 35rpx;
+    height: 35rpx;
+    border-radius: 50%;
+}
+
+.line {
+    margin: 25rpx 0 5rpx;
+}
+
+.select-submit {
+    height: 100rpx;
+    position: relative;
+    background-color: #bfa;
+}
+
+
+/* 解决高度塌陷 */
+
+.clearfix::after,
+.clearfix::before {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+
+/* 全选按钮 */
+
+.selectAll {
+    line-height: 100rpx;
+    float: left;
+    margin-left: 24rpx;
+    font-size: 0.9rem;
+    color: rgb(117, 117, 117);
+}
+
+.button {
+    float: right;
+    margin: 10rpx 15rpx 10rpx 0;
+    font-size: 0.9rem;
+    color: white;
+    background-image: linear-gradient(to right, #7a8cfd, #2c46f0);
+    border-radius: 50rpx;
+    padding: 0 50rpx;
+}

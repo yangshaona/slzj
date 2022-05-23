@@ -1,13 +1,9 @@
 // pages/person/demo.js
-import {
-    Unbound
-} from '../../utils/text.js';
+import { Unbound } from '../../utils/function.js';
 import WeCropper from '../dev/we-cropper.js';
 import GlobalConfig from '../dev/config.js';
 import { GetUserInfo2 } from "../../utils/apis.js";
-// import { formatTime } from '../../utils/text.js';
-const formatTime = require('../../utils/text.js');
-// const app = getApp();
+const formatTime = require('../../utils/function.js');
 const config = new GlobalConfig();
 
 config.init();
@@ -44,9 +40,7 @@ Page({
             { 'id': 2, 'icon': '/icon/time2.png', 'desc': '正在活动', 'url': '../doing/doing_stuprt' },
             { 'id': 3, 'icon': '/icon/todos.png', 'desc': '任务中心', 'url': '../task/task' },
             { 'id': 4, 'icon': '/icon/ceng2.png', 'desc': '我的报名', 'url': '../myApply/myApply' },
-            // { 'id': 5, 'icon': '/icon/deal2.png', 'desc': '我的订单', 'url': '../myApply/myApply' },
             { 'id': 5, 'icon': '/icon/idnetify2.png', 'desc': '身份认证', 'url': '../register/register_stu' },
-            // { 'id': 6, 'icon': '/icon/set2.png', 'desc': '个人信息', 'url': '../person_info/stu_info' }
         ],
         // 教师小组件栏
         teacher_widgets: [
@@ -54,7 +48,7 @@ Page({
             { 'id': 1, 'icon': '/icon/ScheduleOutlined.png', 'desc': '活动行程', 'url': '../journey/journey' },
             { 'id': 2, 'icon': '/icon/time2.png', 'desc': '正在活动', 'url': '../doing/doing_tc' },
             { 'id': 3, 'icon': '/icon/ceng2.png', 'desc': '我的报名', 'url': '../teaApply/teaApply' },
-            { 'id': 4, 'icon': '/icon/set2.png', 'desc': '个人信息', 'url': '../person_info/teacher_info' }
+            { 'id': 4, 'icon': '/icon/set2.png', 'desc': '个人信息', 'url': '../person_info/teacher_info' },
         ],
         // 父母小组件栏
         parent_widgets: [
@@ -387,11 +381,13 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
+        console.log("进入我的页面")
         this.judgeIdentity();
         var height = this.data.width * 0.65 * 0.3;
         this.setData({
             imgHeight: height,
         });
+
     },
 
     /**
@@ -406,6 +402,15 @@ Page({
      */
     onShow: function() {
         this.judgeIdentity();
+        if (id_flag == 'teacher' && user.type == 2) {
+            let teacher_widgets = this.data.teacher_widgets;
+            if (teacher_widgets.length <= 5) {
+                teacher_widgets.push({ 'id': 5, 'icon': '/icon/ceng2.png', 'desc': '学生的报名', 'url': '../myApply/myApply' });
+                this.setData({
+                    teacher_widgets: teacher_widgets
+                })
+            }
+        }
     },
     // 判断类型
     judgeIdentity: function() {
@@ -421,7 +426,8 @@ Page({
             this.setData({
                 identity: '教师',
                 modelName: 'Teacher',
-            })
+            });
+
         } else {
             this.setData({
                 identity: '学生',

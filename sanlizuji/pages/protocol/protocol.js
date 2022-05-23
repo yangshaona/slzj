@@ -1,7 +1,5 @@
 // pages/protocol/protocol.js
-import {
-    formatRichText
-} from '../../utils/text.js'
+import { formatRichText } from '../../utils/function.js'
 Page({
 
     /**

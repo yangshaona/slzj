@@ -25,10 +25,8 @@ Page({
             url: '../register/register_stu',
         })
     },
-    /**
-     * 生命周期函数--监听页面加载
-     */
-    onLoad: function(options) {
+    // 进入页面进行初始化
+    Init: function() {
         let that = this;
         user = wx.getStorageSync('user')
         id_flag = wx.getStorageSync('id_flag');
@@ -73,6 +71,13 @@ Page({
         }
 
     },
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+        let that = this;
+        that.Init();
+    },
 
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -85,12 +90,8 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-        user = wx.getStorageSync('user')
-        id_flag = wx.getStorageSync('id_flag');
-        this.setData({
-            id_flag: id_flag,
-            user: user
-        })
+        let that = this;
+        that.Init();
     },
 
     /**

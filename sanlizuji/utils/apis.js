@@ -396,10 +396,52 @@ export async function TeaUpGps(param) {
         data: param
     })
 }
-// export async function GetOrderDetail(param) {
-//     return $axios({
-//         method: "GET",
-//         url: "GetOrderDetail",
-//         data: param
-//     })
-// }
+export async function CancelRegistration(param) {
+    return $axios({
+        method: "GET",
+        url: "CancelRegistration",
+        data: param
+    })
+}
+export async function getStuList(param) {
+    return $axios({
+        method: "GET",
+        url: "getStuList",
+        data: param
+    })
+}
+export async function getStuInfo(param) {
+    return $axios({
+        method: "GET",
+        url: "getStuInfo",
+        data: param
+    })
+}
+export async function getStuApplyList(param) {
+    return $axios({
+        method: "GET",
+        url: "getStuApplyList",
+        data: param
+    })
+}
+export async function getAllStus(param) {
+    return $axios({
+        method: "GET",
+        url: "getAllStus",
+        data: param
+    })
+}
+export async function getAllCourses(param) {
+    return $axios({
+        method: "GET",
+        url: "getAllCourses",
+        data: param
+    })
+}
+export async function changeOrderInfo(param) {
+    return $axios({
+        method: "GET",
+        url: "changeOrderInfo",
+        data: param
+    })
+}

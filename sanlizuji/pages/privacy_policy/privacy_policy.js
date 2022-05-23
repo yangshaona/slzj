@@ -1,6 +1,6 @@
 import {
     formatRichText
-} from '../../utils/text.js'
+} from '../../utils/function.js'
 Page({
 
     /**

@@ -30,7 +30,6 @@
         "pages/pay/confirm",
         "pages/doing/doing_parent",
         "pages/pay/waiting_pay",
-        "pages/bind_kids/bind_kids",
         "pages/template/agree_protocol/agree_protocol",
         "pages/protocol/protocol",
         "pages/privacy_policy/privacy_policy",

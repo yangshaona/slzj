@@ -1,5 +1,7 @@
 // pages/detail/teacher.js
 import { GetTeaReviewAct, GetTeacherDetail } from '../../utils/apis.js';
+import { mergeArr } from '../../utils/function.js';
+
 const app = getApp();
 let user = wx.getStorageSync('user');
 Page({
@@ -49,17 +51,6 @@ Page({
                 schoolImg: mergeArr(value.data.data1, value.data.data2)
             });
             console.log(that.data.schoolImg);
-
-            function mergeArr(arr1, arr2) { //arr目标数组 arr1要合并的数组 return合并后的数组
-                if (arr1.length == 0) {
-                    return [];
-                }
-                let arr3 = [];
-                arr1.map((item, index) => {
-                    arr3.push(Object.assign(item, arr2[index]));
-                })
-                return arr3;
-            }
         }, reason => {
             console.log("无法获取导师活动的数据", reason);
         });

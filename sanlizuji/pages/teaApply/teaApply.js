@@ -2,7 +2,8 @@
 const app = getApp();
 let user = wx.getStorageSync('user')
 let id_flag = wx.getStorageSync('id_flag');
-import { DeleteOneOrderByPk, GetTeacher, GetMyApply } from '../../utils/apis.js';
+import { mergeArr } from '../../utils/function.js'
+import { DeleteOneOrderByPk, GetTeacher, GetMyApply, orderisshow, CancelRegistration } from '../../utils/apis.js';
 Page({
 
     /**
@@ -66,8 +67,7 @@ Page({
     commentTap: function(e) {
         // 点击的id
         var id = e.currentTarget.dataset.id;
-        console.log("点击评价")
-        console.log(id)
+        console.log("点击评价", id);
         wx.navigateTo({
             url: '../myApply/comment?id=' + id,
         })
@@ -114,34 +114,31 @@ Page({
 
     // 删除一条订单记录
     DeleteOneOrder: function(e) {
-
-        console.log("删除订单")
-        console.log(e)
-        var orderid = e.currentTarget.dataset.id;
-        var modelName = "teaSignList";
+        console.log("删除订单", e);
+        var orderid = e.currentTarget.dataset.orderid;
         let that = this;
         wx.showModal({
-            content: "是否取消报名",
+            content: "是否删除",
             success(res) {
                 if (res.confirm) {
-                    DeleteOneOrderByPk({
-                        modelName: modelName,
+                    orderisshow({
+                        modelName: "teaSignList",
                         id: orderid,
                     }).then(value => {
                         console.log("删除结果", value);
-                        if (value.data.data == '不存在该ID，删除失败') {
+                        if (value.data.data == '删除成功') {
                             wx.showToast({
-                                title: "取消失败",
-                                icon: 'cancel',
-                                duration: 800,
-                            })
-                        } else {
-                            wx.showToast({
-                                title: "取消成功",
+                                title: "删除成功",
                                 icon: 'success',
                                 duration: 800,
-                            });
+                            })
                             that.setFilter();
+                        } else {
+                            wx.showToast({
+                                title: "删除失败",
+                                icon: 'error',
+                                duration: 800,
+                            });
                         }
                     }, reason => {
                         console.log("删除数据失败", reason);
@@ -149,10 +146,35 @@ Page({
                 }
             }
         })
-
-
     },
-
+    // 取消报名
+    cancelRegistration: function(e) {
+        console.log("取消订单", e)
+        let orderid = e.currentTarget.dataset.id;
+        console.log(orderid);
+        // "WxSign/CancelRegistration"
+        CancelRegistration({
+            orderid: orderid,
+        }).then(value => {
+            console.log("取消报名结果", value);
+            if (value.data == "修改成功") {
+                this.setFilter();
+            } else {
+                wx.showToast({
+                    title: "取消失败",
+                    icon: "error",
+                    duration: 800
+                })
+            }
+        }, reason => {
+            console.log("取消报名失败", reason);
+            wx.showToast({
+                title: "取消失败",
+                icon: "error",
+                duration: 800
+            })
+        })
+    },
     // 筛选显示内容，这部分由服务端实现，这里只是测试一下样式
     setFilter: function() {
         var select = this.data.select;
@@ -173,7 +195,7 @@ Page({
         }).then(value => {
             console.log("教师端我的报名", value)
             var total = [];
-            total = mergerArr(value.data.data1, value.data.data2)
+            total = mergeArr(value.data.data1, value.data.data2)
             var now = new Date;
             var date = (now.getFullYear()).toString() + '-' + (now.getMonth() + 1).toString() + '-' + (now.getDate()).toString();
             that.setData({
@@ -201,19 +223,7 @@ Page({
             that.setData({
                 filter: filter
             })
-            console.log("所有报名数据")
-            console.log(that.data.filter)
-
-            function mergerArr(arr1, arr2) {
-                if (arr1 == [] || arr1.length == 0) {
-                    return [];
-                }
-                let arr3 = [];
-                arr1.map((item, index) => {
-                    arr3.push(Object.assign(item, arr2[index]));
-                })
-                return arr3;
-            }
+            console.log("所有报名数据", that.data.filter);
 
         }, reason => {
             console.log("获取教师的报名数据失败", reason);
@@ -230,24 +240,26 @@ Page({
     setTitle: function(tname) {
         wx.setNavigationBarTitle({ title: tname })
     },
+    // 初始化页面
+    Init: function() {
+        let that = this;
+        user = wx.getStorageSync('user');
+        id_flag = wx.getStorageSync('id_flag');
+        this.setData({
+            user: user,
+            id_flag: id_flag
+        })
+        if (user != null && user != '') {
+            that.setFilter();
+        }
+    },
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function(options) {
         let that = this;
-        console.log("返回的数据是")
-        console.log(options)
-        user = wx.getStorageSync('user');
-        this.setData({
-            user: user,
-            id_flag: id_flag
-        })
-
-
-        if (user != null && user != '') {
-            that.setFilter();
-
-        }
+        console.log("返回的数据是", options)
+        that.Init();
     },
 
     /**
@@ -261,13 +273,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-
-        user = wx.getStorageSync('user')
-        id_flag = wx.getStorageSync('id_flag')
-        this.setData({
-            user: user,
-            id_flag: id_flag
-        })
+        this.Init();
     },
 
     /**

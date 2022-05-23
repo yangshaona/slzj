@@ -45,6 +45,28 @@
             </view>
         </view>
         <view class="line"></view>
+
+
+
+        <view class="" wx:if="{{user.type==2}}">
+            <view class="info-bar">
+                <desc class="info-bar-desc" inner-text="学校：{{user.school}}" icon="/icon/school.png"></desc>
+                <view class="info-bar-view" bindtap="Bind" data-trigger="school">></view>
+            </view>
+            <view class="line"></view>
+            <view class="info-bar">
+                <desc class="info-bar-desc" inner-text="年级：{{user.grade}}" icon="/icon/grade.png"></desc>
+                <view class="info-bar-view" bindtap="Bind" data-trigger="grade">></view>
+            </view>
+            <view class="line"></view>
+            <view class="info-bar">
+                <desc class="info-bar-desc" inner-text="班级：{{user.class}}" icon="/icon/class.png"></desc>
+                <view class="info-bar-view" bindtap="Bind" data-trigger="class">></view>
+            </view>
+            <view class="line"></view>
+        </view>
+
+
         <view class="info-bar">
             <desc class="info-bar-desc" inner-text="住址：{{user.province}} {{user.city}} {{user.district}}" icon="/icon/address.png"></desc>
             <view class="info-bar-view">
@@ -95,6 +117,37 @@
                 <input type='number' class="input" bindblur='teaPhone' placeholder='请输入手机号' value="{{user.phone}}" auto-focus="true"></input>
             </view>
         </view>
+        <!-- 修改学校名称 -->
+        <view wx:if="{{trigger=='school'}}" class="info">
+            <view class='change-name'>
+                <text class=''>修改学校名称</text>
+            </view>
+            <view class='input-name'>
+                <input type='number' class="input" bindblur='teaSchool' placeholder='请输入学校全称' value="{{user.school}}" auto-focus="true"></input>
+            </view>
+        </view>
+
+        <!-- 修改年级 -->
+        <view wx:if="{{trigger=='grade'}}" class="info">
+            <view class='change-name'>
+                <text class=''>修改所教年级</text>
+            </view>
+            <view class='input-name'>
+                <input type='number' class="input" bindblur='teaGrade' placeholder='请输入所教年级' value="{{user.grade}}" auto-focus="true"></input>
+            </view>
+        </view>
+
+        <!-- 修改班级 -->
+        <view wx:if="{{trigger=='class'}}" class="info">
+            <view class='change-name'>
+                <text class=''>修改所教班级</text>
+            </view>
+            <view class='input-name'>
+                <input type='number' class="input" bindblur='teaClass' placeholder='请输入所教班级' value="{{user.class}}" auto-focus="true"></input>
+            </view>
+        </view>
+
+
         <view class='modal-btn-wrapper'>
             <view class='cancel-btn' style='color:rgba(7,17,27,0.6)' bindtap='back'>取消</view>
             <view class='confirm-btn' style='color:#1677ff' bindtap='ok'>确定</view>
