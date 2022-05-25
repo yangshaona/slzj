@@ -1,7 +1,37 @@
-<view class="stock_jiajian">
-    <view class="stockBox" bindtap="reduce">-</view>
-    <view class="stockBox nums">
-        <input class="stockinnum" bindconfirm="search" value="{{num}}" bindinput="setValue"></input>
+<view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'></view>
+<view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
+    <!-- 随行人信息的填写 -->
+    <view class="info">
+        <view class='change-name'>
+            <text class=''>随行人相关信息</text>
+            <view class="line"></view>
+        </view>
+        <scroll-view scroll-y style="height:350px">
+            <view class="box" wx:for="{{userList}}" wx:key="*this">
+                <view class="user-view">随行人{{index+1}}：</view>
+                <view class='input-info'>
+                    <view class='input-view'>姓名</view>
+                    <input type='text' class="input-name" data-id="{{index}}" bindblur='addUser' value="{{userList[index].user}}" placeholder='请填写姓名'></input>
+                </view>
+                <view class='input-info'>
+                    <view class='input-view'>身份证</view>
+                    <input type='number' class="input-name" data-id="{{index}}" bindblur='addIdCard' value="{{userList[index].idcard}}" placeholder='请填写身份证'></input>
+                </view>
+                <view class='input-info'>
+                    <view class='input-view'>手机号</view>
+                    <input type='number' class="input-name" maxlength='11' data-id="{{index}}" bindblur='addTel' value="{{userList[index].phone}}" placeholder='请填写手机号'></input>
+                </view>
+                <view style="padding:20rpx 0" class="line"></view>
+            </view>
+        </scroll-view>
+        <view class="add">
+            <button bindtap="delList" class="del-btn">删除随行人</button>
+            <button bindtap="addList" class="add-btn">添加随行人</button>
+        </view>
+
     </view>
-    <view class="stockBox" bindtap="add">+</view>
+    <view class='modal-btn-wrapper'>
+        <view class='cancel-btn' style='color:rgba(7,17,27,0.6)' bindtap='back'>取消</view>
+        <view class='confirm-btn' style='color:#1677ff;' bindtap='ok'>确定</view>
+    </view>
 </view>

@@ -56,21 +56,43 @@
     white-space: nowrap;
 }
 
-.actTeacher {
+.actTeacher-wrapper {
     display: flex;
     box-sizing: border-box;
     width: 100%;
+    height: 60rpx;
     margin: 0 0 2.5% 0;
+    line-height: 60rpx;
+}
+
+.actTeacher {
+    display: flex;
+    box-sizing: border-box;
+    width: 50%;
+    height: 60rpx;
+    margin: 0 0 2.5% 0;
+    line-height: 60rpx;
+    /* justify-content: space-around; */
 }
 
 .actTeacher image {
-    width: 5%;
+    width: 10%;
     margin: auto 2.5% auto 0;
 }
 
 .actTeacher view {
     color: #6177ff;
     font-size: 0.85rem;
+    line-height: 60rpx;
+}
+
+.actTeacher-wrapper button {
+    font-size: 0.9rem;
+    margin-right: 0;
+    overflow: none;
+    color: #fff;
+    background-image: linear-gradient(to right, #6177ff, #8898ff);
+    line-height: 60rpx;
 }
 
 .actDate {

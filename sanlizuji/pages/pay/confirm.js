@@ -1,4 +1,6 @@
 import { CouponCheck, GetActDetail, changeOrderInfo } from '../../utils/apis.js';
+import { checkPhone } from '../../utils/function.js'
+const check_idnum = require('../../utils/function.js');
 // pages/pay/confirm.js
 const app = getApp();
 let user = wx.getStorageSync('user');
@@ -34,6 +36,13 @@ Page({
         stus_name: [],
         // 订单数量记录
         num: 1,
+        // 增添随行人
+        userList: [{
+            name: "",
+            idnum: "",
+            phone: "",
+        }],
+        showModal: false,
     },
 
     //跳转进入购买须知
@@ -49,20 +58,31 @@ Page({
     checkSubmit: function(e) {
         var that = this;
         console.log("点击提交订单按钮跳转到支付页面");
-        // 修改改变数量的订单数据
-        if (that.data.num != 1) {
-            changeOrderInfo({
-                orderid: that.options.orderid,
-                order_num: that.data.num,
-            }).then(value => {
-                console.log("修改订单购买数量结果", value);
+        // 如果该活动类型可以添加随行人则弹窗提示是否添加随行人
+        if (that.data.order.isOther != 0) {
+            wx.showModal({
+                title: "添加随行人",
+                content: '是否增添监护人一同随行',
+                success(res) {
+                    if (res.confirm) {
+                        // 填写随行人信息
+                        that.setData({
+                            showModal: true,
+                        })
+                    } else {
+                        wx.redirectTo({
+                            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+                        });
+                    }
+                }
             })
+        } else {
+            wx.redirectTo({
+                url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+            });
         }
-        wx.redirectTo({
-            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
-        });
-
     },
+
 
     // 获取设备信息
     getSysInfo: function(e) {
@@ -79,7 +99,6 @@ Page({
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
         let userinfo = JSON.parse(that.options.userinfo);
-        // if (id_flag == 'parent' || id_flag == 'teacher') { this.loadStu(); }
         that.setData({
             userinfo: user,
             id_flag: id_flag,
@@ -195,5 +214,140 @@ Page({
             })
         }
         console.log(num)
+    },
+
+    // 增添随行人
+    addUser(e) {
+        console.log(e.detail.value, 111)
+        let index = e.target.dataset.id;
+        let userList = this.data.userList;
+        userList[index].name = e.detail.value.trim();
+        this.setData({
+            userList
+        })
+    },
+    addIdCard(e) {
+        console.log(e.detail.value, 222)
+        let index = e.target.dataset.id;
+        let userList = this.data.userList;
+        var data = check_idnum.checkIdCard(e.detail.value);
+        if (!data.idCardFlag) {
+            wx.showToast({
+                title: '身份证号有误',
+                icon: 'none',
+                duration: 800
+            })
+            return;
+        }
+        userList[index].idnum = e.detail.value.trim();
+        this.setData({
+            userList
+        })
+    },
+    addTel(e) {
+        console.log(e.detail.value, 333)
+        let index = e.target.dataset.id;
+        let userList = this.data.userList;
+        if (!checkPhone(e.detail.value.trim())) {
+            wx.showToast({
+                title: '请填写正确的手机号',
+                icon: 'none',
+                duration: 2000
+            })
+            return;
+        }
+        userList[index].phone = e.detail.value.trim();
+        this.setData({
+            userList
+        })
+    },
+    // 添加随行人
+    addList() {
+        let userList = this.data.userList;
+        console.log("添加人信息为", userList);
+        if (userList[userList.length - 1].name.trim() !== '' && userList[userList.length - 1].idnum.trim() !== '' && userList[userList.length - 1].phone.trim() !== '') {
+            setTimeout(() => {
+                let userList = this.data.userList;
+                userList.push({
+                    name: "",
+                    idnum: '',
+                    phone: ""
+                })
+                this.setData({
+                    userList
+                }, 300)
+            })
+        } else {
+            wx.showToast({
+                title: '请填写完整再追加',
+                icon: 'none',
+                duration: 2000
+            })
+            return;
+        }
+
+    },
+    delList() {
+        let userList = this.data.userList;
+        if (userList.length > 1) {
+            userList.pop();
+            this.setData({
+                userList: userList
+            })
+        } else {
+            wx.showToast({
+                title: '操作失败，无法继续删除',
+                icon: 'none',
+                duration: 2000,
+            })
+        }
+
+    },
+    // 点击提交按钮
+    ok: function() {
+        let userList = this.data.userList;
+        let that = this;
+        if (userList[userList.length - 1].name.trim() == '' || userList[userList.length - 1].idnum.trim() == '' || userList[userList.length - 1].phone.trim() == '') {
+            wx.showToast({
+                title: '请填写完整再提交',
+                icon: 'none',
+                duration: 2000,
+            })
+        } else {
+            // 修改改变数量的订单参与人数数据
+            that.setData({
+                num: userList.length + 1,
+                payPrice: this.data.onePrice * (userList.length + 1) - that.data.price,
+            })
+            changeOrderInfo({
+                orderid: that.options.orderid,
+                order_num: that.data.num,
+                OtherInfo: JSON.stringify(userList),
+                needPayMoney: this.data.payPrice,
+            }).then(value => {
+                console.log("修改订单结果", value);
+            });
+            console.log(JSON.stringify(userList));
+            // 跳转到订单确认界面
+            wx.redirectTo({
+                url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+            });
+            this.setData({
+                showModal: false,
+            })
+        }
+
+
+    },
+    back: function() {
+        // 跳转到订单确认界面 
+        let that = this;
+        this.setData({
+            showModal: false,
+        })
+        wx.redirectTo({
+            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+        });
+
     }
 })

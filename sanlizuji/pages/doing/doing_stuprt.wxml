@@ -4,15 +4,6 @@
 
 <template is="scope" wx:if="{{!user}}" />
 <view wx:else>
-    <!-- <block wx:if="{{doing=='无正在进行的课程'}}">
-        <view class="empty">
-            <image src="/icon/暂无搜索结果.png" mode="widthFix">
-            </image>
-            <view>
-                暂无正在进行的课程
-            </view>
-        </view>
-    </block> -->
     <template is="not_found" wx:if="{{doing=='无正在进行的课程'}}" />
 
     <view class="empty" wx:elif="{{doing=='该活动暂未分配老师'}}">
@@ -53,7 +44,7 @@
                         <view class="desc1">{{item.key}}</view>
                     </view>
                     <view class="desc2">
-                        <text>{{item.value}}</text>
+                        <text>{{item.value==''?'暂未安排':item.value}}</text>
                     </view>
                 </view>
             </block>

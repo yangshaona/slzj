@@ -105,6 +105,7 @@
         display: flex;
         width: 100%;
         margin: 2.5% 0;
+        justify-content: flex-end;
     }
     
     .btn-useless {
@@ -194,4 +195,21 @@
     .line {
         width: 100%;
         border-bottom: 1rpx solid rgb(212, 209, 209);
+    }
+    /* 随行人信息显示样式设置 */
+    
+    .every-item {
+        padding: 20rpx;
+        margin-bottom: 20rpx;
+        box-shadow: 0 0 20px #d3d3d3;
+        border-radius: 30rpx;
+    }
+    
+    .every-item .info-view {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+    
+    .everyone {
+        margin-left: 40rpx;
     }

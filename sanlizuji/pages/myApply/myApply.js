@@ -72,11 +72,18 @@ Page({
     // 点击查看详情
     goToOrderDetail: function(e) {
         // 点击的id
-        var id = e.currentTarget.dataset.courseid;
-        var price = e.currentTarget.dataset.price;
+        let id = e.currentTarget.dataset.courseid;
+        let needPayMoney = e.currentTarget.dataset.needpaymoney;
+        console.log(id, needPayMoney);
+        if (needPayMoney == '') {
+            needPayMoney = e.currentTarget.dataset.price;
+        }
         wx.navigateTo({
-            url: '../pay/pay?orderid=' + id + '&price=' + price,
-        })
+            url: '../pay/pay?orderid=' + id + '&price=' + needPayMoney + "&key=" + '' + "&userinfo=" + '',
+
+        });
+
+
     },
     // 删除一条订单记录
     DeleteOneOrder: function(e) {

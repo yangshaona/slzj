@@ -7,6 +7,8 @@ const ENV = {
     test: '',
     // 服务器地址前缀
     develop: 'https://sanli-tracks.com/sanli/index.php?r=',
+    // develop: 'https://sanli-tracks.com/sanlia/index.php?r=',
+    // develop: 'http://127.0.0.1/sanliGit/sanli/index.php?r=',
 }
 
 // 选择环境

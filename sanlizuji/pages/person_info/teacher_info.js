@@ -107,20 +107,6 @@ Page({
 
     },
 
-    // 修改姓名
-    teaName: function(e) {
-        this.setData({
-            tmp: e.detail.value
-        })
-        console.log("修改姓名", this.data.tmp);
-    },
-    // 身份证信息的修改
-    teaIdNum: function(e) {
-        this.setData({
-            tmp: e.detail.value,
-        })
-        console.log("身份证信息", this.data.tmp);
-    },
     // 检查身份证号是否输入正确
     checkID: function(idnum) {
         var data = check_idnum.checkIdCard(idnum);
@@ -148,13 +134,15 @@ Page({
             return true;
         }
     },
-    // 手机号信息的修改
-    teaPhone: function(e) {
+
+    // 教师更改个人信息
+    teaChangeInfo: function(e) {
         this.setData({
-            tmp: e.detail.value,
+            tmp: e.detail.value
         })
-        console.log("手机号信息", this.data.tmp);
+        console.log("修改的信息是：", this.data.tmp);
     },
+
     // 工作类型选择器改变
     typeChange: function(e) {
         console.log("类型改变为: " + e.detail.value);
@@ -173,10 +161,8 @@ Page({
         this.setData({
             showModal: true,
             trigger: e.currentTarget.dataset.trigger,
-
         });
-        console.log("点击哪里");
-        console.log(e)
+        console.log("点击哪里", e);
     },
     /**
      * 点击返回按钮隐藏
@@ -217,6 +203,9 @@ Page({
                 district: user.district,
                 type: user.type,
                 resume: user.exp,
+                school: user.school,
+                grade: user.grade,
+                class: user.class
             }
             SaveInfo(modelData, modelName);
             console.log(user);
@@ -233,7 +222,7 @@ Page({
         console.log("trigger", trigger);
         // 修改信息事件 
         let tmp = that.data.tmp;
-        let flag = trigger == 'name' && check_idnum.checkName(tmp) || trigger == 'idnum' && that.checkID(tmp) || trigger == 'phone' && checkPhone(tmp);
+        let flag = trigger == 'name' && check_idnum.checkName(tmp) || trigger == 'school' || trigger == 'grade' || trigger == 'class' || trigger == 'idnum' && that.checkID(tmp) || trigger == 'phone' && checkPhone(tmp);
         if (flag) {
             that.checkInfo(trigger);
         }
@@ -247,7 +236,8 @@ Page({
         this.setData({
             multiIndex: e.detail.value,
             reg_idx: 1
-        })
+        });
+        this.checkInfo("region");
     },
     bindMultiPickerColumnChange: function(e) {
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
@@ -264,7 +254,6 @@ Page({
             multiArray: res.data.multiArray,
             multiIndex: res.data.multiIndex
         });
-        this.checkInfo("region");
 
     },
     getArea: function() {

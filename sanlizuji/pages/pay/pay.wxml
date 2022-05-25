@@ -37,21 +37,32 @@
 
     </view>
 
-    <!-- <time title="支付剩余" time="{{time}}" class="deal-desc"></time> -->
+    <!-- 个人信息 -->
     <view class="apply-info-box">
         <view class="apply-ttl">{{order.coursename}}</view>
         <view class="apply-second-ttl">- 报名信息 -</view>
         <view class="apply-info">
-            <view class="apply-stu">报名学员: {{order.username}}</view>
-            <view class="date">活动时间: {{order.starttime}} ~ {{order.endtime}}</view>
-            <view class="remark">*备注: {{remark}}</view>
+            <view class="every-item">
+                <view class="apply-stu">报名学员：{{order.username}}</view>
+                <view class="date">活动时间：{{order.starttime}} ~ {{order.endtime}}</view>
+                <view class="remark">*备注：{{remark}}</view>
+            </view>
+            <!-- 随行人的信息 -->
+            <block wx:if="{{otherInfo!=''}}" class="apply-info-box" wx:for="{{otherInfo}}" wx:key="item">
+                <view class="every-item">
+                    <text class="info-view">随行人{{index+1}}：</text>
+                    <view class="everyone">
+                        <view data-id="{{index}}">姓名：{{item.name}}</view>
+                        <view data-id="{{index}}">手机号：{{item.phone}}</view>
+                    </view>
+                </view>
+            </block>
             <view class="price">￥{{filters.toFix(price-coupons)}}</view>
         </view>
-        <view class="btn-box">
-
-            <view class="btn-useless"></view>
+        <view class="btn-box" wx:if="{{userinfo!=''}}">
             <button class="invalid" data-orderid="{{order.id}}" wx:if="{{order.status==2}}" bindtap="Cancel">取消订单</button>
             <button class="pay" wx:if="{{order.status==2}}" bindtap="Submit">确认支付</button>
         </view>
     </view>
+
 </view>

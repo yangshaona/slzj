@@ -25,13 +25,16 @@
             <view class="actTop">
                 <block wx:for="{{activity}}">
                     <view wx:if="{{id_flag!='parent'}}">
-                        <view class="actBox" style="height:500rpx;" data-id="{{item.courseid}}" bindtap="toCoursesDetail">
+                        <view class="actBox" style="height:530rpx;" data-id="{{item.courseid}}" bindtap="toCoursesDetail">
                             <image src="{{item.imagesurl}}" mode="widthFix" class="actImg"></image>
                             <view class="actCtn">
                                 <text class="actTtl">{{item.coursename}}</text>
-                                <view class="actTeacher" data-courseid="{{item.courseid}}" data-teacherid="{{item.teacherid}}" catchtap="showTeacherDetail">
-                                    <image src="/icon/account.png" mode="widthFix"></image>
-                                    <view>导师：{{item.teacher==''?'未分配':item.teacher}}</view>
+                                <view class="actTeacher-wrapper" data-courseid="{{item.courseid}}">
+                                    <view class="actTeacher" data-courseid="{{item.courseid}}" data-teacherid="{{item.teacherid}}" catchtap="showTeacherDetail">
+                                        <image src="/icon/account.png" mode="widthFix"></image>
+                                        <view>导师：{{item.teacher==''?'未分配':item.teacher}}</view>
+                                    </view>
+                                    <button wx:if="{{item.isOther==1}}" class="parent-btn" data-orderid="{{item.id}}" catchtap="checkEscorts">查看随行人</button>
                                 </view>
                                 <view class="actDate">
                                     <view class="actDesc">开始日期: <text style="color: #6177ff;">{{item.startTime}}</text></view>
@@ -43,13 +46,16 @@
                     </view>
                     <view wx:else>
                         <view wx:for="{{item}}">
-                            <view class="actBox" style="height:500rpx;" data-id="{{item.courseid}}" bindtap="toCoursesDetail">
+                            <view class="actBox" style="height:530rpx;" data-id="{{item.courseid}}" bindtap="toCoursesDetail">
                                 <image src="{{item.imagesurl}}" mode="widthFix" class="actImg"></image>
                                 <view class="actCtn">
                                     <text class="actTtl">{{item.coursename}}</text>
-                                    <view class="actTeacher" data-id="{{item.courseid}}" data-teacherid="{{item.teacherid}}" catchtap="showTeacherDetail">
-                                        <image src="/icon/account.png" mode="widthFix"></image>
-                                        <view>导师：{{item.teacher==''?'未分配':item.teacher}}</view>
+                                    <view class="actTeacher-wrapper" data-courseid="{{item.courseid}}">
+                                        <view class="actTeacher" data-courseid="{{item.courseid}}" data-teacherid="{{item.teacherid}}" catchtap="showTeacherDetail">
+                                            <image src="/icon/account.png" mode="widthFix"></image>
+                                            <view>导师：{{item.teacher==''?'未分配':item.teacher}}</view>
+                                        </view>
+                                        <button wx:if="{{item.isOther==1}}" class="parent-btn" data-orderid="{{item.id}}" catchtap="checkEscorts">查看随行人</button>
                                     </view>
                                     <view class="actDate">
                                         <view class="actDesc">开始日期: <text style="color: #6177ff;">{{item.startTime}}</text></view>

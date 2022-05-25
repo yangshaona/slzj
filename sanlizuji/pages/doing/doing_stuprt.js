@@ -155,20 +155,15 @@ Page({
             url: '../register/register_stu',
         })
     },
-    /**
-     * 生命周期函数--监听页面加载
-     */
-    onLoad: function(options) {
-
-        console.log(options)
-        var userid = options.userid
+    init: function() {
         let that = this;
         user = wx.getStorageSync('user')
         id_flag = wx.getStorageSync('id_flag');
+        let userid = that.options.userid;
         this.setData({
             id_flag: id_flag,
             user: user
-        })
+        });
         if (id_flag != 'parent') {
             userid = user.id;
         }
@@ -176,8 +171,7 @@ Page({
             id: userid,
         });
         p.then(value => {
-            console.log("是否有正在活动信息111111111")
-            console.log(value)
+            console.log("是否有正在活动信息", value);
             if (value.data.data[0] == "无正在进行的课程") {
                 that.setData({
                     doing: value.data.data[0],
@@ -205,17 +199,19 @@ Page({
         });
     },
     /**
-     * 生命周期函数--监听页面初次渲染完成
+     * 生命周期函数--监听页面加载
      */
-    onReady: function() {
-
+    onLoad: function(options) {
+        console.log(options);
+        let that = this;
+        that.init();
     },
 
     /**
      * 生命周期函数--监听页面显示
      */
     onShow: function() {
-        var that = this;
+        let that = this;
         user = wx.getStorageSync('user')
         id_flag = wx.getStorageSync('id_flag');
         this.setData({
@@ -224,7 +220,6 @@ Page({
         })
         if (that.data.course != "") {
             this.data.realTime = setInterval(function() {
-
                     // 请求服务器数据
                     console.log('请求接口：刷新数据');
                     let teaOrderId = wx.getStorageSync('teaOrderId');
@@ -235,6 +230,8 @@ Page({
                 realTime: this.data.realTime, //实时数据对象(用于关闭实时刷新方法)
             })
         }
+        that.init();
+
     },
 
     /**

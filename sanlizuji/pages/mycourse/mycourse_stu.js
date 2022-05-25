@@ -19,6 +19,7 @@ Page({
         id_flag: "",
         user: user,
         kids_name: "",
+        showModal: false,
     },
     // 跳转到报名
     //前往报名
@@ -137,12 +138,6 @@ Page({
             url: '../detail/detail?id=' + id,
         })
     },
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function() {
-
-    },
 
     /**
      * 生命周期函数--监听页面显示
@@ -159,40 +154,6 @@ Page({
         else if (id_flag == "parent") that.GetKidsActivity();
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
-
-    },
     // 选中孩子
     select: function(e) {
         console.log("选中的值是");
@@ -246,4 +207,13 @@ Page({
             console.log("获取孩子信息失败", reason);
         });
     },
+
+    // 查看随行人
+    checkEscorts: function(e) {
+        console.log(e);
+        let orderid = e.currentTarget.dataset.orderid;
+        wx.navigateTo({
+            url: './accompanying_person/accompanying_person?orderid=' + orderid,
+        })
+    }
 })

@@ -1,0 +1,43 @@
+<!-- 随行人信息 -->
+<block class="" wx:for='{{allOtherInfo}}'>
+    <view class="middle">—— 随行人{{index+1}} ——</view>
+    <!-- 信息 -->
+    <view class="dataBox">
+        <view class="data">
+            <view class="descBox">
+                <image src="/icon/account.png" mode="widthFix" class="descImg"></image>
+                <view class="desc1">姓名</view>
+            </view>
+            <view class="desc2">
+                <text>{{item.name}}</text>
+            </view>
+        </view>
+        <view class="data">
+            <view class="descBox">
+                <image src="/icon/group.png" mode="widthFix" class="descImg"></image>
+                <view class="desc1">小组</view>
+            </view>
+            <view class="desc2">
+                <text>{{(item.group==''||item.group==null)?'暂未安排':item.group}}</text>
+            </view>
+        </view>
+        <view class="data">
+            <view class="descBox">
+                <image src="/icon/hotel.png" mode="widthFix" class="descImg"></image>
+                <view class="desc1">酒店</view>
+            </view>
+            <view class="desc2">
+                <text>{{(item.hotel==''||item.hotel==null)?'暂未安排':item.hotel}}</text>
+            </view>
+        </view>
+        <view class="data">
+            <view class="descBox">
+                <image src="/icon/room.png" mode="widthFix" class="descImg"></image>
+                <view class="desc1">房间号</view>
+            </view>
+            <view class="desc2">
+                <text>{{(item.room==''||item.room==null)?'暂未安排':item.room}}</text>
+            </view>
+        </view>
+    </view>
+</block>

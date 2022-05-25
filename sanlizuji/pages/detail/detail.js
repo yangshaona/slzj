@@ -483,15 +483,6 @@ Page({
             that.isLoaded('../register/register_stu');
         } else {
             if (id_flag == 'parent' || id_flag == 'teacher') {
-                // if (id_flag == 'teacher') {
-                //     if (user.grade == '' || user.class == '' || user.school == '') {
-                //         console.log("2345yugfdsaj")
-                //         that.setData({
-                //             showModal: true,
-                //             stuShowModal: true,
-                //         })
-                //     }
-                // }
                 if (that.data.idx != -1) {
                     console.log("选择的学生下标是：", that.data.idx);
                     that.generateOrder(that.data.kid);

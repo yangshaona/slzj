@@ -1,4 +1,6 @@
 import { GetActDetail, GetKidsList, CouponCheck, GetOrderDetail, changeOrderInfo } from '../../utils/apis.js';
+import { checkPhone } from '../../utils/function.js'
+const check_idnum = require('../../utils/function.js');
 const app = getApp();
 let user = wx.getStorageSync('user');
 let id_flag = wx.getStorageSync('id_flag');
@@ -37,6 +39,14 @@ Page({
         num: 1,
         // 记录订单初始时的购买数量
         order_num: 1,
+        // 增添随行人
+        userList: [{
+            name: "",
+            idnum: "",
+            phone: "",
+        }],
+        otherInfo: '',
+        showModal: false,
     },
 
     //跳转进入购买须知
@@ -54,19 +64,47 @@ Page({
         console.log(that.options);
         var id = e.currentTarget.dataset.id;
         console.log("优惠券金额", that.data.price);
-        if (that.data.num != that.data.order_num) {
-            changeOrderInfo({
-                orderid: that.options.orderid,
-                order_num: that.data.num,
-            }).then(value => {
-                console.log("修改订单购买数量结果", value);
-            })
-        }
-        wx.redirectTo({
-            // url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.order.price + "&key=" + that.data.coupons_key + "&coupons=" + that.data.price + "&userinfo=" + that.options.userinfo,
-            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
 
-        })
+        // 如果该活动类型可以添加随行人则弹窗提示是否添加随行人
+        if (that.data.order.isOther != 0) {
+            wx.showModal({
+                title: "添加随行人",
+                content: '是否增添监护人一同随行',
+                success(res) {
+                    if (res.confirm) {
+                        // 填写随行人信息
+                        that.setData({
+                            showModal: true,
+                        })
+                    } else {
+                        that.setData({
+                            payPrice: that.data.onePrice - that.data.price,
+                        });
+                        that.changeOrderInfo(1, '', that.data.payPrice);
+
+                        wx.redirectTo({
+                            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+                        });
+                    }
+                }
+            })
+        } else {
+            wx.redirectTo({
+                url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+            });
+        }
+    },
+    // 修改订单信息
+    changeOrderInfo(num, OtherInfo, needPayMoney) {
+        let that = this;
+        changeOrderInfo({
+            orderid: that.options.orderid,
+            order_num: num,
+            OtherInfo: OtherInfo,
+            needPayMoney: needPayMoney,
+        }).then(value => {
+            console.log("修改订单结果", value);
+        });
     },
 
     // 获取设备信息
@@ -84,6 +122,7 @@ Page({
         user = wx.getStorageSync('user');
         id_flag = wx.getStorageSync('id_flag');
         let userinfo = JSON.parse(that.options.userinfo);
+
         that.setData({
                 userinfo: user,
                 id_flag: id_flag,
@@ -94,6 +133,13 @@ Page({
             id: that.options.orderid,
             modelName: 'SignList',
         }).then(value => {
+            if (value.data.data[0].OtherInfo != '') {
+                that.setData({
+                    userList: JSON.parse(value.data.data[0].OtherInfo),
+                });
+            }
+
+            console.log(that.data.userList)
             const p = GetActDetail({
                 id: that.data.courseid,
                 modelName: 'ClubNews',
@@ -209,4 +255,129 @@ Page({
         }
         console.log(num)
     },
+
+    // 增添随行人
+    addUser(e) {
+        console.log(e.detail.value, 111)
+        let index = e.target.dataset.id;
+        let userList = this.data.userList;
+        userList[index].name = e.detail.value.trim();
+        this.setData({
+            userList
+        })
+    },
+    addIdCard(e) {
+        console.log(e.detail.value, 222)
+        let index = e.target.dataset.id;
+        let userList = this.data.userList;
+        var data = check_idnum.checkIdCard(e.detail.value);
+        if (!data.idCardFlag) {
+            wx.showToast({
+                title: '身份证号有误',
+                icon: 'none',
+                duration: 800
+            })
+            return;
+        }
+        userList[index].idnum = e.detail.value.trim();
+        this.setData({
+            userList
+        })
+    },
+    addTel(e) {
+        console.log(e.detail.value, 333)
+        let index = e.target.dataset.id;
+        let userList = this.data.userList;
+        if (!checkPhone(e.detail.value.trim())) {
+            wx.showToast({
+                title: '请填写正确的手机号',
+                icon: 'none',
+                duration: 2000
+            })
+            return;
+        }
+        userList[index].phone = e.detail.value.trim();
+        this.setData({
+            userList
+        })
+    },
+    // 添加随行人
+    addList() {
+        let userList = this.data.userList;
+        console.log("添加人信息为", userList);
+        if (userList[userList.length - 1].name.trim() !== '' && userList[userList.length - 1].idnum.trim() !== '' && userList[userList.length - 1].phone.trim() !== '') {
+            setTimeout(() => {
+                let userList = this.data.userList;
+                userList.push({
+                    name: "",
+                    idnum: '',
+                    phone: ""
+                })
+                this.setData({
+                    userList
+                }, 300)
+            })
+        } else {
+            wx.showToast({
+                title: '请填写完整再追加',
+                icon: 'none',
+                duration: 2000
+            })
+            return;
+        }
+
+    },
+    delList() {
+        let userList = this.data.userList;
+        if (userList.length > 1) {
+            userList.pop();
+            this.setData({
+                userList: userList
+            })
+        } else {
+            wx.showToast({
+                title: '操作失败，无法继续删除',
+                icon: 'none',
+                duration: 2000,
+            })
+        }
+
+    },
+    // 点击提交按钮
+    ok: function() {
+        let userList = this.data.userList;
+        let that = this;
+        if (userList[userList.length - 1].name.trim() == '' || userList[userList.length - 1].idnum.trim() == '' || userList[userList.length - 1].phone.trim() == '') {
+            wx.showToast({
+                title: '请填写完整再提交',
+                icon: 'none',
+                duration: 2000,
+            })
+        } else {
+            // 修改改变数量的订单参与人数数据
+            that.setData({
+                num: userList.length + 1,
+                payPrice: this.data.onePrice * (userList.length + 1) - that.data.price,
+            })
+            that.changeOrderInfo(that.data.num, JSON.stringify(userList), that.data.payPrice);
+            // 跳转到订单确认界面
+            wx.redirectTo({
+                url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+            });
+            this.setData({
+                showModal: false,
+            })
+        }
+    },
+    back: function() {
+        // 跳转到订单确认界面 
+        let that = this;
+        this.setData({
+            showModal: false,
+        })
+        wx.redirectTo({
+            url: './pay?orderid=' + that.options.orderid + '&price=' + that.data.payPrice + "&key=" + that.data.coupons + "&userinfo=" + that.options.userinfo,
+        });
+
+    }
 })

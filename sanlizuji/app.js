@@ -111,6 +111,8 @@ App({
         longtitude: "",
         realTime: null, //实时数据对象(用于关闭实时刷新方法)
         imgUrl: 'https://sanli-tracks.com/sanli/uploads/temp/WxImg/',
+        // imgUrl: 'https://sanli-tracks.com/sanlia/uploads/temp/WxImg/',
+        // imgUrl: 'http://127.0.0.1/sanliGit/sanli/uploads/temp/WxImg/',
         // okayapiHost: "http://test_phalapi.com", // TODO: 配置成你所在的接口域名
         okayApiAppKey: "appkey", // TODO：改为你的APP_KEY 在http://open.yesapi.cn/?r=App/Mine寻找
         okayApiAppSecrect: "appsecret", // TODO：改为你的APP_SECRECT
@@ -119,6 +121,9 @@ App({
         // 正在活动的orderid
         orderid: "",
         imgPrefix: 'https://sanli-tracks.com/sanli/uploads/temp/',
+        // imgPrefix: 'https://sanli-tracks.com/sanlia/uploads/temp/',
+        // imgPrefix: 'http://127.0.0.1/sanliGit/sanli/uploads/temp/',
+
     },
 
     show_msg: function(msg) {
@@ -181,6 +186,7 @@ App({
         }).then(value => {
             console.log("导师获取正在活动数据", value);
             if (value.data.data[0] != "无正在进行的课程") {
+                webSocket.connectSocket();
                 id = value.data.data[0].id;
                 wx.setStorageSync('orderid', value.data.tea_doing[0].id);
                 that.GetLocation(value.data.tea_doing[0].id);
@@ -199,6 +205,7 @@ App({
             if (value.data.data[0] == "无正在进行的课程") {
 
             } else {
+                webSocket.connectSocket();
                 that.globalData.orderid = value.data.data[0].id;
                 courseid = value.data.data[0].courseid;
                 wx.setStorageSync('orderid', that.globalData.orderid);
@@ -297,12 +304,12 @@ App({
             // that.globalData.realTime = setInterval(function() {
             // 请求服务器数据
             if (id_flag == "teacher") {
-                that.TeaNowCourse()
+                that.TeaNowCourse();
             }
             if (id_flag == 'student') {
                 that.ActiveStuDetail();
             }
-            webSocket.connectSocket();
+
 
         }
         const p = isShow({});

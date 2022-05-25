@@ -292,6 +292,7 @@ wx.onSocketError(function(res) {
 wx.onSocketClose(function(res) {
     console.log('WebSocket 已关闭！');
     let app = getApp();
+    console.log(app.globalData.url);
     wx.request({
         url: app.globalData.url + 'WxOther/WebSocket',
         data: {},

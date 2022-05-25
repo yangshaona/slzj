@@ -36,7 +36,7 @@
         <!-- 有内容 -->
         <block wx:if="{{filter.length != 0}}">
             <block wx:for="{{filter}}" wx:key="id">
-                <view class="ctnBox" style="height: 50%;" data-courseid="{{item.id}}" data-price="{{item.price}}" bindtap="goToOrderDetail">
+                <view class="ctnBox" style="height: 50%;" data-courseid="{{item.id}}" data-price="{{item.price}}" data-needPayMoney="{{item.needPayMoney}}" bindtap="goToOrderDetail">
                     <view class="title">{{item.coursename}}</view>
                     <image src="{{item.imagesurl}}" mode="widthFix" class="ctnImg"></image>
                     <view class="ctnLine"></view>

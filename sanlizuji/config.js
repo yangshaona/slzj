@@ -1,5 +1,7 @@
-var host = "https://sanli-tracks.com/sanli/index.php?r="
-    // 
+var host = "https://sanli-tracks.com/sanli/index.php?r=";
+// var host = 'https://sanli-tracks.com/sanlia/index.php?r=';
+// var host = 'http://127.0.0.1/sanliGit/sanli/index.php?r=';
+// 
 let config = {
     host,
     //请求网址url列表

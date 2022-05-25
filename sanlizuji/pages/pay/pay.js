@@ -37,6 +37,9 @@ Page({
         coupons: 0, //优惠券金额
         // 设置支付按钮防抖
         timeID: null,
+        // 显示随行人
+        otherInfo: [],
+        userinfo: '',
     },
 
     /**
@@ -47,7 +50,7 @@ Page({
         console.log("确认支付页面", options);
         this.setData({
             price: options.price,
-            // coupons: options.coupons,
+            userinfo: options.userinfo,
         })
         this.getCourse(options.orderid);
         user = wx.getStorageSync('user');
@@ -63,7 +66,13 @@ Page({
             console.log("订单详情", value)
             that.setData({
                 order: value.data.data[0],
+
             });
+            if (value.data.data[0].OtherInfo != '') {
+                that.setData({
+                    otherInfo: JSON.parse(value.data.data[0].OtherInfo),
+                })
+            }
             var listData = [];
             listData.push(that.data.order);
             that.setData({
@@ -93,7 +102,7 @@ Page({
         if (typeof(callback) === 'function') {
             // 后台销毁订单
             const p = GetOrderDetail({
-                id: orderid,
+                id: that.options.orderid,
                 modelName: 'SignList',
             });
             p.then(value => {
@@ -305,6 +314,6 @@ Page({
     },
 
     onShow: function() {
-
+        this.getCourse(this.options.orderid);
     },
 })

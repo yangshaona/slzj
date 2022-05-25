@@ -460,7 +460,8 @@ Page({
             multiIndex: e.detail.value,
             reg_idx: 1,
             showpicker: "off-picker",
-        })
+        });
+        this.checkInfo("region");
     },
     bindMultiPickerColumnChange: function(e) {
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
@@ -477,7 +478,7 @@ Page({
             multiArray: res.data.multiArray,
             multiIndex: res.data.multiIndex
         });
-        this.checkInfo("region");
+
     },
     getArea: function() {
         let data = initArea();

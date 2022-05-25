@@ -379,12 +379,9 @@ function areaColumnChange(res) {
         province.forEach(item => {
             if (item.name === provinceName) {
                 provinceId = item.id;
-                throw (new Error('find item'))
             }
         })
-    } catch (err) {
-        console.log("省份获取出错了", err);
-    }
+    } catch (err) {}
     city = areaList.filter(item => {
         return item.pid == provinceId;
     })
@@ -407,7 +404,6 @@ function areaColumnChange(res) {
             areaList.forEach(item => {
                 if (item.name === cityName) {
                     cityId = item.id;
-                    throw (new Error('find item'));
                 }
             })
         } catch (err) {}

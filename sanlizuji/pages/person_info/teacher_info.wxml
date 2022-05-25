@@ -84,7 +84,7 @@
     <view class="resume" bindtap="DownloadResume" data-resume="{{user.resume}}">点击预览简历</view>
     <button class="logout" bindtap="logout" type="button">退出登录</button>
 </view>
-<view wx:if="{{trigger=='name'||trigger=='idnum'||trigger=='phone'}}">
+<view wx:if="{{trigger=='name'||trigger=='idnum'||trigger=='phone'||trigger=='school'||trigger=='grade'||trigger=='class'}}">
     <view class="model" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'></view>
     <view class="modalDlg" catchtouchmove='preventTouchMove' wx:if='{{showModal}}'>
 
@@ -94,7 +94,7 @@
                 <text class=''>修改姓名</text>
             </view>
             <view class='input-name'>
-                <input type='text' class="input" bindblur='teaName' placeholder='请输入姓名' value="{{user.name}}" auto-focus="true"></input>
+                <input type='text' class="input" bindblur='teaChangeInfo' placeholder='请输入姓名' value="{{user.name}}" auto-focus="true"></input>
             </view>
         </view>
 
@@ -104,7 +104,7 @@
                 <text class=''>查看身份证</text>
             </view>
             <view class='input-name'>
-                <input type='idcard' class="input" bindblur='teaIdNum' value="{{user.idnum}}" auto-focus="true"></input>
+                <input type='idcard' class="input" bindblur='teaChangeInfo' value="{{user.idnum}}" auto-focus="true"></input>
             </view>
         </view>
 
@@ -114,16 +114,17 @@
                 <text class=''>修改手机号</text>
             </view>
             <view class='input-name'>
-                <input type='number' class="input" bindblur='teaPhone' placeholder='请输入手机号' value="{{user.phone}}" auto-focus="true"></input>
+                <input type='number' class="input" bindblur='teaChangeInfo' placeholder='请输入手机号' value="{{user.phone}}" auto-focus="true"></input>
             </view>
         </view>
+
         <!-- 修改学校名称 -->
         <view wx:if="{{trigger=='school'}}" class="info">
             <view class='change-name'>
                 <text class=''>修改学校名称</text>
             </view>
             <view class='input-name'>
-                <input type='number' class="input" bindblur='teaSchool' placeholder='请输入学校全称' value="{{user.school}}" auto-focus="true"></input>
+                <input type='number' class="input" bindblur='teaChangeInfo' placeholder='请输入学校全称' value="{{user.school}}" auto-focus="true"></input>
             </view>
         </view>
 
@@ -133,7 +134,7 @@
                 <text class=''>修改所教年级</text>
             </view>
             <view class='input-name'>
-                <input type='number' class="input" bindblur='teaGrade' placeholder='请输入所教年级' value="{{user.grade}}" auto-focus="true"></input>
+                <input type='number' class="input" bindblur='teaChangeInfo' placeholder='请输入所教年级' value="{{user.grade}}" auto-focus="true"></input>
             </view>
         </view>
 
@@ -143,7 +144,7 @@
                 <text class=''>修改所教班级</text>
             </view>
             <view class='input-name'>
-                <input type='number' class="input" bindblur='teaClass' placeholder='请输入所教班级' value="{{user.class}}" auto-focus="true"></input>
+                <input type='number' class="input" bindblur='teaChangeInfo' placeholder='请输入所教班级' value="{{user.class}}" auto-focus="true"></input>
             </view>
         </view>
 

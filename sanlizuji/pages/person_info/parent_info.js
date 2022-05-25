@@ -1,5 +1,5 @@
 // pages/person_info/parent_info.js
-import { SaveInfo, checkPhone, Unbound, initArea } from '../../utils/function.js';
+import { SaveInfo, checkPhone, Unbound, initArea, areaColumnChange } from '../../utils/function.js';
 import { SearchKids, GetKidsName, KidBindParent } from '../../utils/apis.js';
 const areaList = require('../../utils/arealist.js');
 const check_idnum = require('../../utils/function.js'); //路径根据自己的文件目录来
@@ -327,47 +327,14 @@ Page({
         that.getArea();
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh: function() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom: function() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage: function() {
-
-    },
     //获取地区
     bindMultiPickerChange: function(e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
         this.setData({
             multiIndex: e.detail.value,
             reg_idx: 1
-        })
+        });
+        this.checkInfo("region");
     },
     bindMultiPickerColumnChange: function(e) {
         console.log('修改的列为', e.detail.column, '，值为', e.detail.value);
@@ -384,7 +351,6 @@ Page({
             multiArray: res.data.multiArray,
             multiIndex: res.data.multiIndex
         });
-        this.checkInfo("region");
     },
     getArea: function() {
         let data = initArea();
